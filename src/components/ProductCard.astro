@@ -83,9 +83,16 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
 
 <style>
   .card__media {
-    border-radius: var(--radius);
+    border-radius: 16px;
+    border: 2px solid var(--ink);
+    box-shadow: 0 0 0 var(--ink);
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-    transition: transform 0.6s var(--ease-out);
+    transition:
+      transform 0.6s var(--ease-out),
+      box-shadow 0.25s var(--ease-out);
+  }
+  .card:hover .card__media {
+    box-shadow: 6px 6px 0 var(--brand);
   }
   .card__imglink {
     position: absolute;
@@ -97,9 +104,7 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
     inset: 0;
     z-index: 3;
     pointer-events: none;
-    background:
-      radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.55), transparent 50%),
-      var(--holo);
+    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.5), transparent 50%);
     mix-blend-mode: soft-light;
     opacity: var(--go, 0);
     transition: opacity 0.5s;
@@ -130,8 +135,10 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
     display: grid;
     gap: 0.4rem;
     padding: 0.6rem;
-    border-radius: 10px;
-    background: rgb(var(--bg-rgb) / 0.82);
+    border-radius: 12px;
+    border: 2px solid var(--ink);
+    background: rgb(243 241 236 / 0.92);
+    color: var(--ink);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;
@@ -141,7 +148,7 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
       transform 0.4s var(--ease-out);
   }
   .card__qa-title {
-    color: var(--muted);
+    color: #6b655e;
     text-align: center;
   }
   .card__qa-sizes {
@@ -152,8 +159,8 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
   .card__qa button {
     position: relative;
     height: 34px;
-    border-radius: 6px;
-    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    border: 1.5px solid var(--ink);
     font-family: var(--f-mono);
     font-size: 0.6875rem;
     font-weight: 600;
@@ -163,9 +170,8 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
       border-color 0.2s;
   }
   .card__qa button:hover {
-    background: var(--fg);
-    color: var(--bg);
-    border-color: var(--fg);
+    background: var(--ink);
+    color: var(--cotton);
   }
   .card__qa button:disabled {
     opacity: 0.3;
@@ -179,7 +185,7 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--brand);
   }
   .card__qa button:global(.is-added) {
     animation: qa-added 0.7s var(--ease-out);

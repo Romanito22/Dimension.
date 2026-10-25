@@ -356,6 +356,9 @@ add('story/2', 1600, 900, '16:9', '2560 × 1440', 'Les pièces du Drop 01 à pla
 );
 add('story/3', 800, 1000, '4:5', '1600 × 2000', 'Détail de la maille jacquard', (path) => detail(P(4), path));
 
+// Texture de gravier seule : fond de la scène du hero et de la table de travail
+add('texture/gravel', 1600, 1000, '16:10', '2560 × 1600', 'Gravier au soleil', () => doc(1600, 1000, background('gravel', 1600, 1000, 17)));
+
 // Détourés (PNG transparent) : scène du hero et section « Devant / Dos »
 products.forEach((p) => {
   (['front', 'back'] as View[]).forEach((view) => {

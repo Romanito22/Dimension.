@@ -8,6 +8,7 @@ import { media } from '../lib/media';
 import { products, brand, byNewest, formatPrice, imageKeys, categoryLabel, totalStock } from '../lib/shop';
 
 const ogImage = media('hero/desktop');
+const gravel = media('texture/gravel');
 const teeBack = media('cutout/dim-001-back');
 const teeFront = media('cutout/dim-001-front');
 const latest = byNewest(products);
@@ -46,12 +47,27 @@ const ticker = products.map((p) => {
 
 const manifesto =
   "On ne fait pas des vêtements pour remplir des placards. On fait des pièces qui se portent *fort,* qui se lavent cent fois et qu'on garde *dix ans.* Brodées. Imprimées. Tricotées. En séries courtes : quand c'est parti, c'est *parti.*";
+// Table de travail : les pièces à plat sur le gravier, à déplacer
+const TABLE = [
+  { x: 0.16, y: 0.45, r: -14, w: 21, view: 'back' },
+  { x: 0.38, y: 0.62, r: 7, w: 23, view: 'front' },
+  { x: 0.6, y: 0.4, r: -5, w: 22, view: 'back' },
+  { x: 0.83, y: 0.58, r: 11, w: 20, view: 'front' },
+  { x: 0.5, y: 0.82, r: -9, w: 18, view: 'front' },
+];
+const tableItems = dvItems.map((p, i) => ({
+  ...TABLE[i % TABLE.length],
+  name: p.name,
+  price: formatPrice(p.price),
+  url: `/produit/${p.slug}`,
+  img: media(`cutout/${p.id.toLowerCase()}-${TABLE[i % TABLE.length].view}`).src,
+}));
 const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), accent: w.includes('*') }));
 ---
 
 <Base header="overlay" page="home" image={ogImage.src}>
   <!-- HERO : la scène du drop -->
-  <section class="dv" data-dropviewer aria-labelledby="dv-title">
+  <section class="dv theme-dark" data-dropviewer aria-labelledby="dv-title" style={`--gravel-img:url(${gravel.src})`}>
     <script type="application/json" data-dv-json set:html={JSON.stringify(dvData)} />
     <h1 id="dv-title" class="visually-hidden">dimension. — {brand.drop.name} : {brand.tagline}</h1>
 
@@ -83,12 +99,12 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     <div class="wrap dv__info">
       <div class="dv__meta">
         <p class="label dv__kicker"><span data-dv-index>01</span> / {String(dvData.length).padStart(2, '0')} — <span data-dv-cat>{first.category}</span></p>
-        <p class="chrome dv__name" data-dv-name>{first.name}</p>
+        <p class="dv__name" data-dv-name>{first.name}</p>
         <p class="dv__short" data-dv-short>{first.short}</p>
       </div>
       <div class="dv__buy">
         <div class="dv__price-row">
-          <p class="display chrome dv__price" data-dv-price>{formatPrice(first.price)}</p>
+          <p class="display dv__price" data-dv-price>{formatPrice(first.price)}</p>
           <p class="label dv__stock" data-dv-stock>{firstStock} pièces en stock</p>
         </div>
         <p class="label dv__hint">Choisis ta taille — ajout instantané</p>
@@ -101,7 +117,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   </section>
 
   <!-- BANDEAU DE STOCK -->
-  <div class="tick" aria-label="Stock du drop en direct">
+  <div class="tick theme-dark" aria-label="Stock du drop en direct">
     <div class="tick__track">
       {
         [0, 1].map((n) => (
@@ -126,14 +142,14 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       <div class="wrap hs__head">
         <div>
           <span class="label accent">{brand.drop.name} · {products.length} pièces</span>
-          <h2 id="drop-title" class="display h-xl" data-chars>Nouveautés</h2>
+          <h2 id="drop-title" class="display h-2xl patch" data-chars>Nouveautés</h2>
         </div>
         <a href="/boutique" class="link link--under label">Tout voir</a>
       </div>
       <div class="hs__viewport">
         <div class="hs__track" data-hs-track>
-          <div class="hs__intro">
-            <p class="display chrome hs__big">5 pièces.<br /><span class="accent">Séries courtes.</span></p>
+          <div class="hs__intro theme-brand">
+            <p class="display hs__big">5 pièces.<br /><span class="accent">Séries courtes.</span></p>
             <p class="muted">Brodées, imprimées, tricotées. Quand c'est parti, c'est parti.</p>
             <span class="label hs__hint" aria-hidden="true">Continue de scroller <span class="hs__arrow">→</span></span>
           </div>
@@ -156,12 +172,12 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   </section>
 
   <!-- PIÈCE SIGNATURE : devant / dos au scroll -->
-  <section class="flip" data-flip aria-labelledby="flip-title">
+  <section class="flip theme-dark" data-flip aria-labelledby="flip-title">
     <div class="flip__sticky">
       <div class="wrap flip__grid">
         <div class="flip__copy">
           <span class="label accent">La pièce signature</span>
-          <h2 id="flip-title" class="display flip__title">Love over<br />everything</h2>
+          <h2 id="flip-title" class="display flip__title patch">Love over<br />everything</h2>
           <ol class="flip__steps" role="list">
             <li data-flip-step="0" class="is-active">
               <span class="flip__n display">01</span>
@@ -177,7 +193,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
             </li>
           </ol>
           <div class="flip__buy">
-            <span class="flip__price display chrome">{formatPrice(signature.price)}</span>
+            <span class="flip__price display">{formatPrice(signature.price)}</span>
             <a href={sigUrl} class="btn btn--accent btn--lg">Je le veux <span class="btn__dot" aria-hidden="true"></span></a>
           </div>
         </div>
@@ -205,14 +221,37 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   </section>
 
   <!-- MANIFESTE : s'allume mot par mot -->
-  <section class="mf" data-scrub aria-label="Manifeste">
+  <section class="mf theme-brand" data-scrub aria-label="Manifeste">
     <div class="mf__sticky">
       <div class="wrap">
-        <p class="label accent mf__label">Manifeste</p>
+        <p class="label mf__label">Manifeste</p>
         <p class="display mf__text">
           {mfWords.map((w) => <span class:list={['mf__w', w.accent && 'is-accent']}>{w.text} </span>)}
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- TABLE DE TRAVAIL : les pièces à plat, déplaçables -->
+  <section class="tb theme-dark" data-table aria-labelledby="tb-title" style={`--gravel-img:url(${gravel.src})`}>
+    <div class="wrap tb__head">
+      <div>
+        <span class="label accent">Touche à tout</span>
+        <h2 id="tb-title" class="display h-2xl patch" data-chars>Le drop à plat</h2>
+      </div>
+      <p class="tb__hint">Attrape les pièces, déplace-les, clique sur celle qui te plaît.</p>
+    </div>
+    <div class="tb__stage" data-table-stage>
+      {
+        tableItems.map((t, i) => (
+          <a class="tb__item" href={t.url} data-drag data-cursor="Attraper" style={`--x:${t.x};--y:${t.y};--r:${t.r}deg;--w:${t.w};--z:${i + 1}`} aria-label={`${t.name}, ${t.price}`}>
+            <img src={t.img} alt="" width="1000" height="1250" loading="lazy" draggable="false" />
+            <span class="tb__tag">
+              <b>{t.name}</b> {t.price}
+            </span>
+          </a>
+        ))
+      }
     </div>
   </section>
 
@@ -222,7 +261,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       <div class="section-head">
         <div data-reveal>
           <span class="label accent">Explorer</span>
-          <h2 id="cats-title" class="display h-xl" data-chars>Le vestiaire</h2>
+          <h2 id="cats-title" class="display h-2xl patch" data-chars>Le vestiaire</h2>
         </div>
       </div>
       <div class="cats__grid">
@@ -272,7 +311,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   </div></div>
 
   <!-- STORY -->
-  <section class="section story" aria-labelledby="story-title">
+  <section class="section story theme-sand" aria-labelledby="story-title">
     <div class="wrap story__grid">
       <div class="story__copy">
         <span class="label accent" data-reveal>{brand.story.kicker}</span>
@@ -351,9 +390,17 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     min-height: 680px;
     overflow: hidden;
     isolation: isolate;
+    background: var(--gravel) var(--gravel-img) center / cover;
+  }
+  .dv::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
     background:
-      radial-gradient(ellipse 60% 55% at 50% 52%, #1a1f2a 0%, transparent 70%),
-      var(--bg);
+      radial-gradient(ellipse 55% 60% at 50% 48%, transparent 30%, rgb(10 8 6 / 0.55) 100%),
+      linear-gradient(0deg, rgb(10 8 6 / 0.75) 0%, transparent 38%),
+      linear-gradient(180deg, rgb(10 8 6 / 0.55) 0%, transparent 25%);
   }
   .dv__word {
     position: absolute;
@@ -368,7 +415,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     font-size: clamp(6rem, 24vw, 30rem);
     line-height: 0.8;
     color: transparent;
-    -webkit-text-stroke: 1px rgb(var(--fg-rgb) / 0.1);
+    -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.22);
     white-space: nowrap;
     letter-spacing: -0.01em;
     transform: translateY(-2%);
@@ -391,7 +438,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     transform: translate(-50%, -50%);
     object-fit: contain;
     transition: opacity 0.25s;
-    filter: drop-shadow(0 40px 50px rgb(0 0 0 / 0.6));
+    filter: drop-shadow(18px 24px 18px rgb(0 0 0 / 0.55));
   }
   .dv:global(.has-gl) .dv__fallback {
     visibility: hidden;
@@ -436,7 +483,13 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     transform: translateY(-50%);
     display: grid;
     gap: 0.35rem;
-    width: 220px;
+    width: 250px;
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    border: 1.5px solid rgb(255 255 255 / 0.18);
+    background: rgb(12 10 8 / 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
   .dv__go {
     width: 100%;
@@ -628,6 +681,13 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     .dv__rail li {
       flex: 1;
     }
+    .dv__rail {
+      padding: 0;
+      border: 0;
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
     .dv__go {
       display: block;
       padding: 0.5rem 0;
@@ -738,6 +798,113 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     margin-inline: 1.5rem;
   }
 
+  /* ================= TABLE DE TRAVAIL ================= */
+  .tb {
+    position: relative;
+    padding-top: var(--space-lg);
+    background: var(--gravel) var(--gravel-img) center / cover;
+    overflow: hidden;
+  }
+  .tb::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgb(10 8 6 / 0.75) 0%, transparent 30%),
+      linear-gradient(120deg, rgb(255 236 200 / 0.12), transparent 50%);
+    pointer-events: none;
+  }
+  .tb__head {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .tb__head .label {
+    display: block;
+    margin-bottom: 0.9rem;
+  }
+  .tb__hint {
+    max-width: 30ch;
+    color: var(--fg-2);
+    font-size: var(--fs-sm);
+  }
+  .tb__stage {
+    position: relative;
+    height: clamp(520px, 86vh, 900px);
+    touch-action: pan-y;
+  }
+  .tb__item {
+    --dx: 0px;
+    --dy: 0px;
+    --lift: 0;
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    top: calc(var(--y) * 100%);
+    width: calc(var(--w) * 1vw);
+    min-width: 150px;
+    max-width: 380px;
+    z-index: var(--z);
+    transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) rotate(var(--r)) scale(calc(1 + var(--lift) * 0.06));
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .tb__item img {
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(calc(8px + var(--lift) * 14px) calc(12px + var(--lift) * 22px) calc(8px + var(--lift) * 14px) rgb(0 0 0 / 0.55));
+    transition: filter 0.25s var(--ease-out);
+  }
+  .tb__item:global(.is-grabbing) {
+    cursor: grabbing;
+    --lift: 1;
+  }
+  .tb__tag {
+    position: absolute;
+    left: 50%;
+    bottom: 6%;
+    transform: translateX(-50%) rotate(calc(var(--r) * -1)) translateY(8px);
+    white-space: nowrap;
+    padding: 0.45rem 0.75rem;
+    border-radius: 10px;
+    border: 2px solid var(--ink);
+    background: var(--cotton);
+    color: var(--ink);
+    box-shadow: 3px 3px 0 var(--brand);
+    font-size: var(--fs-xs);
+    opacity: 0;
+    transition:
+      opacity 0.25s,
+      transform 0.3s var(--ease-out);
+    pointer-events: none;
+  }
+  .tb__item:hover .tb__tag,
+  .tb__item:focus-visible .tb__tag {
+    opacity: 1;
+    transform: translateX(-50%) rotate(calc(var(--r) * -1));
+  }
+  @media (max-width: 860px) {
+    .tb__stage {
+      height: 120vw;
+      max-height: 680px;
+    }
+    .tb__item {
+      width: calc(var(--w) * 1.9vw);
+      min-width: 0;
+    }
+    .tb__tag {
+      opacity: 1;
+      transform: translateX(-50%) rotate(calc(var(--r) * -1));
+      font-size: 0.625rem;
+    }
+  }
+
   /* ================= MANIFESTE ================= */
   .mf {
     --mp: 0;
@@ -769,7 +936,10 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     opacity: 1;
   }
   .mf__w.is-accent:global(.is-lit) {
-    color: var(--accent-2);
+    color: var(--ink);
+  }
+  .mf__w {
+    opacity: 0.22;
   }
   @keyframes ping {
     to {
@@ -828,10 +998,11 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     gap: 1.5rem;
     padding: 2rem;
     border-radius: var(--radius);
-    background:
-      radial-gradient(circle at 20% 0%, rgb(var(--accent-rgb) / 0.16), transparent 60%),
-      var(--surface);
-    color: var(--fg);
+    background: var(--brand);
+    color: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    box-shadow: 6px 6px 0 var(--ink);
   }
   .hs__intro .muted {
     color: var(--fg-2);
@@ -840,7 +1011,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     font-size: clamp(1.4rem, 2.1vw, 2.3rem);
   }
   .hs__big .accent {
-    color: var(--accent);
+    color: var(--ink);
   }
   .hs__arrow {
     display: inline-block;
@@ -863,10 +1034,12 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     z-index: 2;
     font-size: clamp(2rem, 3.2vw, 3.4rem);
     color: transparent;
-    -webkit-text-stroke: 1px rgb(var(--fg-rgb) / 0.5);
+    -webkit-text-stroke: 1.5px var(--brand);
     pointer-events: none;
   }
   .hs__end {
+    border: 2px solid var(--ink) !important;
+    box-shadow: 6px 6px 0 var(--ink);
     display: grid;
     place-items: center;
     align-content: center;
@@ -880,8 +1053,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       color 0.5s var(--ease-out);
   }
   .hs__end:hover {
-    background: var(--accent);
-    color: var(--on-accent);
+    background: var(--brand);
+    color: #fff;
   }
   .hs__end-ring {
     width: 64px;
@@ -937,7 +1110,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     position: relative;
     height: 320vh;
     background:
-      radial-gradient(circle at 72% 52%, rgb(var(--accent-rgb) / calc(var(--fp) * 0.32)), transparent 48%),
+      radial-gradient(circle at 72% 52%, rgb(var(--brand-rgb) / calc(0.25 + var(--fp) * 0.55)), transparent 52%),
       var(--bg);
   }
   .flip__sticky {
@@ -1197,8 +1370,9 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     padding-block: 1.5rem;
   }
   .ribbon {
-    background: var(--chrome-btn);
-    color: var(--on-accent);
+    background: var(--ink);
+    color: var(--cotton);
+    border-block: 2px solid var(--ink);
     overflow: hidden;
     padding-block: clamp(1rem, 2vw, 1.75rem);
     transform: rotate(-1.4deg) scale(1.03);
@@ -1225,7 +1399,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   .ribbon__caps {
     font-size: clamp(1rem, 2vw, 1.8rem);
     padding-inline: 0.6em;
-    color: var(--accent-deep);
+    color: var(--brand);
   }
   .ribbon__ring {
     width: clamp(12px, 1.2vw, 18px);
@@ -1252,7 +1426,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     justify-items: start;
   }
   .story__copy h2 {
-    max-width: 14ch;
+    max-width: 20ch;
   }
   .story__visual {
     position: relative;

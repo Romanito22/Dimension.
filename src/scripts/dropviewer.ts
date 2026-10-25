@@ -26,6 +26,7 @@ uniform float uSpot;
 uniform vec2 uMouse;
 uniform vec2 uRes;
 uniform vec4 uRect;
+uniform float uRot;
 float hash(vec2 q){return fract(sin(dot(q,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 q){vec2 i=floor(q),f=fract(q);f=f*f*(3.-2.*f);
   return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}
@@ -37,10 +38,15 @@ vec4 rgbSplit(sampler2D t,vec2 uv,float s){
   vec4 c=tex(t,uv);
   return vec4(tex(t,uv+vec2(s,0.)).r,c.g,tex(t,uv-vec2(s,0.)).b,c.a);
 }
+vec2 rot(vec2 q,float a){float c=cos(a),s=sin(a);return vec2(c*q.x-s*q.y,s*q.x+c*q.y);}
+float alphaAt(vec2 uv,float reveal){return mix(tex(uA,uv).a,tex(uB,uv).a,reveal);}
 void main(){
   vec2 px=gl_FragCoord.xy;
   vec2 uv=(px-uRect.xy)/uRect.zw;
   uv.y=1.-uv.y;
+  vec2 q=(uv-.5)*uRect.zw;
+  q=rot(q,uRot);
+  uv=q/uRect.zw+.5;
   float d=distance(px,uMouse);
   vec2 dir=normalize(px-uMouse+.0001);
   float ripple=sin(d*.035-uT*3.2)*exp(-d*.005)*(.003+uVel*.03);
@@ -57,14 +63,17 @@ void main(){
   vec4 b=rgbSplit(uB,uv-vec2(0.,(1.-reveal)*.03),split);
   vec4 c=mix(a,b,reveal);
   float band=(1.-smoothstep(0.,.075,abs(nv-e)))*step(.001,uP)*step(uP,.999);
-  vec3 holo=.62+.38*cos(6.2832*(uv.y*1.6+uv.x*.8+uT*.15+vec3(0.,.33,.67)));
-  vec3 hot=mix(holo,vec3(1.),smoothstep(.6,1.,band));
+  vec3 hot=mix(vec3(.82,.06,.33),vec3(1.,.93,.86),smoothstep(.6,1.,band));
   c.rgb+=hot*band*1.9*max(a.a,b.a);
   float spot=exp(-pow(d/(uRes.y*.55),2.));
-  float light=mix(1.,.66+.55*spot,uSpot);
-  c.rgb*=light*vec3(.97,.99,1.04);
+  float light=mix(1.,.8+.38*spot,uSpot);
+  c.rgb*=light*vec3(1.04,1.,.93);
+  // Ombre portée sur le gravier (soleil en haut à gauche)
+  vec2 so=vec2(.035,.05);
+  float sh=(alphaAt(uv-so,reveal)+alphaAt(uv-so*1.25+vec2(.01,0.),reveal)+alphaAt(uv-so*.8-vec2(.008,0.),reveal))/3.;
+  sh*=.55;
   c.rgb+=(hash(px+uT)-.5)*.05*c.a;
-  gl_FragColor=vec4(c.rgb*c.a,c.a);
+  gl_FragColor=vec4(c.rgb*c.a,c.a+sh*(1.-c.a));
 }`;
 
 function compile(gl: WebGLRenderingContext, type: number, src: string) {
@@ -84,6 +93,9 @@ function loadImage(src: string) {
     img.src = src;
   });
 }
+
+// Inclinaison de chaque pièce posée à plat (degrés)
+const ROT = [-7, 5, -4, 8, -9];
 
 const SCRAMBLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*°#';
 function scramble(el: HTMLElement, text: string, duration = 700) {
@@ -286,7 +298,8 @@ export function initDropViewer(signal: AbortSignal, introDone: Promise<void>) {
     uSpot = U('uSpot'),
     uMouse = U('uMouse'),
     uRes = U('uRes'),
-    uRect = U('uRect');
+    uRect = U('uRect'),
+    uRot = U('uRot');
   gl.uniform1i(uA, 0);
   gl.uniform1i(uB, 1);
 
@@ -385,7 +398,7 @@ export function initDropViewer(signal: AbortSignal, introDone: Promise<void>) {
 
     // Boîte de la pièce : centrée, légèrement remontée
     const mobile = W / dpr < 861;
-    const h = Math.min(H * (mobile ? 0.6 : 0.86), W * (mobile ? 1.05 : 0.62) * 1.25);
+    const h = Math.min(H * (mobile ? 0.58 : 0.78), W * (mobile ? 1 : 0.56) * 1.25);
     const w = h * 0.8;
     const cx = W / 2;
     const cy = H * (mobile ? 0.4 : 0.5);
@@ -408,6 +421,9 @@ export function initDropViewer(signal: AbortSignal, introDone: Promise<void>) {
       gl!.uniform2f(uMouse, mx * W, (1 - my) * H);
       gl!.uniform2f(uRes, W, H);
       gl!.uniform4f(uRect, rect[0], rect[1], rect[2], rect[3]);
+      const ra = ROT[(progress < 1 ? from : to) % ROT.length];
+      const rb = ROT[to % ROT.length];
+      gl!.uniform1f(uRot, ((progress < 1 ? ra + (rb - ra) * eased : rb) * Math.PI) / 180);
       gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
       if (!root!.classList.contains('has-gl')) root!.classList.add('has-gl');
     }

@@ -78,7 +78,7 @@ const orgLd = {
     <ClientRouter />
   </head>
   <body data-header={header}>
-    <div class="loader" data-loader aria-hidden="true">
+    <div class="loader theme-brand" data-loader aria-hidden="true">
       <div class="loader__center">
         <svg class="loader__mono" viewBox={MONO_VIEWBOX}>
           <path d={MONO_BOWL} fill-rule="evenodd" pathLength="1"></path>
@@ -135,8 +135,8 @@ const orgLd = {
     inset: 0;
     z-index: 500;
     display: none;
-    background: var(--bg);
-    color: var(--fg);
+    background: var(--brand);
+    color: #fff;
     clip-path: inset(0 0 0 0);
     transition: clip-path 1.1s cubic-bezier(0.76, 0, 0.24, 1);
   }
@@ -170,9 +170,9 @@ const orgLd = {
     overflow: visible;
   }
   .loader__mono path {
-    fill: var(--fg);
+    fill: #fff;
     fill-opacity: 0;
-    stroke: var(--fg);
+    stroke: var(--ink);
     stroke-width: 1.2;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
@@ -185,8 +185,8 @@ const orgLd = {
   }
   .loader__ring {
     fill: none;
-    stroke: var(--accent);
-    stroke-width: 1.6;
+    stroke: var(--ink);
+    stroke-width: 1.8;
     transform-origin: 98px 7px;
     transform: scale(0);
     animation: pop-ring 0.7s cubic-bezier(0.3, 1.6, 0.4, 1) 1.2s forwards;
@@ -215,7 +215,7 @@ const orgLd = {
     animation: fade-up 0.8s var(--ease-out) 0.9s forwards;
   }
   .loader__word span {
-    color: var(--accent);
+    color: var(--ink);
   }
   @keyframes fade-up {
     from {
@@ -238,10 +238,9 @@ const orgLd = {
     bottom: 0.6rem;
     font-size: clamp(3rem, 9vw, 8rem);
     line-height: 0.8;
-    background-image: var(--chrome);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #fff;
+    -webkit-text-stroke: 0.03em var(--ink);
+    text-shadow: 0.05em 0.06em 0 var(--ink);
     font-variant-numeric: tabular-nums;
   }
 
@@ -252,7 +251,8 @@ const orgLd = {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: var(--holo);
+    background: var(--brand);
+    border: 2px solid var(--ink);
     box-shadow: 0 0 24px rgb(var(--accent-rgb) / 0.8);
     pointer-events: none;
   }
@@ -267,10 +267,11 @@ const orgLd = {
     align-items: center;
     gap: 1rem;
     padding: 0.75rem 2.4rem 0.75rem 0.75rem;
-    border-radius: 14px;
-    background: var(--surface-2);
-    border: 1px solid var(--line-strong);
-    box-shadow: 0 30px 60px rgb(0 0 0 / 0.55);
+    border-radius: 16px;
+    background: var(--cotton);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--brand);
     transform: translate(-50%, 140%);
     opacity: 0;
     visibility: hidden;
@@ -295,7 +296,7 @@ const orgLd = {
     background: var(--media);
   }
   .toast__ok {
-    color: var(--ok);
+    color: var(--brand);
   }
   .toast__name {
     font-weight: 600;
@@ -304,7 +305,7 @@ const orgLd = {
   }
   .toast__meta {
     font-size: var(--fs-xs);
-    color: var(--muted);
+    color: #6b655e;
   }
   .toast__ctas {
     display: flex;
@@ -403,7 +404,7 @@ const orgLd = {
     width: 26px;
     height: 26px;
     margin: -13px 0 0 -13px;
-    border: 1.5px solid var(--fg);
+    border: 1.5px solid #fff;
     border-radius: 50%;
     mix-blend-mode: difference;
     transition:

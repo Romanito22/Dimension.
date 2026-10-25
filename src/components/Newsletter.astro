@@ -4,16 +4,16 @@ import brand from '../data/brand.json';
 const next = brand.nextDrop;
 ---
 
-<section class="nl" aria-labelledby="nl-title">
+<section class="nl theme-dark" aria-labelledby="nl-title">
   <div class="wrap nl__inner">
     <div class="nl__copy">
       <p class="label accent"><span class="nl__dot" aria-hidden="true"></span>Accès anticipé</p>
       <h2 id="nl-title" class="display nl__title" data-chars>{next.name} arrive</h2>
       <div class="nl__count" data-countdown={next.date} aria-label={`Lancement du ${next.name}`}>
-        <div><span class="display chrome" data-cd="d">00</span><span class="label">jours</span></div>
-        <div><span class="display chrome" data-cd="h">00</span><span class="label">heures</span></div>
-        <div><span class="display chrome" data-cd="m">00</span><span class="label">min</span></div>
-        <div><span class="display chrome" data-cd="s">00</span><span class="label">sec</span></div>
+        <div><span class="display patch" data-cd="d">00</span><span class="label">jours</span></div>
+        <div><span class="display patch" data-cd="h">00</span><span class="label">heures</span></div>
+        <div><span class="display patch" data-cd="m">00</span><span class="label">min</span></div>
+        <div><span class="display patch" data-cd="s">00</span><span class="label">sec</span></div>
       </div>
     </div>
     <form class="nl__form" data-newsletter novalidate>
@@ -37,7 +37,7 @@ const next = brand.nextDrop;
     overflow: hidden;
     padding-block: var(--space-xl);
     background:
-      radial-gradient(ellipse 50% 70% at 15% 100%, rgb(var(--accent-rgb) / 0.22), transparent 70%),
+      radial-gradient(ellipse 50% 70% at 15% 100%, rgb(var(--brand-rgb) / 0.35), transparent 70%),
       var(--bg);
     border-top: 1px solid var(--line);
   }

@@ -11,9 +11,10 @@ import { introDone, splitChars } from './effects';
 import { initHScroll, initFlip, initScrub } from './home';
 import { initDropViewer } from './dropviewer';
 import { initQuickAdd } from './quickadd';
+import { initTable } from './table';
 
 /* ---------- En-tête ---------- */
-const header = document.querySelector<HTMLElement>('[data-header]');
+const header = document.querySelector<HTMLElement>('header[data-header]');
 let lastY = window.scrollY;
 function onScroll() {
   const y = window.scrollY;
@@ -165,6 +166,7 @@ document.addEventListener('astro:page-load', () => {
   initReveal(signal);
   initDropViewer(signal, introDone);
   initScrub(signal);
+  initTable(signal);
   initHScroll(signal);
   initFlip(signal);
   initParallax(signal);

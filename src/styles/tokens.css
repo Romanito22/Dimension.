@@ -1,34 +1,42 @@
-/* dimension. — design tokens « Chrome Y2K »
-   Noir bleuté, titres en dégradé chrome, bleu glacé pour les signaux
-   (stock, sélection), reflets holographiques en touches rares.
-   Les fonds produits restent gris studio clair pour que les pièces ressortent. */
+/* dimension. — design tokens « Patch brodé »
+   Les couleurs viennent directement de la marque : le monogramme brodé
+   framboise cerné de noir sur coton blanc, le sable du T-shirt Crew,
+   le gravier des photos. Les sections alternent coton / noir / framboise / sable
+   via les classes .theme-* qui redéfinissent les jetons localement. */
 :root {
-  /* Couleurs */
-  --bg: #0b0c0f;
-  --bg-rgb: 11 12 15;
-  --bg-2: #07080a;
-  --surface: #13151a;
-  --surface-2: #1b1e25;
-  --media: #cfd1d4;
-  --fg: #e6e9ee;
-  --fg-rgb: 230 233 238;
-  --fg-2: #aeb4be;
-  --muted: #7f8590;
-  --accent: #8fd8ff;
-  --accent-rgb: 143 216 255;
-  --accent-2: #c4ecff;
-  --accent-deep: #2a6f9a;
-  --accent-soft: #10202b;
-  --on-accent: #0b0c0f;
-  --ok: #7cf0c0;
+  /* Couleurs de marque (constantes) */
+  --brand: #c2124f;
+  --brand-rgb: 194 18 79;
+  --brand-ink: #ffffff;
+  --brand-deep: #8a0c37;
+  --ink: #111111;
+  --cotton: #f3f1ec;
+  --sand: #e9d7b9;
   --gravel: #5c4a3d;
-  --line: rgb(230 233 238 / 0.1);
-  --line-strong: rgb(230 233 238 / 0.24);
+  --love: #f2a2cc;
 
-  /* Chrome & holographique */
-  --chrome: linear-gradient(180deg, #ffffff 0%, #c9ced6 30%, #8d949f 48%, #f3f5f8 56%, #b5bcc6 72%, #6c737e 100%);
-  --chrome-btn: linear-gradient(180deg, #fbfcfd 0%, #d9dde3 45%, #a9b0ba 55%, #e9ecf0 100%);
-  --holo: conic-gradient(from 210deg, #b8f1ff, #d7c6ff, #ffc9ec, #fff3c4, #c3ffe4, #b8f1ff);
+  /* Jetons de surface (thème coton par défaut) */
+  --bg: var(--cotton);
+  --bg-rgb: 243 241 236;
+  --bg-2: #ebe7e0;
+  --surface: #e9e5dd;
+  --surface-2: #dfdad1;
+  --media: #d6d3cf;
+  --fg: var(--ink);
+  --fg-rgb: 17 17 17;
+  --fg-2: #3a3734;
+  --muted: #6b655e;
+  --accent: var(--brand);
+  --accent-rgb: var(--brand-rgb);
+  --accent-2: var(--brand);
+  --accent-deep: var(--brand-deep);
+  --accent-soft: #f6d9e3;
+  --on-accent: #ffffff;
+  --ok: #1f7a4a;
+  --line: rgb(17 17 17 / 0.14);
+  --line-strong: rgb(17 17 17 / 0.85);
+  --stitch: repeating-linear-gradient(90deg, var(--brand) 0 9px, transparent 9px 15px);
+  --shadow-hard: 4px 4px 0 var(--ink);
 
   /* Typographies */
   --f-display: 'Unbounded Variable', 'Unbounded', 'Arial Black', system-ui, sans-serif;
@@ -66,4 +74,53 @@
   --z-header: 50;
   --z-drawer: 80;
   --z-cursor: 100;
+}
+
+/* Thèmes de section */
+.theme-dark {
+  --bg: var(--ink);
+  --bg-rgb: 17 17 17;
+  --bg-2: #0b0b0b;
+  --surface: #1b1a19;
+  --surface-2: #252322;
+  --fg: var(--cotton);
+  --fg-rgb: 243 241 236;
+  --fg-2: #c9c4bc;
+  --muted: #9d968e;
+  --accent: #f0457e;
+  --accent-rgb: 240 69 126;
+  --accent-2: #f0457e;
+  --accent-soft: #3a1020;
+  --on-accent: #111111;
+  --ok: #7be0a8;
+  --line: rgb(243 241 236 / 0.14);
+  --line-strong: rgb(243 241 236 / 0.85);
+  --shadow-hard: 4px 4px 0 var(--brand);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+.theme-brand {
+  --bg: var(--brand);
+  --bg-rgb: 194 18 79;
+  --surface: var(--brand-deep);
+  --fg: #ffffff;
+  --fg-rgb: 255 255 255;
+  --fg-2: #ffe3ec;
+  --muted: #ffc7d8;
+  --accent: var(--ink);
+  --accent-2: var(--ink);
+  --on-accent: #ffffff;
+  --line: rgb(255 255 255 / 0.22);
+  --line-strong: rgb(255 255 255 / 0.9);
+  --stitch: repeating-linear-gradient(90deg, #fff 0 9px, transparent 9px 15px);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+.theme-sand {
+  --bg: var(--sand);
+  --bg-rgb: 233 215 185;
+  --surface: #dfcaa6;
+  --muted: #5e5546;
+  background-color: var(--bg);
+  color: var(--fg);
 }

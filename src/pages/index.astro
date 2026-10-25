@@ -5,111 +5,148 @@ import Img from '../components/Img.astro';
 import Logo from '../components/Logo.astro';
 import Newsletter from '../components/Newsletter.astro';
 import { media } from '../lib/media';
-import { products, brand, byNewest, formatPrice, imageKeys } from '../lib/shop';
+import { products, brand, byNewest, formatPrice } from '../lib/shop';
 
-const heroD = media('hero/desktop');
-const heroM = media('hero/mobile');
+const ogImage = media('hero/desktop');
+const teeBack = media('cutout/love-back');
+const teeFront = media('cutout/love-front');
 const latest = byNewest(products);
 const signature = products.find((p) => p.art === 'love')!;
-const sigKeys = imageKeys(signature);
 const tshirtCount = products.filter((p) => p.category === 't-shirts').length;
 const knitCount = products.filter((p) => p.category === 'maille').length;
 const socialHandle = brand.handle;
 const tiktok = brand.socials.find((s) => s.name === 'TikTok')!.url;
+const sigUrl = `/produit/${signature.slug}`;
 ---
 
-<Base header="overlay" page="home" image={heroD.src}>
+<Base header="overlay" page="home" image={ogImage.src}>
   <!-- HERO -->
-  <section class="hero" aria-labelledby="hero-title">
-    <picture class="hero__media" data-parallax="0.18">
-      <source media="(max-width: 700px)" srcset={heroM.src} />
-      <img src={heroD.src} alt={heroD.alt} width={heroD.width} height={heroD.height} fetchpriority="high" />
-    </picture>
-    <div class="hero__shade" aria-hidden="true"></div>
+  <section class="hx" data-hero aria-labelledby="hero-title">
+    <div class="hx__bg" aria-hidden="true">
+      <span class="blob blob--1"></span>
+      <span class="blob blob--2"></span>
+      <span class="blob blob--3"></span>
+      <span class="blob blob--cursor" data-blob></span>
+    </div>
 
-    <div class="wrap hero__top">
+    <div class="wrap hx__meta">
       <p class="label">{brand.drop.name} — {brand.drop.season}</p>
-      <p class="label hero__handle">{socialHandle}</p>
+      <p class="label hx__handle">{socialHandle}</p>
     </div>
 
-    <div class="wrap hero__bottom">
-      <h1 id="hero-title" class="display hero__title" data-split>
-        <span class="split-line" style="--l:0"><span class="hero__love">Love</span></span>
-        <span class="split-line" style="--l:1"><span>over</span></span>
-        <span class="split-line" style="--l:2"><span>everything<span class="dot" aria-hidden="true"></span></span></span>
-      </h1>
-      <div class="hero__aside" data-reveal style="--i:4">
-        <p class="hero__lede">
-          Streetwear brodé et imprimé en séries courtes. Des cotons épais, des graphismes faits main, et une seule règle.
-        </p>
-        <div class="hero__ctas">
-          <a href="/boutique" class="btn btn--light btn--lg">Shop le drop <span class="btn__dot" aria-hidden="true"></span></a>
-          <a href="/lookbook" class="btn btn--ghost btn--lg hero__ghost">Lookbook</a>
-        </div>
-      </div>
-    </div>
-    <a href="#drop" class="hero__scroll label" aria-label="Défiler vers les nouveautés">
-      <span class="hero__scroll-ring" aria-hidden="true"></span>Scroll
-    </a>
-  </section>
+    <h1 id="hero-title" class="hx__love display" data-layer="-0.6">
+      <span class="visually-hidden">Love over everything</span>
+      <span class="hx__letters" aria-hidden="true">
+        {['L', 'O', 'V', 'E'].map((c, i) => <span style={`--c:${i}`}>{c}</span>)}
+      </span>
+    </h1>
 
-  <!-- NOUVEAUTÉS -->
-  <section id="drop" class="section drop" data-carousel aria-labelledby="drop-title">
-    <div class="wrap section-head">
-      <div data-reveal>
-        <span class="label accent">{brand.drop.name} · {products.length} pièces</span>
-        <h2 id="drop-title" class="display h-xl">Nouveautés</h2>
-      </div>
-      <div class="drop__ctrl" data-reveal style="--i:1">
-        <a href="/boutique" class="link link--under label">Tout voir</a>
-        <div class="drop__arrows">
-          <button class="arrow" type="button" data-prev aria-label="Précédent">
-            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 6H1m5-5L1 6l5 5"></path></svg>
-          </button>
-          <button class="arrow" type="button" data-next aria-label="Suivant">
-            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h16m-5-5 5 5-5 5"></path></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="drop__track" data-track>
-      {
-        latest.map((p, i) => (
-          <div class="drop__item" data-reveal style={`--i:${i}`}>
-            <ProductCard product={p} index={i} vt sizes="(max-width: 700px) 75vw, 30vw" />
-          </div>
-        ))
-      }
-    </div>
-    <div class="wrap">
-      <div class="drop__progress"><span data-progress></span></div>
-    </div>
-  </section>
-
-  <!-- PIÈCE SIGNATURE -->
-  <section class="sig" aria-labelledby="sig-title">
-    <div class="wrap sig__grid">
-      <a href={`/produit/${signature.slug}`} class="sig__main media" data-reveal="clip" data-cursor="Voir">
-        <Img k={sigKeys[3]} sizes="(max-width: 860px) 100vw, 55vw" />
-      </a>
-      <div class="sig__copy">
-        <span class="label accent" data-reveal>La pièce signature</span>
-        <h2 id="sig-title" class="display h-xl" data-reveal style="--i:1">
-          Love over<br />everything
-        </h2>
-        <p class="lede" data-reveal style="--i:2">{signature.description}</p>
-        <ul class="sig__facts" role="list" data-reveal style="--i:3">
-          <li><span class="label muted">Devant</span>Monogramme brodé</li>
-          <li><span class="label muted">Dos</span>Print LOVE bicolore</li>
-          <li><span class="label muted">Coton</span>240 g/m²</li>
-        </ul>
-        <div class="sig__buy" data-reveal style="--i:4">
-          <a href={`/produit/${signature.slug}`} class="btn btn--accent btn--lg">
-            Découvrir — {formatPrice(signature.price)} <span class="btn__dot" aria-hidden="true"></span>
+    <div class="hx__stage" data-layer="1">
+      <div class="hx__float">
+        <div class="hx__tee" data-hero-tee>
+          <img src={teeBack.src} alt={teeBack.alt} width={teeBack.width} height={teeBack.height} fetchpriority="high" />
+          <a href={sigUrl} class="hotspot" style="left:50%;top:46%">
+            <span class="hotspot__dot" aria-hidden="true"></span>
+            <span class="hotspot__tag"><span class="label">Print LOVE</span> {signature.name} — {formatPrice(signature.price)}</span>
           </a>
         </div>
-        <div class="sig__detail media ratio-45" data-reveal="clip" style="--i:2">
-          <Img k={sigKeys[2]} sizes="240px" />
+      </div>
+      <span class="hx__shadow" aria-hidden="true"></span>
+    </div>
+
+    <p class="hx__over display" aria-hidden="true" data-layer="1.6">Over everything<span class="dot"></span></p>
+
+    <div class="wrap hx__foot">
+      <p class="hx__lede">Streetwear brodé et imprimé en séries courtes. Des cotons épais, des graphismes faits main — et une seule règle.</p>
+      <a href="#drop" class="hx__scroll label" aria-label="Défiler vers les nouveautés">
+        <span class="hx__scroll-ring" aria-hidden="true"></span>Scroll
+      </a>
+      <div class="hx__ctas">
+        <a href="/boutique" class="btn btn--lg">Shop le drop <span class="btn__dot" aria-hidden="true"></span></a>
+        <a href="/lookbook" class="btn btn--ghost btn--lg">Lookbook</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOUVEAUTÉS : défilement horizontal -->
+  <section id="drop" class="hs" data-hscroll aria-labelledby="drop-title">
+    <div class="hs__sticky">
+      <div class="wrap hs__head">
+        <div>
+          <span class="label accent">{brand.drop.name} · {products.length} pièces</span>
+          <h2 id="drop-title" class="display h-xl" data-chars>Nouveautés</h2>
+        </div>
+        <a href="/boutique" class="link link--under label">Tout voir</a>
+      </div>
+      <div class="hs__viewport">
+        <div class="hs__track" data-hs-track>
+          <div class="hs__intro">
+            <p class="display hs__big">5 pièces.<br /><span class="accent">Séries courtes.</span></p>
+            <p class="muted">Brodées, imprimées, tricotées. Quand c'est parti, c'est parti.</p>
+            <span class="label hs__hint" aria-hidden="true">Continue de scroller <span class="hs__arrow">→</span></span>
+          </div>
+          {
+            latest.map((p, i) => (
+              <div class="hs__item" style={`--i:${i}`}>
+                <span class="hs__num display" aria-hidden="true">0{i + 1}</span>
+                <ProductCard product={p} index={i} vt sizes="(max-width: 860px) 74vw, 26vw" />
+              </div>
+            ))
+          }
+          <a href="/boutique" class="hs__end" data-cursor="Boutique">
+            <span class="hs__end-ring" aria-hidden="true"></span>
+            <span class="display">Toute la<br />boutique →</span>
+          </a>
+        </div>
+      </div>
+      <div class="wrap hs__bar"><span data-hs-progress></span></div>
+    </div>
+  </section>
+
+  <!-- PIÈCE SIGNATURE : devant / dos au scroll -->
+  <section class="flip" data-flip aria-labelledby="flip-title">
+    <div class="flip__sticky">
+      <div class="wrap flip__grid">
+        <div class="flip__copy">
+          <span class="label accent">La pièce signature</span>
+          <h2 id="flip-title" class="display flip__title">Love over<br />everything</h2>
+          <ol class="flip__steps" role="list">
+            <li data-flip-step="0" class="is-active">
+              <span class="flip__n display">01</span>
+              <div><strong>Monogramme brodé</strong><p>Le « d° » au point plein, fil framboise cerné de noir, côté cœur.</p></div>
+            </li>
+            <li data-flip-step="1">
+              <span class="flip__n display">02</span>
+              <div><strong>Jersey 240 g/m²</strong><p>Coton épais, col côtelé, épaules tombées : la coupe boxy qui tient.</p></div>
+            </li>
+            <li data-flip-step="2">
+              <span class="flip__n display">03</span>
+              <div><strong>Le cœur LOVE</strong><p>Imprimé au dos en deux tons, gonflé comme une bulle. Signé over everything.</p></div>
+            </li>
+          </ol>
+          <div class="flip__buy">
+            <span class="flip__price display">{formatPrice(signature.price)}</span>
+            <a href={sigUrl} class="btn btn--accent btn--lg">Je le veux <span class="btn__dot" aria-hidden="true"></span></a>
+          </div>
+        </div>
+
+        <div class="flip__stage">
+          <svg class="flip__ring" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="48" pathLength="1"></circle>
+            <circle class="flip__ring-p" cx="50" cy="50" r="48" pathLength="1"></circle>
+          </svg>
+          <span class="flip__side display" aria-hidden="true"><span data-flip-side>Devant</span></span>
+          <div class="flip__card" data-flip-card>
+            <div class="flip__face flip__face--front">
+              <img src={teeFront.src} alt={teeFront.alt} width={teeFront.width} height={teeFront.height} loading="lazy" />
+              <span class="flip__pin" style="left:50%;top:36%" aria-hidden="true"></span>
+            </div>
+            <div class="flip__face flip__face--back">
+              <img src={teeBack.src} alt={teeBack.alt} width={teeBack.width} height={teeBack.height} loading="lazy" />
+              <span class="flip__pin" style="left:50%;top:46%" aria-hidden="true"></span>
+            </div>
+          </div>
+          <span class="flip__count label" aria-hidden="true"><span data-flip-count>01</span> / 03</span>
         </div>
       </div>
     </div>
@@ -121,7 +158,7 @@ const tiktok = brand.socials.find((s) => s.name === 'TikTok')!.url;
       <div class="section-head">
         <div data-reveal>
           <span class="label accent">Explorer</span>
-          <h2 id="cats-title" class="display h-xl">Le vestiaire</h2>
+          <h2 id="cats-title" class="display h-xl" data-chars>Le vestiaire</h2>
         </div>
       </div>
       <div class="cats__grid">
@@ -218,7 +255,7 @@ const tiktok = brand.socials.find((s) => s.name === 'TikTok')!.url;
       <div class="section-head social__head">
         <div data-reveal>
           <span class="label accent">On se retrouve là-bas</span>
-          <h2 id="social-title" class="display h-xl">{socialHandle}</h2>
+          <h2 id="social-title" class="display h-xl" data-chars>{socialHandle}</h2>
         </div>
         <a href={tiktok} target="_blank" rel="noopener" class="btn btn--ghost" data-reveal>Suivre sur TikTok</a>
       </div>
@@ -243,265 +280,697 @@ const tiktok = brand.socials.find((s) => s.name === 'TikTok')!.url;
 </Base>
 
 <style>
-  /* HERO */
-  .hero {
+  /* ================= HERO ================= */
+  .hx {
+    --mx: 0;
+    --my: 0;
+    --sp: 0;
     position: relative;
-    min-height: max(100svh, 640px);
-    color: var(--cotton);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    min-height: max(100svh, 700px);
+    background: var(--candy);
+    color: var(--framboise-deep);
     overflow: hidden;
-    background: var(--gravel);
+    isolation: isolate;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
   }
-  .hero__media {
+  .hx__bg {
     position: absolute;
-    inset: -6% 0 auto;
-    height: 112%;
+    inset: -10%;
+    z-index: -1;
   }
-  .hero__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    animation: hero-zoom 2.4s var(--ease-out) both;
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    will-change: transform;
   }
-  @keyframes hero-zoom {
-    from {
-      transform: scale(1.12);
-      filter: brightness(0.6);
+  .blob--1 {
+    width: 55vw;
+    height: 55vw;
+    left: -8%;
+    top: 5%;
+    background: #f8cfe3;
+    animation: drift-a 19s ease-in-out infinite alternate;
+  }
+  .blob--2 {
+    width: 46vw;
+    height: 46vw;
+    right: -6%;
+    bottom: -4%;
+    background: #e5719f;
+    opacity: 0.75;
+    animation: drift-b 23s ease-in-out infinite alternate;
+  }
+  .blob--3 {
+    width: 30vw;
+    height: 30vw;
+    left: 40%;
+    top: 55%;
+    background: #fbe6f0;
+    animation: drift-a 16s ease-in-out infinite alternate-reverse;
+  }
+  .blob--cursor {
+    width: 26vw;
+    height: 26vw;
+    left: 0;
+    top: 0;
+    margin: -13vw 0 0 -13vw;
+    background: var(--framboise);
+    opacity: 0.32;
+    filter: blur(80px);
+    transform: translate3d(var(--bx, 50vw), var(--by, 50vh), 0);
+  }
+  @keyframes drift-a {
+    to {
+      transform: translate3d(12vw, 8vh, 0) scale(1.15);
     }
   }
-  .hero__shade {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(180deg, rgb(0 0 0 / 0.35) 0%, transparent 22%),
-      linear-gradient(20deg, rgb(20 12 8 / 0.62) 0%, rgb(20 12 8 / 0.15) 45%, transparent 70%);
+  @keyframes drift-b {
+    to {
+      transform: translate3d(-14vw, -10vh, 0) scale(0.9);
+    }
   }
-  .hero__top {
+  .hx__meta {
     position: relative;
+    z-index: 3;
     width: 100%;
     display: flex;
     justify-content: space-between;
     padding-top: calc(var(--header-total) + 1.25rem);
   }
-  .hero__bottom {
-    position: relative;
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas: 'aside .' 'title title';
-    align-items: end;
-    gap: 1.5rem var(--space-md);
-    padding-bottom: clamp(2rem, 5vh, 4rem);
-  }
-  .hero__title {
-    grid-area: title;
-    font-size: clamp(3.4rem, 10.4vw, 12.5rem);
-    line-height: 0.86;
-  }
-  .hero__love {
-    color: var(--candy);
-  }
-  .hero__aside {
-    grid-area: aside;
-    max-width: 360px;
-    display: grid;
-    gap: 1.5rem;
-    padding-bottom: 0.6rem;
-  }
-  .hero__lede {
-    font-size: var(--fs-md);
-    line-height: 1.45;
-  }
-  .hero__ctas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-  .hero__ghost {
-    --btn-hover: var(--cotton);
-    --btn-hover-fg: var(--ink);
-  }
-  .hero__scroll {
+  .hx__love {
     position: absolute;
     left: 50%;
-    bottom: 1.25rem;
-    transform: translateX(-50%);
-    display: none;
+    top: 47%;
+    z-index: 0;
+    margin: 0;
+    font-size: clamp(8rem, 27vw, 34rem);
+    line-height: 0.78;
+    letter-spacing: -0.045em;
+    color: var(--framboise);
+    white-space: nowrap;
+    transform: translate(-50%, -50%) translate3d(calc(var(--mx) * -14px), calc(var(--my) * -10px), 0) scale(calc(1 + var(--sp) * 0.25));
+    opacity: calc(1 - var(--sp) * 0.9);
+  }
+  .hx__letters {
+    display: flex;
+    overflow: hidden;
+    padding-top: 0.04em;
+  }
+  .hx__letters span {
+    display: block;
+    transform: translateY(105%);
+    transition: transform 1.3s var(--ease-out);
+    transition-delay: calc(var(--c) * 90ms + 150ms);
+  }
+  .hx.is-ready .hx__letters span {
+    transform: none;
+  }
+  .hx__stage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: min(44vw, 74vh, 660px);
+    aspect-ratio: 4 / 5;
+    transform: translate(-50%, -50%) translate3d(calc(var(--mx) * 22px), calc(var(--my) * 16px + var(--sp) * -140px), 0);
+    perspective: 1200px;
+  }
+  .hx__float {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateY(80px) rotate(-14deg) scale(0.82);
+    transition:
+      opacity 1s var(--ease-out),
+      transform 1.6s cubic-bezier(0.2, 1.3, 0.3, 1);
+    transition-delay: 0.45s;
+  }
+  .hx.is-ready .hx__float {
+    opacity: 1;
+    transform: none;
+    animation: float 6s ease-in-out 2.2s infinite;
+  }
+  @keyframes float {
+    0%,
+    100% {
+      translate: 0 0;
+      rotate: 0deg;
+    }
+    50% {
+      translate: 0 -14px;
+      rotate: 1.4deg;
+    }
+  }
+  .hx__tee {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: rotateY(calc(var(--mx) * 14deg)) rotateX(calc(var(--my) * -10deg)) rotate(-6deg);
+    transition: transform 0.2s linear;
+    transform-style: preserve-3d;
+  }
+  .hx__tee img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 30px 40px rgb(126 15 58 / 0.28));
+  }
+  .hx__shadow {
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: 12%;
+    height: 7%;
+    border-radius: 50%;
+    background: rgb(126 15 58 / 0.3);
+    filter: blur(22px);
+    z-index: -1;
+  }
+  .hx__over {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(7.5rem, 18vh, 11rem);
+    z-index: 2;
+    margin: 0;
+    font-size: clamp(2.2rem, 7.6vw, 9rem);
+    white-space: nowrap;
+    color: var(--cotton);
+    -webkit-text-stroke: 0.035em var(--framboise);
+    paint-order: stroke fill;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    transform: translate(-50%, 40px) translate3d(calc(var(--mx) * 30px), calc(var(--my) * 18px), 0);
+    transition:
+      opacity 1s var(--ease-out) 1.1s,
+      transform 1.2s var(--ease-out) 1.1s;
+  }
+  .hx.is-ready .hx__over {
+    opacity: calc(1 - var(--sp) * 1.4);
+    transform: translate(-50%, 0) translate3d(calc(var(--mx) * 30px), calc(var(--my) * 18px + var(--sp) * -60px), 0);
+    transition:
+      opacity 1s var(--ease-out) 1.1s,
+      transform 0.25s linear;
+  }
+  .hx__over .dot {
+    -webkit-text-stroke: 0;
+    border-color: var(--framboise);
+  }
+  .hx__foot {
+    grid-row: 3;
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: 1.5rem;
+    padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
+    opacity: 0;
+    transition: opacity 1s var(--ease-out) 1.4s;
+  }
+  .hx.is-ready .hx__foot {
+    opacity: 1;
+  }
+  .hx__lede {
+    max-width: 34ch;
+    font-size: var(--fs-sm);
+    color: var(--ink);
+  }
+  .hx__ctas {
+    display: flex;
+    justify-content: end;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .hx__scroll {
+    display: inline-flex;
     align-items: center;
     gap: 0.6rem;
   }
-  .hero__scroll-ring {
+  .hx__scroll-ring {
     width: 10px;
     height: 10px;
     border: 1.5px solid currentColor;
     border-radius: 50%;
-    animation: float 2.2s var(--ease-in-out) infinite;
+    animation: bob 2.2s var(--ease-in-out) infinite;
   }
-  @keyframes float {
+  @keyframes bob {
     50% {
-      transform: translateY(5px);
+      transform: translateY(6px);
     }
   }
-  @media (min-width: 1100px) {
-    .hero__scroll {
-      display: inline-flex;
+
+  /* Point cliquable sur le produit */
+  .hotspot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    z-index: 2;
+  }
+  .hotspot__dot {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--cotton);
+    box-shadow: 0 0 0 4px rgb(163 23 77 / 0.85);
+  }
+  .hotspot__dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--cotton);
+    animation: ping 2s var(--ease-out) infinite;
+  }
+  @keyframes ping {
+    to {
+      transform: scale(2.6);
+      opacity: 0;
     }
+  }
+  .hotspot__tag {
+    position: absolute;
+    left: calc(100% + 0.75rem);
+    white-space: nowrap;
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 12px;
+    background: var(--cotton);
+    color: var(--ink);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    box-shadow: 0 12px 30px rgb(126 15 58 / 0.18);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition:
+      opacity 0.35s var(--ease-out),
+      transform 0.35s var(--ease-out);
+    pointer-events: none;
+  }
+  .hotspot__tag .label {
+    color: var(--framboise);
+  }
+  .hotspot:hover .hotspot__tag,
+  .hotspot:focus-visible .hotspot__tag {
+    opacity: 1;
+    transform: none;
   }
   @media (max-width: 860px) {
-    .hero__bottom {
-      grid-template-columns: 1fr;
-      grid-template-areas: 'title' 'aside';
+    .hx {
+      min-height: max(100svh, 640px);
     }
-    .hero__handle {
+    .hx__handle {
       display: none;
     }
-    .hero__title {
-      font-size: clamp(2.3rem, 11.2vw, 6rem);
+    .hx__love {
+      top: 38%;
+      font-size: 29vw;
     }
-    .hero__shade {
-      background: linear-gradient(0deg, rgb(20 12 8 / 0.78) 0%, rgb(20 12 8 / 0.35) 45%, rgb(0 0 0 / 0.25) 100%);
+    .hx__stage {
+      top: 42%;
+      width: min(82vw, 52vh);
     }
-    .hero__ctas .btn {
+    .hx__over {
+      bottom: auto;
+      top: calc(42% + min(41vw, 26vh) + 0.5rem);
+      font-size: 7.2vw;
+    }
+    .hx__foot {
+      grid-template-columns: 1fr;
+    }
+    .hx__scroll {
+      display: none;
+    }
+    .hx__ctas {
+      justify-content: stretch;
+    }
+    .hx__ctas .btn {
       flex: 1;
-      padding-inline: 1rem;
+      padding-inline: 0.75rem;
+      font-size: 0.6875rem;
+    }
+    .hx__ctas .btn__dot {
+      display: none;
+    }
+    .hotspot__tag {
+      display: none;
     }
   }
 
-  /* NOUVEAUTÉS */
-  .drop__ctrl {
+  /* ================= DÉFILEMENT HORIZONTAL ================= */
+  .hs {
+    position: relative;
+    padding-block: var(--space-lg) var(--space-md);
+  }
+  .hs__head,
+  .hs__bar {
+    width: 100%;
+  }
+  .hs__head {
     display: flex;
-    align-items: center;
-    gap: 1.5rem;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+    margin-bottom: var(--space-md);
   }
-  .drop__arrows {
-    display: flex;
-    gap: 0.5rem;
+  .hs__head .label {
+    display: block;
+    margin-bottom: 0.9rem;
   }
-  .arrow {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    border: 1px solid var(--line-strong);
-    display: grid;
-    place-items: center;
-    transition:
-      background 0.3s,
-      color 0.3s,
-      border-color 0.3s,
-      opacity 0.3s;
-  }
-  .arrow:hover:not(:disabled) {
-    background: var(--ink);
-    color: var(--cotton);
-    border-color: var(--ink);
-  }
-  .arrow:disabled {
-    opacity: 0.3;
-  }
-  .drop__track {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: clamp(260px, 29vw, 520px);
-    column-gap: clamp(12px, 1.4vw, 24px);
+  .hs__viewport {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
-    padding-inline: var(--gutter);
     scrollbar-width: none;
-    cursor: grab;
   }
-  .drop__track::-webkit-scrollbar {
+  .hs__viewport::-webkit-scrollbar {
     display: none;
   }
-  .drop__track:global(.is-grabbing) {
-    cursor: grabbing;
-    user-select: none;
+  .hs__track {
+    display: flex;
+    align-items: stretch;
+    gap: clamp(14px, 1.6vw, 28px);
+    padding-inline: var(--gutter);
+    width: max-content;
   }
-  .drop__item {
+  .hs__intro,
+  .hs__item,
+  .hs__end {
+    flex: none;
+    width: clamp(260px, 25vw, 440px);
     scroll-snap-align: start;
   }
-  .drop__progress {
-    margin-top: 2.25rem;
-    height: 2px;
-    background: var(--line);
-    overflow: hidden;
+  .hs__intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 2rem;
+    border-radius: var(--radius);
+    background: var(--ink);
+    color: var(--cotton);
   }
-  .drop__progress span {
+  .hs__intro .muted {
+    color: rgb(246 245 242 / 0.65);
+  }
+  .hs__big {
+    font-size: clamp(2rem, 3.4vw, 3.6rem);
+  }
+  .hs__big .accent {
+    color: var(--candy);
+  }
+  .hs__arrow {
+    display: inline-block;
+    animation: nudge 1.6s var(--ease-in-out) infinite;
+  }
+  @keyframes nudge {
+    50% {
+      transform: translateX(8px);
+    }
+  }
+  .hs__item {
+    position: relative;
+    transform: skewX(calc(var(--vel, 0) * -0.18deg));
+    transition: transform 0.4s var(--ease-out);
+  }
+  .hs__num {
+    position: absolute;
+    top: -0.62em;
+    right: 0.1em;
+    z-index: 2;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--framboise);
+    pointer-events: none;
+  }
+  .hs__end {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 1.5rem;
+    text-align: center;
+    border-radius: var(--radius);
+    border: 1px solid var(--line-strong);
+    font-size: clamp(1.6rem, 2.4vw, 2.6rem);
+    transition:
+      background 0.5s var(--ease-out),
+      color 0.5s var(--ease-out);
+  }
+  .hs__end:hover {
+    background: var(--framboise);
+    color: var(--cotton);
+  }
+  .hs__end-ring {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .hs__end:hover .hs__end-ring {
+    transform: scale(1.4);
+  }
+  .hs__bar {
+    margin-top: 2rem;
+  }
+  .hs__bar span {
     display: block;
-    height: 100%;
+    height: 2px;
     background: var(--ink);
     transform-origin: left;
-    transform: scaleX(0.1);
-    transition: transform 0.3s var(--ease-out);
+    transform: scaleX(var(--hp, 0.04));
+    box-shadow: 0 0 0 0 var(--line);
   }
-  @media (max-width: 700px) {
-    .drop__track {
-      grid-auto-columns: 74vw;
-    }
-    .drop__arrows {
-      display: none;
-    }
+  .hs__bar {
+    height: 2px;
+    background: var(--line);
+    background-clip: content-box;
+  }
+  /* Version épinglée (desktop) */
+  .hs:global(.is-pinned) {
+    padding: 0;
+  }
+  .hs:global(.is-pinned) .hs__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: calc(var(--header-total) * 0.6);
+  }
+  .hs:global(.is-pinned) .hs__viewport {
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+  .hs:global(.is-pinned) .hs__track {
+    will-change: transform;
   }
 
-  /* PIÈCE SIGNATURE */
-  .sig {
-    background: var(--paper);
-    padding-block: var(--space-lg);
+  /* ================= DEVANT / DOS ================= */
+  .flip {
+    --fp: 0;
+    position: relative;
+    height: 320vh;
+    background: color-mix(in srgb, var(--candy) calc(var(--fp) * 100%), var(--paper));
   }
-  .sig__grid {
+  .flip__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .flip__grid {
+    width: 100%;
     display: grid;
-    grid-template-columns: 1.15fr 1fr;
+    grid-template-columns: 1fr 1.1fr;
     gap: var(--space-lg);
     align-items: center;
+    padding-top: calc(var(--header-total) * 0.5);
   }
-  .sig__main {
-    display: block;
-    aspect-ratio: 4 / 5;
-    border-radius: var(--radius);
-  }
-  .sig__copy {
-    position: relative;
+  .flip__copy {
     display: grid;
     gap: 1.5rem;
     align-content: center;
-    padding-right: 4vw;
   }
-  .sig__facts {
+  .flip__title {
+    font-size: clamp(2.2rem, 4.6vw, 5rem);
+  }
+  .flip__steps {
     display: grid;
-    grid-template-columns: repeat(3, auto);
-    justify-content: start;
-    gap: 2rem;
-    padding-block: 1.25rem;
-    border-block: 1px solid var(--line);
+    gap: 0.25rem;
+  }
+  .flip__steps li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--line-strong);
+    opacity: 0.32;
+    transition: opacity 0.5s var(--ease-out);
+  }
+  .flip__steps li:global(.is-active) {
+    opacity: 1;
+  }
+  .flip__steps strong {
+    font-size: var(--fs-md);
+  }
+  .flip__steps p {
     font-size: var(--fs-sm);
-    font-weight: 600;
+    color: var(--ink-2);
+    max-width: 40ch;
+    margin-top: 0.2rem;
   }
-  .sig__facts .label {
-    display: block;
-    margin-bottom: 0.3rem;
+  .flip__n {
+    font-size: 1.6rem;
+    color: transparent;
+    -webkit-text-stroke: 1.2px var(--framboise);
+    transition: color 0.5s;
   }
-  .sig__detail {
-    width: 34%;
-    max-width: 200px;
-    justify-self: end;
-    border-radius: var(--radius);
-    margin-top: 1rem;
+  .flip__steps li:global(.is-active) .flip__n {
+    color: var(--framboise);
+  }
+  .flip__buy {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .flip__price {
+    font-size: 2.4rem;
+  }
+  .flip__stage {
+    position: relative;
+    aspect-ratio: 1;
+    width: min(100%, 78vh);
+    justify-self: center;
+    display: grid;
+    place-items: center;
+    perspective: 1600px;
+  }
+  .flip__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .flip__ring circle {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 0.25;
+  }
+  .flip__ring .flip__ring-p {
+    stroke: var(--framboise);
+    stroke-width: 0.6;
+    stroke-dasharray: 1;
+    stroke-dashoffset: calc(1 - var(--fp));
+  }
+  .flip__side {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(4rem, 11vw, 12rem);
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(163 23 77 / 0.35);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .flip__card {
+    position: relative;
+    width: 76%;
+    aspect-ratio: 4 / 5;
+    transform-style: preserve-3d;
+    transform: rotateY(calc(var(--rot, 0) * 1deg)) rotateX(6deg) rotateZ(calc(-4deg + var(--fp) * 8deg));
+  }
+  .flip__face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip__face img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 34px 38px rgb(126 15 58 / 0.25));
+  }
+  .flip__face--back {
+    transform: rotateY(180deg);
+  }
+  .flip__pin {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border-radius: 50%;
+    background: var(--cotton);
+    box-shadow: 0 0 0 4px var(--framboise);
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity 0.4s,
+      transform 0.5s var(--ease-out);
+  }
+  .flip__pin::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--framboise);
+    animation: ping 2s var(--ease-out) infinite;
+  }
+  .flip:global([data-step='0']) .flip__face--front .flip__pin,
+  .flip:global([data-step='2']) .flip__face--back .flip__pin {
+    opacity: 1;
+    transform: none;
+  }
+  .flip__count {
+    position: absolute;
+    bottom: 4%;
+    right: 4%;
   }
   @media (max-width: 860px) {
-    .sig__grid {
+    .flip {
+      height: 300vh;
+    }
+    .flip__grid {
       grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding-top: calc(var(--header-total) + 0.5rem);
     }
-    .sig__copy {
-      padding: 0;
+    .flip__stage {
+      order: -1;
+      width: min(100%, 44vh);
     }
-    .sig__facts {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
+    .flip__copy {
+      gap: 0.75rem;
     }
-    .sig__detail {
+    .flip__title {
+      font-size: 1.9rem;
+    }
+    .flip__copy > .label {
       display: none;
+    }
+    .flip__steps li {
+      display: none;
+      padding-block: 0.6rem;
+    }
+    .flip__steps li:global(.is-active) {
+      display: grid;
+    }
+    .flip__price {
+      font-size: 1.8rem;
     }
   }
 
@@ -582,6 +1051,8 @@ const tiktok = brand.socials.find((s) => s.name === 'TikTok')!.url;
   .ribbon__set {
     display: flex;
     align-items: center;
+    transform: skewX(calc(var(--vel, 0) * -0.35deg));
+    transition: transform 0.35s var(--ease-out);
   }
   .ribbon__word {
     font-family: var(--f-script);

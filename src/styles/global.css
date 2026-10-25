@@ -62,9 +62,11 @@ a {
 html {
   background: var(--bg);
   color: var(--fg);
+  color-scheme: light;
   scroll-behavior: auto;
 }
 body {
+  background: var(--bg);
   font-family: var(--f-text);
   font-size: var(--fs-base);
   line-height: 1.55;
@@ -292,7 +294,8 @@ body {
   isolation: isolate;
   transition:
     color var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+    transform var(--dur-fast) var(--ease-out),
+    translate 0.5s var(--ease-out);
   white-space: nowrap;
 }
 .btn::before {

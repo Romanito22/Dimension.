@@ -27,7 +27,8 @@ Node.js ≥ 22.12 requis. Pour mettre en ligne : importer le dépôt sur **Verce
 | **Concept** | « Love over everything » : coton blanc, broderie framboise, soleil sur le gravier. Le petit cercle du logo (« ° ») est le motif récurrent : curseur, puces, séparateurs, états actifs. |
 | **Palette** (`src/styles/tokens.css`) | Coton `#F6F5F2` · Encre `#171514` · **Framboise `#A3174D`** (accent, tiré du print LOVE) · Rose bonbon `#F2A2CC` · Gris studio `#D4D1D0` (fond produit, comme tes mockups) · Gravier `#5C4A3D` |
 | **Typographies** | *Archivo Expanded* (titres, capitales larges comme « OVER EVERYTHING ») · *Inter Tight* (texte) · *Grenze Gotisch* (mot-symbole provisoire, en attendant le logo vectoriel) |
-| **Interactions** | Second visuel au survol des produits, tailles dispo au survol, zoom produit qui suit la souris + plein écran, transitions de page avec morphing de l'image produit, apparitions au scroll, parallaxe légère, curseur cercle, carrousel glissable. Tout est désactivé si l'utilisateur a choisi « réduire les animations ». Bonus : touche **G** pour afficher la grille de mise en page. |
+| **Accueil** | Intro animée (le monogramme se dessine, une fois par visite) · hero rose bonbon avec matière liquide qui suit la souris, t-shirt détouré en 3D flottante et point cliquable sur le print · nouveautés en défilement horizontal pendant le scroll · pièce signature qui se retourne devant/dos au scroll avec les détails qui s'allument · ruban qui s'incline selon la vitesse de scroll |
+| **Interactions** | Cartes produit inclinables avec reflet, boutons aimantés, titres révélés lettre par lettre, grain photo, second visuel au survol des produits, tailles dispo au survol, zoom produit qui suit la souris + plein écran, transitions de page avec morphing de l'image produit, apparitions au scroll, parallaxe légère, curseur cercle, carrousel glissable. Tout est désactivé si l'utilisateur a choisi « réduire les animations ». Bonus : touche **G** pour afficher la grille de mise en page. |
 
 ---
 
@@ -96,15 +97,16 @@ Soit 5 pièces × 4 = **20 photos** (`dim-001` = Love Over Everything, `dim-002`
 
 | Fichier | Format | Taille | Contenu |
 |---|---|---|---|
-| `hero/desktop.jpg` | 16:9 | 2560 × 1440 | Visuel d'ouverture (garde de l'espace à gauche pour le texte) |
-| `hero/mobile.jpg` | 4:5 | 1350 × 1688 | Version verticale du hero |
+| `cutout/love-back.png` | 4:5, **PNG détouré (fond transparent)** | 2000 × 2500 | Le t-shirt Love Over Everything vu de dos, posé à plat : il flotte au centre du hero et dans la section « Devant / Dos » |
+| `cutout/love-front.png` | 4:5, **PNG détouré** | 2000 × 2500 | Le même, vu de face (section « Devant / Dos ») |
+| `hero/desktop.jpg` | 16:9 | 2560 × 1440 | Image de partage sur les réseaux (Open Graph) |
 | `categories/t-shirts.jpg`, `categories/maille.jpg`, `categories/love.jpg` | 3:4 | 1500 × 2000 | Tuiles catégories de l'accueil |
 | `story/1.jpg`, `story/3.jpg` | 4:5 | 1600 × 2000 | Page « La marque » (détails, atelier, mains) |
 | `story/2.jpg` | 16:9 | 2560 × 1440 | Grand bandeau « La marque » |
 | `lookbook/1.jpg` … `lookbook/9.jpg` | 1, 5, 9 en 16:9 · les autres en 4:5 | 2560 × 1440 / 1600 × 2000 | Lookbook Drop 01 |
 | `social/1.jpg` … `social/6.jpg` | 1:1 | 1080 × 1080 | Grille TikTok / Instagram |
 
-**Total : 20 photos produit + 22 photos de pages.**
+**Total : 20 photos produit + 2 détourés + 21 photos de pages.** Astuce détourage : remove.bg ou Photoshop « Sélectionner le sujet », puis export PNG.
 
 ---
 

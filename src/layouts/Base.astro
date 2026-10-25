@@ -9,6 +9,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/CartDrawer.astro';
 import brand from '../data/brand.json';
+import { MONO_VIEWBOX, MONO_BOWL, MONO_STEM, MONO_RING } from '../lib/logo';
 
 interface Props {
   title?: string;
@@ -66,10 +67,30 @@ const orgLd = {
     <script is:inline data-astro-rerun>
       document.documentElement.classList.replace('no-js', 'js');
     </script>
+    <script is:inline>
+      try {
+        if (!sessionStorage.getItem('dim-intro') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('is-loading');
+        }
+      } catch (e) {}
+    </script>
     <script type="application/ld+json" set:html={JSON.stringify(jsonld ?? orgLd)} />
     <ClientRouter />
   </head>
   <body data-header={header}>
+    <div class="loader" data-loader aria-hidden="true">
+      <div class="loader__center">
+        <svg class="loader__mono" viewBox={MONO_VIEWBOX}>
+          <path d={MONO_BOWL} fill-rule="evenodd" pathLength="1"></path>
+          <path d={MONO_STEM} pathLength="1"></path>
+          <circle class="loader__ring" cx={MONO_RING.cx} cy={MONO_RING.cy} r={MONO_RING.r}></circle>
+        </svg>
+        <p class="loader__word">dimension<span>.</span></p>
+      </div>
+      <p class="loader__tag label">Love over everything</p>
+      <p class="loader__count display" data-loader-count>000</p>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
     <a class="skip-link" href="#main">Aller au contenu</a>
     <Header />
     <main id="main" data-page={page} class:list={['main', header === 'solid' && 'main--offset']} transition:name="main">
@@ -93,6 +114,162 @@ const orgLd = {
   }
   .main--offset {
     padding-top: var(--header-total);
+  }
+
+  /* Intro : le monogramme se dessine */
+  .loader {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: none;
+    background: var(--framboise);
+    color: var(--cotton);
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 1.1s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .is-loading .loader {
+    display: grid;
+    place-items: center;
+    animation: loader-failsafe 0s 6s forwards;
+  }
+  @keyframes loader-failsafe {
+    to {
+      visibility: hidden;
+    }
+  }
+  .loader.is-out {
+    clip-path: inset(0 0 100% 0);
+  }
+  .loader__center {
+    display: grid;
+    justify-items: center;
+    gap: 1.25rem;
+    transition:
+      transform 1.1s cubic-bezier(0.76, 0, 0.24, 1),
+      opacity 0.6s;
+  }
+  .loader.is-out .loader__center {
+    transform: translateY(-12vh);
+    opacity: 0;
+  }
+  .loader__mono {
+    width: clamp(90px, 12vw, 150px);
+    overflow: visible;
+  }
+  .loader__mono path {
+    fill: var(--cotton);
+    fill-opacity: 0;
+    stroke: var(--cotton);
+    stroke-width: 1.2;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation:
+      draw 1.1s var(--ease-in-out) 0.1s forwards,
+      fill-in 0.5s ease 1s forwards;
+  }
+  .loader__mono path:nth-child(2) {
+    animation-delay: 0.35s, 1.15s;
+  }
+  .loader__ring {
+    fill: none;
+    stroke: var(--candy);
+    stroke-width: 1.6;
+    transform-origin: 98px 7px;
+    transform: scale(0);
+    animation: pop-ring 0.7s cubic-bezier(0.3, 1.6, 0.4, 1) 1.2s forwards;
+  }
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes fill-in {
+    to {
+      fill-opacity: 1;
+    }
+  }
+  @keyframes pop-ring {
+    to {
+      transform: scale(1);
+    }
+  }
+  .loader__word {
+    font-family: var(--f-script);
+    font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    opacity: 0;
+    animation: fade-up 0.8s var(--ease-out) 0.9s forwards;
+  }
+  .loader__word span {
+    color: var(--candy);
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .loader__tag {
+    position: absolute;
+    left: var(--gutter);
+    bottom: 1.5rem;
+  }
+  .loader__count {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 0.6rem;
+    font-size: clamp(3rem, 9vw, 8rem);
+    line-height: 0.8;
+    color: var(--candy);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Grain photo sur tout le site */
+  .grain {
+    position: fixed;
+    inset: -60%;
+    z-index: 95;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 0.9s steps(6) infinite;
+  }
+  @keyframes grain {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-4%, 3%); }
+    40% { transform: translate(3%, -5%); }
+    60% { transform: translate(-6%, -2%); }
+    80% { transform: translate(5%, 4%); }
+    100% { transform: translate(-2%, 6%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .grain {
+      animation: none;
+    }
+  }
+
+  /* Titres lettre par lettre */
+  [data-chars] .w {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.06em;
+    margin-bottom: -0.06em;
+  }
+  [data-chars] .ch {
+    display: inline-block;
+  }
+  .js [data-chars] .ch {
+    transform: translateY(110%) rotate(8deg);
+    transition: transform 0.9s var(--ease-out);
+    transition-delay: calc(var(--ci) * 28ms);
+  }
+  .js [data-chars].is-in .ch {
+    transform: none;
   }
 
   /* Curseur : le petit cercle du logo suit le pointeur */

@@ -67,10 +67,10 @@ function artLove(view: View) {
   }
   const heart =
     'M200 322C142 304 94 266 96 214C98 180 126 160 156 166C178 170 192 184 200 198C208 184 222 170 244 166C274 160 302 180 304 214C306 266 258 304 200 322Z';
-  const squiggle =
-    'M128 206C126 230 140 246 158 238M150 196C162 188 176 200 170 214C164 228 150 222 156 210M186 206C188 236 206 262 214 240C220 222 214 206 202 206M226 200C222 222 232 246 250 238M248 198C268 194 280 214 270 228C262 240 246 236 252 222M180 262C176 280 196 292 206 280';
-  return `<path d="${heart}" fill="${CANDY}" stroke="${FRAMBOISE}" stroke-width="16" stroke-linejoin="round" paint-order="stroke"/>
-  <path d="${squiggle}" fill="none" stroke="${FRAMBOISE}" stroke-width="7" stroke-linecap="round"/>
+  const wob = id('w');
+  return `<filter id="${wob}" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="1" seed="7"/><feDisplacementMap in="SourceGraphic" scale="9"/></filter>
+  <path d="${heart}" fill="${CANDY}" stroke="${FRAMBOISE}" stroke-width="16" stroke-linejoin="round" paint-order="stroke"/>
+  <g filter="url(#${wob})"><text x="201" y="262" text-anchor="middle" transform="rotate(-5 200 240)" font-family="'Arial Black', 'Arial Rounded MT Bold', Helvetica, sans-serif" font-weight="900" font-size="66" letter-spacing="-4" fill="#F9CFE4" stroke="${FRAMBOISE}" stroke-width="8" stroke-linejoin="round" paint-order="stroke">LOVE</text></g>
   <text x="200" y="362" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" letter-spacing="4" fill="${FRAMBOISE}">OVER EVERYTHING</text>`;
 }
 
@@ -157,7 +157,6 @@ function garment(p: Product, view: View) {
   const line = dark ? mix(base, '#ffffff', 0.18) : mix(base, '#000000', 0.16);
   const clip = id('c');
   const vol = id('v');
-  const soft = id('s');
   const [c1, c2] = shape.collar[view];
   let art = '';
   if (p.art === 'love') art = artLove(view);
@@ -166,18 +165,37 @@ function garment(p: Product, view: View) {
   if (p.art === 'doodle') art = artDoodle(view);
   if (p.art === 'camo') art = artCamo(view, clip);
 
+  const fold = id('f');
+  const knit = id('k');
+  const ao = id('ao');
+  const seed = (p.id.charCodeAt(6) * 7 + (view === 'back' ? 13 : 0)) % 97;
   return `<defs>
     <clipPath id="${clip}"><path d="${shape.d}"/></clipPath>
-    <linearGradient id="${vol}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient>
-    <filter id="${soft}"><feGaussianBlur stdDeviation="2.4"/></filter>
+    <linearGradient id="${vol}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="${dark ? 0.1 : 0.22}"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/></linearGradient>
+    <filter id="${fold}" filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="500" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0085 0.0042" numOctaves="2" seed="${seed}" result="n0"/>
+      <feGaussianBlur in="n0" stdDeviation="2.5" result="n"/>
+      <feDiffuseLighting in="n" result="light" surfaceScale="${dark ? 16 : 13}" diffuseConstant="1.08" lighting-color="#fff"><feDistantLight azimuth="235" elevation="62"/></feDiffuseLighting>
+      <feBlend in="SourceGraphic" in2="light" mode="multiply" result="shaded"/>
+      <feSpecularLighting in="n" surfaceScale="${dark ? 16 : 13}" specularConstant="${dark ? 0.22 : 0.12}" specularExponent="18" lighting-color="#fff" result="spec"><feDistantLight azimuth="235" elevation="62"/></feSpecularLighting>
+      <feComposite in="spec" in2="SourceAlpha" operator="in" result="specIn"/>
+      <feComposite in="specIn" in2="shaded" operator="arithmetic" k2="1" k3="1"/>
+      <feComposite in2="SourceAlpha" operator="in"/>
+    </filter>
+    <filter id="${knit}" filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="500">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9 1.6" numOctaves="1" seed="${seed + 3}"/>
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 .78"/>
+    </filter>
+    <filter id="${ao}" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="7"/></filter>
   </defs>
-  <path d="${shape.d}" fill="${base}"/>
-  ${art}
+  <g filter="url(#${fold})">
+    <path d="${shape.d}" fill="${base}"/>
+    ${art}
+  </g>
   <g clip-path="url(#${clip})">
     <rect x="0" y="0" width="400" height="500" fill="url(#${vol})"/>
-    <g filter="url(#${soft})" stroke="${line}" stroke-width="3" fill="none" opacity=".28">
-      <path d="M120 300C150 290 170 318 210 306M230 360C260 346 280 372 296 352M110 240C130 236 140 250 156 244M250 228C270 236 286 226 298 236"/>
-    </g>
+    <rect x="0" y="0" width="400" height="500" filter="url(#${knit})" opacity="${dark ? 0.1 : 0.07}"/>
+    <path d="${shape.d}" fill="none" stroke="#000" stroke-width="22" opacity="${dark ? 0.35 : 0.13}" filter="url(#${ao})"/>
   </g>
   <g fill="none" stroke="${line}" stroke-linecap="round">
     <path d="${c1}" stroke-width="2"/><path d="${c2}" stroke-width="2"/>
@@ -201,14 +219,17 @@ function background(kind: Bg, w: number, h: number, seed = 3) {
   const b = id('gb');
   const c = id('gc');
   const sun = id('sun');
+  const rel = id('rel');
   return `<defs>
+    <filter id="${rel}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${(0.11).toFixed(3)}" numOctaves="3" seed="${seed + 5}" result="t"/><feDiffuseLighting in="t" surfaceScale="5" diffuseConstant="1.1" lighting-color="#ffe7c8"><feDistantLight azimuth="225" elevation="42"/></feDiffuseLighting><feColorMatrix values="0.44 0 0 0 0  0 0.34 0 0 0  0 0 0.27 0 0  0 0 0 1 0"/></filter>
     <filter id="${a}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.42" numOctaves="2" seed="${seed}"/><feColorMatrix values="0 0 0 0 .84  0 0 0 0 .74  0 0 0 0 .64  5 0 0 0 -2.95"/></filter>
     <filter id="${b}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="2" seed="${seed + 9}"/><feColorMatrix values="0 0 0 0 .13  0 0 0 0 .10  0 0 0 0 .08  4 0 0 0 -2.1"/></filter>
     <filter id="${c}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="2" seed="${seed + 21}"/><feColorMatrix values="0 0 0 0 .62  0 0 0 0 .40  0 0 0 0 .32  3.6 0 0 0 -2"/></filter>
     <linearGradient id="${sun}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3df" stop-opacity=".22"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
   </defs>
   <rect width="${w}" height="${h}" fill="#5C4A3D"/>
-  <rect width="${w}" height="${h}" filter="url(#${c})"/>
+  <rect width="${w}" height="${h}" filter="url(#${rel})"/>
+  <rect width="${w}" height="${h}" filter="url(#${c})" opacity=".7"/>
   <rect width="${w}" height="${h}" filter="url(#${b})"/>
   <rect width="${w}" height="${h}" filter="url(#${a})"/>
   <rect width="${w}" height="${h}" fill="url(#${sun})"/>`;
@@ -334,6 +355,13 @@ add('story/2', 1600, 900, '16:9', '2560 × 1440', 'Les pièces du Drop 01 à pla
   ], path, 12),
 );
 add('story/3', 800, 1000, '4:5', '1600 × 2000', 'Détail de la maille jacquard', (path) => detail(P(4), path));
+
+// Détourés (PNG transparent) pour le hero et la section « Devant / Dos »
+(['front', 'back'] as View[]).forEach((view) => {
+  add(`cutout/love-${view}`, 1000, 1250, '4:5', '2000 × 2500 (PNG détouré)', `T-shirt Love Over Everything — ${view === 'front' ? 'devant' : 'dos'}, détouré`, () =>
+    doc(1000, 1250, place(garment(P(0), view), 500, 640, 2.3)),
+  );
+});
 
 const LOOKS: { kind: Bg; ratio: '4:5' | '16:9'; shots: Omit<Shot, 'product'>[]; p: number[] }[] = [
   { kind: 'gravel', ratio: '16:9', p: [0], shots: [{ view: 'back', x: 0.5, y: 0.5, s: 0.95, r: 14 }] },

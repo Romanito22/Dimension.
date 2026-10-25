@@ -27,7 +27,8 @@ const productSizes = SIZES.filter((s) => p.sizes.some((x) => x.size === s));
   style={`--i:${index % 4}`}
 >
   <a href={`/produit/${p.slug}`} class="card__link" aria-label={`${p.name} — ${formatPrice(p.price)}`}>
-    <div class="card__media media ratio-45">
+    <div class="card__media media ratio-45" data-tilt>
+      <span class="card__glare" aria-hidden="true"></span>
       <Img k={k1} class="card__img card__img--1" sizes={sizes} vt={vt ? `media-${p.slug}` : undefined} />
       <Img k={k2} class="card__img card__img--2" sizes={sizes} />
       {
@@ -68,6 +69,18 @@ const productSizes = SIZES.filter((s) => p.sizes.some((x) => x.size === s));
   }
   .card__media {
     border-radius: var(--radius);
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.6s var(--ease-out);
+  }
+  .card__glare {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.4), transparent 55%);
+    mix-blend-mode: soft-light;
+    opacity: var(--go, 0);
+    transition: opacity 0.5s;
   }
   .card__img {
     position: absolute;

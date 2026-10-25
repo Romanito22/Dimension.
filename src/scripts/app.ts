@@ -7,6 +7,8 @@ import { initProduct } from './product';
 import { initCheckout } from './checkout';
 import { initForms } from './forms';
 import { initCarousels } from './carousel';
+import { introDone, splitChars } from './effects';
+import { initHero, initHScroll, initFlip } from './home';
 
 /* ---------- En-tête ---------- */
 const header = document.querySelector<HTMLElement>('[data-header]');
@@ -77,7 +79,7 @@ if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 
 /* ---------- Apparitions au scroll ---------- */
 function initReveal(signal: AbortSignal) {
-  const els = document.querySelectorAll<HTMLElement>('[data-reveal], [data-split]');
+  const els = document.querySelectorAll<HTMLElement>('[data-reveal], [data-split], [data-chars]');
   if (!('IntersectionObserver' in window) || reducedMotion) {
     els.forEach((el) => el.classList.add('is-in'));
     return;
@@ -156,7 +158,11 @@ document.addEventListener('astro:page-load', () => {
   lastY = window.scrollY;
   onScroll();
   markActive();
+  splitChars();
   initReveal(signal);
+  initHero(signal, introDone);
+  initHScroll(signal);
+  initFlip(signal);
   initParallax(signal);
   initCarousels(signal);
   initForms(signal);

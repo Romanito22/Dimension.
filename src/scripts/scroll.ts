@@ -89,3 +89,29 @@ document.addEventListener('astro:page-load', () => {
   }
   remeasure();
 });
+
+// Le routeur mémorise la position au « scrollend », qui ne se déclenche pas de façon fiable
+// avec un défilement animé : on l'enregistre nous-mêmes juste avant de quitter la page,
+// pour que le bouton Retour ramène exactement au même endroit.
+let restoreY: number | null = null;
+document.addEventListener('astro:before-preparation', (e) => {
+  if (!history.state) return;
+  // Retour/Avant : l'état courant est déjà celui de la page de destination, on garde sa position.
+  if ((e as Event & { navigationType?: string }).navigationType === 'traverse') {
+    restoreY = typeof history.state.scrollY === 'number' ? history.state.scrollY : null;
+    return;
+  }
+  restoreY = null;
+  history.replaceState({ ...history.state, scrollX: window.scrollX, scrollY: window.scrollY }, '');
+});
+// Les scripts de page (densité de grille, contenus injectés) peuvent changer la hauteur
+// après la restauration du routeur : on se recale une fois qu'ils ont tous tourné.
+document.addEventListener('astro:page-load', () => {
+  if (restoreY === null) return;
+  const y = restoreY;
+  restoreY = null;
+  requestAnimationFrame(() => {
+    window.scrollTo(0, y);
+    lenis?.scrollTo(y, { immediate: true, force: true });
+  });
+});

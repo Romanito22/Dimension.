@@ -18,11 +18,11 @@ import brand from '../data/brand.json';
     </div>
 
     <div class="drawer__body">
-      <div data-cart-lines></div>
       <div class="drawer__undo" data-undo hidden>
         <span>Retiré : <strong data-undo-name></strong></span>
-        <button type="button" class="link link--under label" data-undo-btn>Annuler</button>
+        <button type="button" class="drawer__undo-btn label" data-undo-btn>Annuler</button>
       </div>
+      <div data-cart-lines></div>
       <div class="upsell" data-upsell hidden>
         <p class="label upsell__title">Complète ton look</p>
         <div class="upsell__list" data-upsell-list></div>
@@ -122,12 +122,24 @@ import brand from '../data/brand.json';
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    margin-top: 1rem;
-    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
     border: 1.5px dashed var(--line-strong);
     border-radius: 12px;
     font-size: var(--fs-sm);
     animation: undo-in 0.4s var(--ease-out);
+  }
+  .drawer__undo-btn {
+    flex: none;
+    min-height: 40px;
+    padding: 0 1rem;
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--cotton);
+  }
+  .drawer__undo-btn:hover {
+    background: var(--brand);
   }
   @keyframes undo-in {
     from {

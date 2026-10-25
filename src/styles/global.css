@@ -64,6 +64,8 @@ html {
   color: var(--fg);
   color-scheme: light;
   scroll-behavior: auto;
+  /* ancres : le titre ne passe pas sous l’en-tête fixe */
+  scroll-padding-top: calc(32px + var(--header-h) + 8px);
 }
 body {
   background: var(--bg);

@@ -29,7 +29,8 @@ function renderPage() {
     .map((id) => catalog().find((p) => p.id === id))
     .filter(Boolean) as ReturnType<typeof catalog>;
   root.querySelector<HTMLElement>('[data-wish-empty]')!.hidden = items.length > 0;
-  root.querySelector<HTMLElement>('[data-wish-total]')!.textContent = String(items.length);
+  const n = items.length;
+  root.querySelector<HTMLElement>('[data-wish-total]')!.textContent = `${n} pièce${n > 1 ? 's' : ''} enregistrée${n > 1 ? 's' : ''}`;
   root.querySelector<HTMLElement>('[data-wish-grid]')!.innerHTML = items
     .map((p) => {
       const qa = esc(JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price, color: p.color, image: p.image, sizes: p.sizes }));

@@ -53,6 +53,10 @@
       box-shadow: 4px 4px 0 var(--brand);
       transition: transform 0.4s var(--ease-out);
     }
+    /* S'efface quand un panneau plein écran est ouvert (menu, filtres, recherche). */
+    body:has(.menu:not([hidden]), .filters-open, .search:not([hidden])) .tabbar {
+      transform: translateY(calc(100% + 30px));
+    }
     body:has(main[data-page='product']) .tabbar,
     body:has(main[data-page='checkout']) .tabbar {
       display: none;

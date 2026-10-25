@@ -102,18 +102,25 @@ function initReveal(signal: AbortSignal) {
     els.forEach((el) => el.classList.add('is-in'));
     return;
   }
+  // Un bloc « rideau » fermé (clip-path) a une surface visible nulle : l'observateur ne le
+  // verrait jamais entrer. On observe donc son parent et on révèle le bloc lui-même.
+  const targets = new Map<Element, HTMLElement[]>();
+  els.forEach((el) => {
+    const watched = el.dataset.reveal === 'clip' ? el.parentElement! : el;
+    targets.set(watched, [...(targets.get(watched) ?? []), el]);
+  });
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
         if (e.isIntersecting) {
-          e.target.classList.add('is-in');
+          targets.get(e.target)?.forEach((el) => el.classList.add('is-in'));
           io.unobserve(e.target);
         }
       }
     },
     { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
   );
-  els.forEach((el) => io.observe(el));
+  targets.forEach((_, el) => io.observe(el));
   signal.addEventListener('abort', () => io.disconnect());
 }
 

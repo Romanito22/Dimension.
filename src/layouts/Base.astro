@@ -313,6 +313,27 @@ const orgLd = {
       transform 0.6s var(--ease-out),
       opacity 0.3s;
   }
+  /* Ordinateur : la confirmation apparaît sous le panier, sans masquer le contenu. */
+  @media (min-width: 861px) {
+    .toast {
+      left: auto;
+      right: var(--gutter);
+      bottom: auto;
+      top: calc(var(--header-total) + 14px);
+      width: min(400px, calc(100% - 2rem));
+      grid-template-columns: 56px 1fr;
+      transform: translateY(-16px);
+    }
+    .toast__ctas {
+      grid-column: 1 / -1;
+    }
+    .toast__btn {
+      flex: 1;
+    }
+    .toast.is-visible {
+      transform: none;
+    }
+  }
   .toast img {
     width: 56px;
     height: 70px;

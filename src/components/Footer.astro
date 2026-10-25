@@ -1,0 +1,150 @@
+---
+import Logo from './Logo.astro';
+import brand from '../data/brand.json';
+
+const year = new Date().getFullYear();
+const cols = [
+  {
+    title: 'Boutique',
+    links: [
+      { href: '/boutique', label: 'Tout le Drop 01' },
+      { href: '/boutique?categorie=t-shirts', label: 'T-shirts' },
+      { href: '/boutique?categorie=maille', label: 'Maille' },
+      { href: '/lookbook', label: 'Lookbook' },
+    ],
+  },
+  {
+    title: 'Aide',
+    links: [
+      { href: '/contact#faq', label: 'FAQ' },
+      { href: '/contact#guide-des-tailles', label: 'Guide des tailles' },
+      { href: '/contact#faq', label: 'Livraison & retours' },
+      { href: '/contact', label: 'Nous écrire' },
+    ],
+  },
+  {
+    title: 'dimension.',
+    links: [
+      { href: '/la-marque', label: 'La marque' },
+      { href: '/cgv', label: 'CGV' },
+      { href: '/mentions-legales', label: 'Mentions légales' },
+      { href: '/mentions-legales#confidentialite', label: 'Confidentialité' },
+    ],
+  },
+];
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <p class="footer__claim display">
+        Love<br />over<br /><span class="footer__candy">everything<span class="dot" aria-hidden="true"></span></span>
+      </p>
+      <div class="footer__cols">
+        {
+          cols.map((c) => (
+            <div>
+              <p class="label footer__title">{c.title}</p>
+              <ul role="list">
+                {c.links.map((l) => (
+                  <li>
+                    <a class="link" href={l.href}>
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+        <div>
+          <p class="label footer__title">Suivre</p>
+          <ul role="list">
+            {
+              brand.socials.map((s) => (
+                <li>
+                  <a class="link" href={s.url} target="_blank" rel="noopener">
+                    {s.name}
+                  </a>
+                </li>
+              ))
+            }
+            <li><a class="link" href={`mailto:${brand.email}`}>{brand.email}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__brand" aria-hidden="true">
+      <Logo variant="lockup" />
+    </div>
+
+    <div class="footer__bottom label">
+      <span>© {year} {brand.legalName}</span>
+      <span>Paiement sécurisé · Livraison offerte dès {brand.shipping.freeThreshold} €</span>
+      <a href="#top" class="link" data-to-top>Haut de page ↑</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: var(--cotton);
+    padding-top: var(--space-lg);
+    overflow: hidden;
+  }
+  .footer__top {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-md);
+    padding-bottom: var(--space-lg);
+  }
+  .footer__claim {
+    font-size: clamp(2rem, 4.5vw, 4rem);
+  }
+  .footer__candy {
+    color: var(--candy);
+  }
+  .footer__cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .footer__title {
+    color: rgb(246 245 242 / 0.5);
+    margin-bottom: 1.1rem;
+  }
+  .footer__cols ul {
+    display: grid;
+    gap: 0.55rem;
+    font-size: var(--fs-sm);
+  }
+  .footer__brand {
+    font-size: clamp(3.5rem, 15.5vw, 16rem);
+    line-height: 0.9;
+    display: flex;
+    justify-content: center;
+    padding-block: 0.1em 0.18em;
+    border-top: 1px solid rgb(246 245 242 / 0.14);
+    color: var(--cotton);
+  }
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-block: 1.5rem 2rem;
+    border-top: 1px solid rgb(246 245 242 / 0.14);
+    color: rgb(246 245 242 / 0.6);
+  }
+  @media (max-width: 960px) {
+    .footer__top {
+      grid-template-columns: 1fr;
+    }
+    .footer__cols {
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 2.25rem;
+    }
+  }
+</style>

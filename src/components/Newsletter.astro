@@ -1,0 +1,95 @@
+---
+import brand from '../data/brand.json';
+---
+
+<section class="nl" aria-labelledby="nl-title">
+  <div class="wrap nl__inner">
+    <div class="nl__copy" data-reveal>
+      <p class="label">Newsletter</p>
+      <h2 id="nl-title" class="display nl__title">
+        Sois là<br />avant le<br />prochain drop<span class="dot" aria-hidden="true"></span>
+      </h2>
+    </div>
+    <form class="nl__form" data-newsletter novalidate data-reveal style="--i:1">
+      <p class="lede">
+        Accès anticipé aux drops, restocks et coulisses. Et <strong>−{Math.round(brand.promo.rate * 100)} %</strong> sur ta première commande.
+      </p>
+      <div class="nl__field">
+        <label for="nl-email" class="visually-hidden">Adresse e-mail</label>
+        <input id="nl-email" name="email" type="email" required autocomplete="email" placeholder="ton@email.com" />
+        <button class="btn" type="submit">
+          S'inscrire <span class="btn__dot" aria-hidden="true"></span>
+        </button>
+      </div>
+      <p class="nl__msg" data-nl-msg role="status" aria-live="polite"></p>
+      <p class="nl__legal">En t'inscrivant, tu acceptes de recevoir nos e-mails. Désinscription en un clic.</p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .nl {
+    background: var(--candy);
+    color: var(--framboise-deep);
+    padding-block: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .nl__inner {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--space-md);
+    align-items: end;
+  }
+  .nl__title {
+    font-size: clamp(2.5rem, 6vw, 6rem);
+    margin-top: 1rem;
+  }
+  .nl__form {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .nl__field {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.4rem;
+    border-radius: 999px;
+    background: var(--cotton);
+  }
+  .nl__field input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding: 0 1rem;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .nl__field input:focus {
+    outline: none;
+  }
+  .nl__field:focus-within {
+    box-shadow: 0 0 0 2px var(--framboise-deep);
+  }
+  .nl__msg {
+    min-height: 1.5em;
+    font-weight: 600;
+  }
+  .nl__legal {
+    font-size: var(--fs-xs);
+    opacity: 0.8;
+  }
+  @media (max-width: 860px) {
+    .nl__inner {
+      grid-template-columns: 1fr;
+    }
+    .nl__field {
+      flex-direction: column;
+      border-radius: 28px;
+      padding: 0.5rem;
+    }
+    .nl__field input {
+      min-height: 48px;
+    }
+  }
+</style>

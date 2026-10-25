@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page introuvable" page="404" noindex>
+  <section class="wrap nf">
+    <p class="label accent">Erreur 404</p>
+    <h1 class="display nf__title">Hors<br />dimension<span class="dot" aria-hidden="true"></span></h1>
+    <p class="lede muted">Cette page s'est perdue en chemin. Pas grave : l'amour, lui, est toujours là.</p>
+    <div class="nf__ctas">
+      <a href="/" class="btn">Retour à l'accueil <span class="btn__dot" aria-hidden="true"></span></a>
+      <a href="/boutique" class="btn btn--ghost">Voir la boutique</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 70vh;
+    display: grid;
+    align-content: center;
+    gap: 1.5rem;
+    padding-block: var(--space-lg);
+  }
+  .nf__title {
+    font-size: clamp(3rem, 12vw, 12rem);
+  }
+  .nf__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

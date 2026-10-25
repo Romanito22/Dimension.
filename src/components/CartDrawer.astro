@@ -1,0 +1,138 @@
+---
+import brand from '../data/brand.json';
+---
+
+<div class="drawer" id="cart-drawer" data-drawer transition:persist="cart-drawer" aria-hidden="true">
+  <div class="drawer__overlay" data-cart-close></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1" data-lenis-prevent>
+    <header class="drawer__head">
+      <h2 id="cart-title" class="display drawer__title">Panier <sup data-cart-count>0</sup></h2>
+      <button class="icon-btn" type="button" data-cart-close aria-label="Fermer le panier">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2 2 14"></path></svg>
+      </button>
+    </header>
+
+    <div class="drawer__ship" data-ship data-threshold={brand.shipping.freeThreshold}>
+      <p class="drawer__ship-text" data-ship-text></p>
+      <div class="drawer__ship-bar"><span data-ship-bar></span></div>
+    </div>
+
+    <div class="drawer__body" data-cart-lines></div>
+
+    <footer class="drawer__foot" data-cart-foot>
+      <div class="drawer__row">
+        <span class="label">Sous-total</span>
+        <strong class="drawer__total" data-cart-subtotal>0 €</strong>
+      </div>
+      <p class="drawer__note muted">Taxes incluses. Livraison calculée à l'étape suivante.</p>
+      <a href="/commande" class="btn btn--accent btn--lg btn--block" data-checkout-link>
+        Commander <span class="btn__dot" aria-hidden="true"></span>
+      </a>
+      <button type="button" class="drawer__continue link label" data-cart-close>Continuer mes achats</button>
+    </footer>
+  </aside>
+</div>
+
+<style>
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-drawer);
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .drawer.is-open {
+    pointer-events: auto;
+  }
+  .drawer__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgb(23 21 20 / 0.4);
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-out);
+  }
+  .drawer.is-open .drawer__overlay {
+    opacity: 1;
+  }
+  .drawer__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(460px, 100%);
+    background: var(--cotton);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.6s var(--ease-out);
+    outline: none;
+  }
+  .drawer.is-open .drawer__panel {
+    transform: none;
+  }
+  .drawer__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem var(--gutter);
+    border-bottom: 1px solid var(--line);
+  }
+  .drawer__title {
+    font-size: 1.5rem;
+  }
+  .drawer__title sup {
+    font-size: 0.55em;
+    color: var(--framboise);
+    vertical-align: 0.8em;
+    margin-left: 0.1em;
+  }
+  .drawer__ship {
+    padding: 1rem var(--gutter);
+    border-bottom: 1px solid var(--line);
+  }
+  .drawer__ship-text {
+    font-size: var(--fs-sm);
+    margin-bottom: 0.6rem;
+  }
+  .drawer__ship-bar {
+    height: 3px;
+    background: var(--paper);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .drawer__ship-bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--framboise);
+    transition: width 0.8s var(--ease-out);
+  }
+  .drawer__body {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 var(--gutter);
+  }
+  .drawer__foot {
+    padding: 1.25rem var(--gutter) 1.5rem;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 0.9rem;
+  }
+  .drawer__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .drawer__total {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .drawer__note {
+    font-size: var(--fs-xs);
+  }
+  .drawer__continue {
+    justify-self: center;
+    padding: 0.5rem;
+  }
+</style>

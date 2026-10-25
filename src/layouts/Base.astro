@@ -1,0 +1,160 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource-variable/inter-tight';
+import '@fontsource-variable/grenze-gotisch';
+import '../styles/global.css';
+import '../styles/cart.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CartDrawer from '../components/CartDrawer.astro';
+import brand from '../data/brand.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  header?: 'overlay' | 'solid';
+  page?: string;
+  jsonld?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = brand.description,
+  image = '/ph/hero--desktop.svg',
+  header = 'solid',
+  page = 'default',
+  jsonld,
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = title ? `${title} — dimension.` : `dimension. — ${brand.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: brand.name,
+  url: brand.url,
+  sameAs: brand.socials.map((s) => s.url),
+};
+---
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#A3174D" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="dimension." />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline data-astro-rerun>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonld ?? orgLd)} />
+    <ClientRouter />
+  </head>
+  <body data-header={header}>
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <Header />
+    <main id="main" data-page={page} class:list={['main', header === 'solid' && 'main--offset']} transition:name="main">
+      <slot />
+    </main>
+    <Footer />
+    <CartDrawer />
+    <div class="cursor" aria-hidden="true" transition:persist="cursor">
+      <span class="cursor__ring"></span>
+      <span class="cursor__label" data-cursor-label></span>
+    </div>
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --header-total: calc(32px + var(--header-h));
+  }
+  .main--offset {
+    padding-top: var(--header-total);
+  }
+
+  /* Curseur : le petit cercle du logo suit le pointeur */
+  .cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-cursor);
+    pointer-events: none;
+    display: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .js .cursor {
+      display: block;
+    }
+  }
+  .cursor__ring {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    border: 1.5px solid var(--framboise);
+    border-radius: 50%;
+    transition:
+      width 0.45s var(--ease-out),
+      height 0.45s var(--ease-out),
+      margin 0.45s var(--ease-out),
+      background 0.3s,
+      border-color 0.3s,
+      opacity 0.3s;
+  }
+  .cursor.is-hover .cursor__ring {
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    background: rgb(242 162 204 / 0.25);
+  }
+  .cursor.is-label .cursor__ring {
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
+    background: var(--framboise);
+    border-color: var(--framboise);
+  }
+  .cursor.is-hidden .cursor__ring {
+    opacity: 0;
+  }
+  .cursor__label {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: var(--cotton);
+    font-family: var(--f-display);
+    font-stretch: 112%;
+    font-weight: 700;
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.25s;
+    white-space: nowrap;
+  }
+  .cursor.is-label .cursor__label {
+    opacity: 1;
+  }
+</style>

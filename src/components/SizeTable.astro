@@ -1,0 +1,104 @@
+---
+import sizes from '../data/sizes.json';
+
+interface Props {
+  only?: string;
+}
+const { only } = Astro.props;
+const tables = Object.entries(sizes.tables).filter(([k]) => !only || k === only);
+---
+
+<div class="sizes">
+  {
+    tables.map(([, t]) => (
+      <div class="sizes__block">
+        <p class="label sizes__label">{t.label}</p>
+        <div class="sizes__scroll">
+          <table>
+            <thead>
+              <tr>
+                {t.columns.map((c) => (
+                  <th scope="col">{c}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {t.rows.map((r) => (
+                <tr>
+                  {r.map((v, i) => (i === 0 ? <th scope="row">{v}</th> : <td>{v} cm</td>))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ))
+  }
+  <p class="sizes__note muted">{sizes.note}</p>
+  <figure class="sizes__how">
+    <svg viewBox="0 0 400 300" aria-hidden="true">
+      <path
+        d="M148 50Q200 74 252 50L318 68Q330 72 334 82L356 156L312 170L299 140L300 280L100 280L101 140L88 170L44 156L66 82Q70 72 82 68Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"></path>
+      <g stroke="var(--framboise)" stroke-width="1.5" fill="var(--framboise)">
+        <path d="M104 150H296"></path><circle cx="104" cy="150" r="3"></circle><circle cx="296" cy="150" r="3"></circle>
+        <path d="M200 58V280" stroke-dasharray="4 4"></path><circle cx="200" cy="58" r="3"></circle><circle cx="200" cy="280" r="3"></circle>
+      </g>
+      <g font-family="Arial, sans-serif" font-size="12" fill="currentColor">
+        <text x="200" y="142" text-anchor="middle">A — largeur poitrine</text>
+        <text x="208" y="232">B — longueur dos</text>
+      </g>
+    </svg>
+    <figcaption class="muted">A : d'une aisselle à l'autre, vêtement à plat. B : du haut de l'épaule à l'ourlet.</figcaption>
+  </figure>
+</div>
+
+<style>
+  .sizes {
+    display: grid;
+    gap: 1.75rem;
+  }
+  .sizes__label {
+    margin-bottom: 0.75rem;
+  }
+  .sizes__scroll {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-sm);
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 0.7rem 0.5rem;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  thead th {
+    font-weight: 500;
+    color: var(--muted);
+    font-size: var(--fs-xs);
+  }
+  tbody th {
+    font-weight: 700;
+  }
+  tbody tr:hover {
+    background: var(--paper);
+  }
+  .sizes__note {
+    font-size: var(--fs-xs);
+  }
+  .sizes__how svg {
+    max-width: 360px;
+    color: var(--ink);
+  }
+  .sizes__how figcaption {
+    font-size: var(--fs-xs);
+    margin-top: 0.5rem;
+  }
+</style>

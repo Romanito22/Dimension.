@@ -1,0 +1,27 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import brand from '../data/brand.json';
+---
+
+<LegalPage title="Conditions générales de vente" updated="octobre 2026">
+  <p><mark>Modèle à faire valider — à adapter à ta structure juridique avant la mise en ligne.</mark></p>
+  <h2>1. Objet</h2>
+  <p>Les présentes conditions régissent les ventes de vêtements et accessoires réalisées sur le site {brand.url} par {brand.legalName}.</p>
+  <h2>2. Prix</h2>
+  <p>Les prix sont indiqués en euros, toutes taxes comprises, hors frais de livraison. Les frais de livraison sont précisés avant la validation de la commande.</p>
+  <h2>3. Commande & paiement</h2>
+  <p>La commande est confirmée après acceptation du paiement. Un e-mail de confirmation récapitule la commande. Le paiement est sécurisé par notre prestataire de paiement.</p>
+  <h2>4. Livraison</h2>
+  <p>
+    Les commandes sont expédiées sous 24 à 48 h ouvrées. Livraison offerte dès {brand.shipping.freeThreshold} € en France métropolitaine (hors express). Délais indicatifs :{' '}
+    {brand.shipping.methods.map((m) => `${m.label} ${m.delay}`).join(' ; ')}.
+  </p>
+  <h2>5. Droit de rétractation & retours</h2>
+  <p>
+    Tu disposes de {brand.shipping.returnsDays} jours à compter de la réception pour exercer ton droit de rétractation, sans justification. Les articles doivent être retournés non portés, non lavés, avec leurs étiquettes. Le remboursement intervient sous 14 jours après réception du retour.
+  </p>
+  <h2>6. Garanties</h2>
+  <p>Les produits bénéficient de la garantie légale de conformité et de la garantie contre les vices cachés.</p>
+  <h2>7. Litiges</h2>
+  <p>En cas de litige, une solution amiable sera recherchée en priorité. À défaut, le consommateur peut recourir gratuitement à un médiateur de la consommation : <mark>nom du médiateur</mark>.</p>
+</LegalPage>

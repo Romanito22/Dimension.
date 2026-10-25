@@ -1,0 +1,59 @@
+{
+  "name": "dimension.",
+  "legalName": "dimension.",
+  "tagline": "Love over everything.",
+  "description": "dimension. — streetwear brodé et imprimé en petites séries. T-shirts, maille et pièces graphiques pensées pour durer. Love over everything.",
+  "url": "https://dimensionbrand.fr",
+  "email": "contact@dimensionbrand.fr",
+  "handle": "@dimensionbrand",
+  "socials": [
+    { "name": "TikTok", "url": "https://www.tiktok.com/@dimensionbrand" },
+    { "name": "Instagram", "url": "https://www.instagram.com/dimensionbrand" }
+  ],
+  "drop": {
+    "name": "Drop 01",
+    "season": "Automne — Hiver 2026",
+    "title": "Love over everything"
+  },
+  "shipping": {
+    "currency": "EUR",
+    "freeThreshold": 80,
+    "methods": [
+      { "id": "relay", "label": "Point relais", "delay": "3 à 5 jours ouvrés", "price": 3.9 },
+      { "id": "home", "label": "Domicile — Colissimo", "delay": "2 à 3 jours ouvrés", "price": 5.9 },
+      { "id": "express", "label": "Express — Chronopost", "delay": "24 h ouvrées", "price": 11.9 }
+    ],
+    "returnsDays": 14
+  },
+  "promo": { "code": "BIENVENUE10", "rate": 0.1 },
+  "marquee": [
+    "Love over everything",
+    "Livraison offerte dès 80 €",
+    "Brodé & imprimé en petites séries",
+    "Retours sous 14 jours",
+    "Drop 01 — disponible maintenant"
+  ],
+  "story": {
+    "kicker": "La marque",
+    "title": "On fait des vêtements comme on aime : sans compter.",
+    "intro": "dimension. est née d'une envie simple — porter ce qui nous ressemble. Des coupes amples, des cotons épais, des graphismes faits main, brodés ou imprimés en petites séries. Rien de superflu, tout ce qui compte.",
+    "chapters": [
+      {
+        "title": "Le point",
+        "text": "Le petit cercle qui flotte au-dessus du « d », c'est notre point de départ. Une dimension en plus : celle qu'on donne aux choses qu'on aime."
+      },
+      {
+        "title": "Le geste",
+        "text": "Chaque graphisme part d'un dessin : un trait, une éclaboussure, un cœur qui déborde. On garde l'accident, la main, l'imperfection qui rend une pièce vivante."
+      },
+      {
+        "title": "La matière",
+        "text": "Des cotons lourds qui tiennent dans le temps, des broderies denses, des encres qui vieillissent bien. On préfère une pièce qu'on garde dix ans à dix pièces qu'on oublie."
+      },
+      {
+        "title": "Les séries courtes",
+        "text": "On produit par drops, en quantités limitées. Quand une pièce part, elle part : moins de stock dormant, plus de pièces qui comptent."
+      }
+    ]
+  }
+}

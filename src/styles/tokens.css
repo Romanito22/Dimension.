@@ -1,0 +1,60 @@
+/* dimension. — design tokens
+   Palette tirée des pièces : coton blanc, framboise & rose bonbon du print LOVE,
+   gris studio des mockups, brun du gravier des photos. */
+:root {
+  /* Couleurs */
+  --cotton: #f6f5f2;
+  --paper: #eceae6;
+  --mist: #d4d1d0;
+  --ink: #171514;
+  --ink-2: #3b3836;
+  --muted: #6b655f;
+  --framboise: #a3174d;
+  --framboise-deep: #7e0f3a;
+  --candy: #f2a2cc;
+  --candy-soft: #f9dbe9;
+  --gravel: #5c4a3d;
+  --line: rgb(23 21 20 / 0.14);
+  --line-strong: rgb(23 21 20 / 0.32);
+
+  --bg: var(--cotton);
+  --fg: var(--ink);
+  --accent: var(--framboise);
+
+  /* Typographies */
+  --f-display: 'Archivo Variable', 'Archivo', 'Arial Black', system-ui, sans-serif;
+  --f-text: 'Inter Tight Variable', 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-script: 'Grenze Gotisch Variable', 'Grenze Gotisch', serif;
+
+  --fs-2xs: 0.6875rem;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --fs-lg: clamp(1.375rem, 1.1rem + 1.2vw, 2rem);
+  --fs-xl: clamp(2rem, 1.2rem + 3.4vw, 4.25rem);
+  --fs-2xl: clamp(2.75rem, 1rem + 7vw, 8.5rem);
+  --fs-mega: clamp(4rem, 15.5vw, 17rem);
+
+  /* Espacements */
+  --gutter: clamp(16px, 2.6vw, 40px);
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+  --space-lg: clamp(3rem, 2rem + 4vw, 6rem);
+  --space-xl: clamp(4.5rem, 3rem + 7vw, 10rem);
+  --header-h: 64px;
+  --radius: 2px;
+  --radius-pill: 999px;
+
+  /* Mouvement */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 0.2s;
+  --dur: 0.5s;
+  --dur-slow: 0.9s;
+
+  --z-header: 50;
+  --z-drawer: 80;
+  --z-cursor: 100;
+}

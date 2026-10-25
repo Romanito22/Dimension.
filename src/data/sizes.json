@@ -1,0 +1,29 @@
+{
+  "note": "Mesures du vêtement à plat, en centimètres. Tolérance ± 1 cm.",
+  "tables": {
+    "t-shirts": {
+      "label": "T-shirts — coupe boxy",
+      "columns": ["Taille", "Largeur poitrine", "Longueur dos", "Longueur manche"],
+      "rows": [
+        ["XS", 52, 66, 21],
+        ["S", 55, 68, 22],
+        ["M", 58, 70, 23],
+        ["L", 61, 72, 24],
+        ["XL", 64, 74, 25],
+        ["XXL", 67, 76, 26]
+      ]
+    },
+    "maille": {
+      "label": "Maille — coupe ample",
+      "columns": ["Taille", "Largeur poitrine", "Longueur dos", "Longueur manche"],
+      "rows": [
+        ["XS", 54, 62, 58],
+        ["S", 57, 64, 59],
+        ["M", 60, 66, 60],
+        ["L", 63, 68, 61],
+        ["XL", 66, 70, 62],
+        ["XXL", 69, 72, 63]
+      ]
+    }
+  }
+}

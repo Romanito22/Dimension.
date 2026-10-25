@@ -1,0 +1,26 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import brand from '../data/brand.json';
+---
+
+<LegalPage title="Mentions légales" updated="octobre 2026">
+  <p><mark>Les informations surlignées sont à compléter avant la mise en ligne.</mark></p>
+  <h2>Éditeur du site</h2>
+  <p>
+    {brand.legalName} — <mark>forme juridique (micro-entreprise, SAS…)</mark>, <mark>adresse du siège</mark>, SIRET <mark>000 000 000 00000</mark>.<br />
+    Responsable de la publication : <mark>Nom Prénom</mark>. Contact : <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>.
+  </p>
+  <h2>Hébergement</h2>
+  <p><mark>Nom de l'hébergeur (ex. Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA)</mark>.</p>
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    L'ensemble des contenus de ce site (logo, monogramme, graphismes, photographies, textes) est la propriété exclusive de {brand.legalName}. Toute reproduction sans autorisation écrite est interdite.
+  </p>
+  <h2 id="confidentialite">Données personnelles & confidentialité</h2>
+  <p>
+    Les données collectées (commande, newsletter, contact) sont utilisées uniquement pour traiter ta demande et ne sont jamais revendues. Conformément au RGPD, tu disposes d'un droit d'accès, de rectification et de suppression : écris-nous à {brand.email}.
+  </p>
+  <p>
+    Ce site utilise le stockage local de ton navigateur pour mémoriser ton panier. Aucun cookie publicitaire n'est déposé sans ton consentement.
+  </p>
+</LegalPage>

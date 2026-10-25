@@ -1,0 +1,59 @@
+{
+  "groups": [
+    {
+      "title": "Commandes & livraison",
+      "items": [
+        {
+          "q": "Quels sont les délais de livraison ?",
+          "a": "Les commandes partent sous 24 à 48 h ouvrées. Compte ensuite 3 à 5 jours en point relais, 2 à 3 jours à domicile, ou 24 h en express."
+        },
+        {
+          "q": "La livraison est-elle offerte ?",
+          "a": "Oui, dès 80 € d'achat en France métropolitaine. En dessous, la livraison démarre à 3,90 € en point relais."
+        },
+        {
+          "q": "Livrez-vous hors de France ?",
+          "a": "Oui, dans toute l'Union européenne, la Suisse et le Royaume-Uni. Les frais sont calculés au moment de la commande."
+        },
+        {
+          "q": "Comment suivre ma commande ?",
+          "a": "Tu reçois un e-mail avec ton numéro de suivi dès que ton colis quitte l'atelier."
+        }
+      ]
+    },
+    {
+      "title": "Retours & échanges",
+      "items": [
+        {
+          "q": "Puis-je retourner un article ?",
+          "a": "Tu as 14 jours après réception pour nous retourner un article non porté, non lavé, avec ses étiquettes. Écris-nous et on t'envoie l'étiquette retour."
+        },
+        {
+          "q": "Puis-je échanger une taille ?",
+          "a": "Oui, l'échange de taille est gratuit (dans la limite des stocks). Précise-le simplement dans ta demande de retour."
+        },
+        {
+          "q": "Quand suis-je remboursé·e ?",
+          "a": "Sous 5 jours ouvrés après réception et vérification de ton retour, sur le moyen de paiement utilisé."
+        }
+      ]
+    },
+    {
+      "title": "Produits & tailles",
+      "items": [
+        {
+          "q": "Comment taillent vos t-shirts ?",
+          "a": "Nos t-shirts ont une coupe ample (boxy) avec épaules tombées. Prends ta taille habituelle pour l'effet voulu, une taille en dessous pour un tombé plus classique."
+        },
+        {
+          "q": "Comment entretenir les broderies et les prints ?",
+          "a": "Lave à 30 °C, à l'envers, sans sèche-linge. Repasse toujours sur l'envers et jamais directement sur la broderie ou l'impression."
+        },
+        {
+          "q": "Une pièce est épuisée, va-t-elle revenir ?",
+          "a": "Nos drops sont produits en séries courtes. Certaines pièces reviennent, d'autres non : inscris-toi à la newsletter pour être prévenu·e en premier."
+        }
+      ]
+    }
+  ]
+}

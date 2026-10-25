@@ -1,0 +1,149 @@
+[
+  {
+    "id": "DIM-001",
+    "slug": "t-shirt-love-over-everything",
+    "name": "T-shirt Love Over Everything",
+    "short": "Monogramme brodé, cœur imprimé au dos",
+    "category": "t-shirts",
+    "price": 49,
+    "date": "2026-10-20",
+    "badge": "Best-seller",
+    "art": "love",
+    "colors": [{ "name": "Blanc", "slug": "blanc", "hex": "#F7F7F4" }],
+    "sizes": [
+      { "size": "XS", "stock": 4 },
+      { "size": "S", "stock": 12 },
+      { "size": "M", "stock": 18 },
+      { "size": "L", "stock": 9 },
+      { "size": "XL", "stock": 2 },
+      { "size": "XXL", "stock": 0 }
+    ],
+    "description": "La pièce qui a tout lancé. Le monogramme « d » brodé en framboise sur le cœur, et dans le dos, un grand LOVE en forme de cœur, gonflé comme une bulle, avec sa signature : over everything.",
+    "details": [
+      "Monogramme brodé devant, fil framboise & noir",
+      "Print LOVE bicolore au dos",
+      "Col côtelé épais, coutures épaule tombée",
+      "Coupe ample (boxy) — prends ta taille habituelle"
+    ],
+    "fabric": "100 % coton, jersey épais 240 g/m².",
+    "care": ["Lavage 30 °C à l'envers", "Pas de sèche-linge", "Repassage à l'envers, jamais sur la broderie ni le print"],
+    "fit": "Coupe boxy. Le modèle mesure 1,80 m et porte du M."
+  },
+  {
+    "id": "DIM-002",
+    "slug": "t-shirt-crew",
+    "name": "T-shirt Crew",
+    "short": "Silhouettes au pochoir, wordmark gothique",
+    "category": "t-shirts",
+    "price": 45,
+    "date": "2026-10-24",
+    "badge": "Nouveau",
+    "art": "crew",
+    "colors": [{ "name": "Sable", "slug": "sable", "hex": "#EFDCC0" }],
+    "sizes": [
+      { "size": "XS", "stock": 3 },
+      { "size": "S", "stock": 10 },
+      { "size": "M", "stock": 14 },
+      { "size": "L", "stock": 11 },
+      { "size": "XL", "stock": 6 },
+      { "size": "XXL", "stock": 3 }
+    ],
+    "description": "Trois silhouettes qui avancent ensemble, un BMX, une veste siglée. Le dos est imprimé façon pochoir, grain de bombe compris. Devant, juste le wordmark DIMENSI*N en gothique liquide.",
+    "details": [
+      "Wordmark DIMENSI*N imprimé côté cœur",
+      "Grand print pochoir au dos, effet spray",
+      "Col côtelé, coupe ample épaule tombée"
+    ],
+    "fabric": "100 % coton, jersey épais 240 g/m², teint sable.",
+    "care": ["Lavage 30 °C à l'envers", "Pas de sèche-linge", "Repassage à l'envers"],
+    "fit": "Coupe boxy. Le modèle mesure 1,80 m et porte du M."
+  },
+  {
+    "id": "DIM-003",
+    "slug": "t-shirt-splash",
+    "name": "T-shirt Splash",
+    "short": "Wordmark liquide, éclaboussure au dos",
+    "category": "t-shirts",
+    "price": 45,
+    "date": "2026-10-22",
+    "badge": "Nouveau",
+    "art": "splash",
+    "colors": [{ "name": "Noir", "slug": "noir", "hex": "#151515" }],
+    "sizes": [
+      { "size": "XS", "stock": 2 },
+      { "size": "S", "stock": 8 },
+      { "size": "M", "stock": 15 },
+      { "size": "L", "stock": 12 },
+      { "size": "XL", "stock": 5 },
+      { "size": "XXL", "stock": 1 }
+    ],
+    "description": "Noir profond, encre blanche. Le mot « dimension » coule sur la poitrine dans un lettrage liquide. Au dos, une éclaboussure qui traverse le tissu et un badge ovale, comme un tampon.",
+    "details": [
+      "Wordmark liquide imprimé devant",
+      "Print éclaboussure + badge ovale au dos",
+      "Encre blanche opaque, toucher doux"
+    ],
+    "fabric": "100 % coton, jersey épais 240 g/m².",
+    "care": ["Lavage 30 °C à l'envers", "Pas de sèche-linge", "Repassage à l'envers"],
+    "fit": "Coupe boxy. Le modèle mesure 1,80 m et porte du M."
+  },
+  {
+    "id": "DIM-004",
+    "slug": "t-shirt-doodle",
+    "name": "T-shirt Doodle",
+    "short": "Dessin au trait, signature DIMENSION",
+    "category": "t-shirts",
+    "price": 45,
+    "date": "2026-10-18",
+    "badge": "",
+    "art": "doodle",
+    "colors": [{ "name": "Écru", "slug": "ecru", "hex": "#ECE7DF" }],
+    "sizes": [
+      { "size": "XS", "stock": 5 },
+      { "size": "S", "stock": 9 },
+      { "size": "M", "stock": 3 },
+      { "size": "L", "stock": 7 },
+      { "size": "XL", "stock": 4 },
+      { "size": "XXL", "stock": 2 }
+    ],
+    "description": "Un visage, une étoile, quelques traits jetés sans lever le crayon. Le Doodle, c'est le carnet de croquis porté sur la poitrine — signé DIMENSION en petites capitales.",
+    "details": [
+      "Dessin au trait imprimé devant, encre noire",
+      "Signature DIMENSION en capitales espacées",
+      "Dos uni"
+    ],
+    "fabric": "100 % coton, jersey épais 240 g/m², teint écru.",
+    "care": ["Lavage 30 °C à l'envers", "Pas de sèche-linge", "Repassage à l'envers"],
+    "fit": "Coupe boxy. Le modèle mesure 1,80 m et porte du M."
+  },
+  {
+    "id": "DIM-005",
+    "slug": "pull-camo-maille",
+    "name": "Pull Camo",
+    "short": "Maille jacquard camouflage, wordmark blanc",
+    "category": "maille",
+    "price": 95,
+    "date": "2026-10-25",
+    "badge": "Édition limitée",
+    "art": "camo",
+    "colors": [{ "name": "Camo gris", "slug": "camo", "hex": "#7E7F82" }],
+    "sizes": [
+      { "size": "XS", "stock": 0 },
+      { "size": "S", "stock": 4 },
+      { "size": "M", "stock": 6 },
+      { "size": "L", "stock": 5 },
+      { "size": "XL", "stock": 2 },
+      { "size": "XXL", "stock": 1 }
+    ],
+    "description": "Un camouflage dessiné à la main puis tricoté en jacquard : noir, gris et grège qui s'entremêlent comme des coups de pinceau. Le wordmark DIMENSI*N est tricoté en blanc côté cœur.",
+    "details": [
+      "Maille jacquard épaisse, motif camouflage peint",
+      "Wordmark DIMENSI*N tricoté devant",
+      "Bord-côtes noirs au col, aux poignets et à la taille",
+      "Série limitée"
+    ],
+    "fabric": "Maille jacquard, 70 % coton, 30 % laine.",
+    "care": ["Lavage à la main ou programme laine 30 °C", "Séchage à plat", "Ne pas essorer"],
+    "fit": "Coupe ample, légèrement courte. Le modèle mesure 1,80 m et porte du M."
+  }
+]

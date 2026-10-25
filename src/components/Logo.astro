@@ -1,0 +1,74 @@
+---
+// Logo dimension. — utilise les fichiers officiels s'ils existent
+// (public/brand/logo.svg pour le logo complet, public/brand/monogram.svg pour le « d° »),
+// sinon le monogramme redessiné + le mot-symbole provisoire.
+import { MONO_VIEWBOX, MONO_BOWL, MONO_STEM, MONO_RING } from '../lib/logo';
+import { brandAsset } from '../lib/media';
+
+interface Props {
+  variant?: 'lockup' | 'mono' | 'word' | 'stacked';
+  class?: string;
+}
+const { variant = 'lockup', class: className = '' } = Astro.props;
+const monoFile = brandAsset('monogram');
+const logoFile = brandAsset('logo');
+---
+
+{
+  variant === 'stacked' && logoFile ? (
+    <img src={logoFile} alt="dimension." class:list={['logo-img', className]} />
+  ) : (
+    <span class:list={['logo', `logo--${variant}`, className]}>
+      {variant !== 'word' &&
+        (monoFile ? (
+          <img src={monoFile} alt="" class="logo__mono" />
+        ) : (
+          <svg class="logo__mono" viewBox={MONO_VIEWBOX} aria-hidden="true">
+            <path d={MONO_BOWL} fill="currentColor" fill-rule="evenodd" />
+            <path d={MONO_STEM} fill="currentColor" />
+            <circle cx={MONO_RING.cx} cy={MONO_RING.cy} r={MONO_RING.r} fill="none" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+        ))}
+      {variant !== 'mono' && (
+        <span class="logo__word">
+          dimension<span class="logo__point">.</span>
+        </span>
+      )}
+    </span>
+  )
+}
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    line-height: 1;
+  }
+  .logo--stacked {
+    flex-direction: column;
+    gap: 0.1em;
+  }
+  .logo__mono {
+    height: 1.15em;
+    width: auto;
+    overflow: visible;
+  }
+  .logo--stacked .logo__mono {
+    height: 1.6em;
+  }
+  .logo__word {
+    font-family: var(--f-script);
+    font-weight: 600;
+    font-size: 1.12em;
+    letter-spacing: 0.01em;
+    transform: translateY(-0.04em);
+  }
+  .logo__point {
+    color: var(--framboise);
+  }
+  .logo-img {
+    height: 100%;
+    width: auto;
+  }
+</style>

@@ -1,0 +1,734 @@
+---
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Img from '../components/Img.astro';
+import Logo from '../components/Logo.astro';
+import Newsletter from '../components/Newsletter.astro';
+import { media } from '../lib/media';
+import { products, brand, byNewest, formatPrice, imageKeys } from '../lib/shop';
+
+const heroD = media('hero/desktop');
+const heroM = media('hero/mobile');
+const latest = byNewest(products);
+const signature = products.find((p) => p.art === 'love')!;
+const sigKeys = imageKeys(signature);
+const tshirtCount = products.filter((p) => p.category === 't-shirts').length;
+const knitCount = products.filter((p) => p.category === 'maille').length;
+const socialHandle = brand.handle;
+const tiktok = brand.socials.find((s) => s.name === 'TikTok')!.url;
+---
+
+<Base header="overlay" page="home" image={heroD.src}>
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <picture class="hero__media" data-parallax="0.18">
+      <source media="(max-width: 700px)" srcset={heroM.src} />
+      <img src={heroD.src} alt={heroD.alt} width={heroD.width} height={heroD.height} fetchpriority="high" />
+    </picture>
+    <div class="hero__shade" aria-hidden="true"></div>
+
+    <div class="wrap hero__top">
+      <p class="label">{brand.drop.name} — {brand.drop.season}</p>
+      <p class="label hero__handle">{socialHandle}</p>
+    </div>
+
+    <div class="wrap hero__bottom">
+      <h1 id="hero-title" class="display hero__title" data-split>
+        <span class="split-line" style="--l:0"><span class="hero__love">Love</span></span>
+        <span class="split-line" style="--l:1"><span>over</span></span>
+        <span class="split-line" style="--l:2"><span>everything<span class="dot" aria-hidden="true"></span></span></span>
+      </h1>
+      <div class="hero__aside" data-reveal style="--i:4">
+        <p class="hero__lede">
+          Streetwear brodé et imprimé en séries courtes. Des cotons épais, des graphismes faits main, et une seule règle.
+        </p>
+        <div class="hero__ctas">
+          <a href="/boutique" class="btn btn--light btn--lg">Shop le drop <span class="btn__dot" aria-hidden="true"></span></a>
+          <a href="/lookbook" class="btn btn--ghost btn--lg hero__ghost">Lookbook</a>
+        </div>
+      </div>
+    </div>
+    <a href="#drop" class="hero__scroll label" aria-label="Défiler vers les nouveautés">
+      <span class="hero__scroll-ring" aria-hidden="true"></span>Scroll
+    </a>
+  </section>
+
+  <!-- NOUVEAUTÉS -->
+  <section id="drop" class="section drop" data-carousel aria-labelledby="drop-title">
+    <div class="wrap section-head">
+      <div data-reveal>
+        <span class="label accent">{brand.drop.name} · {products.length} pièces</span>
+        <h2 id="drop-title" class="display h-xl">Nouveautés</h2>
+      </div>
+      <div class="drop__ctrl" data-reveal style="--i:1">
+        <a href="/boutique" class="link link--under label">Tout voir</a>
+        <div class="drop__arrows">
+          <button class="arrow" type="button" data-prev aria-label="Précédent">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 6H1m5-5L1 6l5 5"></path></svg>
+          </button>
+          <button class="arrow" type="button" data-next aria-label="Suivant">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h16m-5-5 5 5-5 5"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="drop__track" data-track>
+      {
+        latest.map((p, i) => (
+          <div class="drop__item" data-reveal style={`--i:${i}`}>
+            <ProductCard product={p} index={i} vt sizes="(max-width: 700px) 75vw, 30vw" />
+          </div>
+        ))
+      }
+    </div>
+    <div class="wrap">
+      <div class="drop__progress"><span data-progress></span></div>
+    </div>
+  </section>
+
+  <!-- PIÈCE SIGNATURE -->
+  <section class="sig" aria-labelledby="sig-title">
+    <div class="wrap sig__grid">
+      <a href={`/produit/${signature.slug}`} class="sig__main media" data-reveal="clip" data-cursor="Voir">
+        <Img k={sigKeys[3]} sizes="(max-width: 860px) 100vw, 55vw" />
+      </a>
+      <div class="sig__copy">
+        <span class="label accent" data-reveal>La pièce signature</span>
+        <h2 id="sig-title" class="display h-xl" data-reveal style="--i:1">
+          Love over<br />everything
+        </h2>
+        <p class="lede" data-reveal style="--i:2">{signature.description}</p>
+        <ul class="sig__facts" role="list" data-reveal style="--i:3">
+          <li><span class="label muted">Devant</span>Monogramme brodé</li>
+          <li><span class="label muted">Dos</span>Print LOVE bicolore</li>
+          <li><span class="label muted">Coton</span>240 g/m²</li>
+        </ul>
+        <div class="sig__buy" data-reveal style="--i:4">
+          <a href={`/produit/${signature.slug}`} class="btn btn--accent btn--lg">
+            Découvrir — {formatPrice(signature.price)} <span class="btn__dot" aria-hidden="true"></span>
+          </a>
+        </div>
+        <div class="sig__detail media ratio-45" data-reveal="clip" style="--i:2">
+          <Img k={sigKeys[2]} sizes="240px" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATÉGORIES -->
+  <section class="section cats" aria-labelledby="cats-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div data-reveal>
+          <span class="label accent">Explorer</span>
+          <h2 id="cats-title" class="display h-xl">Le vestiaire</h2>
+        </div>
+      </div>
+      <div class="cats__grid">
+        <a href="/boutique?categorie=t-shirts" class="cat cat--a" data-reveal="clip" data-cursor="Explorer">
+          <div class="media cat__media"><Img k="categories/t-shirts" sizes="(max-width: 860px) 100vw, 45vw" /></div>
+          <div class="cat__meta">
+            <h3 class="display cat__title">T-shirts</h3>
+            <span class="label">{tshirtCount} pièces →</span>
+          </div>
+        </a>
+        <a href="/boutique?categorie=maille" class="cat cat--b" data-reveal="clip" style="--i:1" data-cursor="Explorer">
+          <div class="media cat__media"><Img k="categories/maille" sizes="(max-width: 860px) 50vw, 30vw" /></div>
+          <div class="cat__meta">
+            <h3 class="display cat__title">Maille</h3>
+            <span class="label">{knitCount} pièce →</span>
+          </div>
+        </a>
+        <a href="/lookbook" class="cat cat--c" data-reveal="clip" style="--i:2" data-cursor="Voir">
+          <div class="media cat__media"><Img k="categories/love" sizes="(max-width: 860px) 50vw, 25vw" /></div>
+          <div class="cat__meta">
+            <h3 class="display cat__title">Lookbook</h3>
+            <span class="label">{brand.drop.name} →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANDEAU SCRIPT -->
+  <div class="ribbon-wrap" aria-hidden="true"><div class="ribbon">
+    <div class="ribbon__track">
+      {
+        [0, 1].map(() => (
+          <div class="ribbon__set">
+            <span class="ribbon__word">dimension</span>
+            <span class="ribbon__ring" />
+            <span class="ribbon__caps display">Love over everything</span>
+            <span class="ribbon__ring" />
+            <span class="ribbon__word">dimension</span>
+            <span class="ribbon__ring" />
+            <span class="ribbon__caps display">{brand.drop.name}</span>
+            <span class="ribbon__ring" />
+          </div>
+        ))
+      }
+    </div>
+  </div></div>
+
+  <!-- STORY -->
+  <section class="section story" aria-labelledby="story-title">
+    <div class="wrap story__grid">
+      <div class="story__copy">
+        <span class="label accent" data-reveal>{brand.story.kicker}</span>
+        <h2 id="story-title" class="display h-xl" data-reveal style="--i:1">{brand.story.title}</h2>
+        <p class="lede" data-reveal style="--i:2">{brand.story.intro}</p>
+        <a href="/la-marque" class="btn btn--ghost" data-reveal style="--i:3">Notre histoire <span class="btn__dot" aria-hidden="true"></span></a>
+      </div>
+      <div class="story__visual">
+        <div class="media ratio-45 story__img" data-reveal="clip">
+          <Img k="story/1" sizes="(max-width: 860px) 100vw, 40vw" />
+        </div>
+        <div class="story__badge" aria-hidden="true">
+          <Logo variant="mono" />
+        </div>
+      </div>
+    </div>
+    <ul class="wrap story__facts" role="list">
+      <li data-reveal><span class="display">Brodé</span><span class="muted">monogramme au point plein</span></li>
+      <li data-reveal style="--i:1"><span class="display">240 g/m²</span><span class="muted">jersey de coton épais</span></li>
+      <li data-reveal style="--i:2"><span class="display">Séries</span><span class="muted">courtes, par drops</span></li>
+      <li data-reveal style="--i:3"><span class="display">14 j</span><span class="muted">pour changer d'avis</span></li>
+    </ul>
+  </section>
+
+  <!-- LOOKBOOK TEASER -->
+  <section class="look" aria-labelledby="look-title">
+    <a href="/lookbook" class="look__hero media" data-cursor="Lookbook">
+      <div class="look__img" data-parallax="0.12"><Img k="lookbook/1" sizes="100vw" /></div>
+      <div class="look__overlay">
+        <div class="wrap">
+          <span class="label">{brand.drop.name} — Lookbook</span>
+          <h2 id="look-title" class="display h-2xl" data-split>
+            <span class="split-line"><span>Sous le</span></span>
+            <span class="split-line" style="--l:1"><span>soleil<span class="dot" aria-hidden="true"></span></span></span>
+          </h2>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- SOCIAL -->
+  <section class="section social" aria-labelledby="social-title">
+    <div class="wrap">
+      <div class="section-head social__head">
+        <div data-reveal>
+          <span class="label accent">On se retrouve là-bas</span>
+          <h2 id="social-title" class="display h-xl">{socialHandle}</h2>
+        </div>
+        <a href={tiktok} target="_blank" rel="noopener" class="btn btn--ghost" data-reveal>Suivre sur TikTok</a>
+      </div>
+      <ul class="social__grid" role="list">
+        {
+          [1, 2, 3, 4, 5, 6].map((n) => (
+            <li data-reveal style={`--i:${n - 1}`}>
+              <a href={tiktok} target="_blank" rel="noopener" class="social__item media ratio-11" aria-label={`Publication ${n} sur TikTok`}>
+                <Img k={`social/${n}`} sizes="(max-width: 700px) 33vw, 16vw" />
+                <span class="social__hover" aria-hidden="true">
+                  <svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor"><path d="M16 0c.4 3 2.3 5 5.6 5.3v3.9c-2 .1-3.8-.5-5.6-1.6V16c0 9.6-10.5 10.2-13.5 4.7C.3 17 1.6 10.8 8.6 10.6v4.1c-.6.1-1.1.2-1.6.4-1.4.5-2.2 1.4-2 3 .4 3 6.1 4 5.6-2V0z"></path></svg>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Newsletter />
+</Base>
+
+<style>
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: max(100svh, 640px);
+    color: var(--cotton);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    background: var(--gravel);
+  }
+  .hero__media {
+    position: absolute;
+    inset: -6% 0 auto;
+    height: 112%;
+  }
+  .hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: hero-zoom 2.4s var(--ease-out) both;
+  }
+  @keyframes hero-zoom {
+    from {
+      transform: scale(1.12);
+      filter: brightness(0.6);
+    }
+  }
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgb(0 0 0 / 0.35) 0%, transparent 22%),
+      linear-gradient(20deg, rgb(20 12 8 / 0.62) 0%, rgb(20 12 8 / 0.15) 45%, transparent 70%);
+  }
+  .hero__top {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-top: calc(var(--header-total) + 1.25rem);
+  }
+  .hero__bottom {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 'aside .' 'title title';
+    align-items: end;
+    gap: 1.5rem var(--space-md);
+    padding-bottom: clamp(2rem, 5vh, 4rem);
+  }
+  .hero__title {
+    grid-area: title;
+    font-size: clamp(3.4rem, 10.4vw, 12.5rem);
+    line-height: 0.86;
+  }
+  .hero__love {
+    color: var(--candy);
+  }
+  .hero__aside {
+    grid-area: aside;
+    max-width: 360px;
+    display: grid;
+    gap: 1.5rem;
+    padding-bottom: 0.6rem;
+  }
+  .hero__lede {
+    font-size: var(--fs-md);
+    line-height: 1.45;
+  }
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .hero__ghost {
+    --btn-hover: var(--cotton);
+    --btn-hover-fg: var(--ink);
+  }
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hero__scroll-ring {
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    animation: float 2.2s var(--ease-in-out) infinite;
+  }
+  @keyframes float {
+    50% {
+      transform: translateY(5px);
+    }
+  }
+  @media (min-width: 1100px) {
+    .hero__scroll {
+      display: inline-flex;
+    }
+  }
+  @media (max-width: 860px) {
+    .hero__bottom {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'title' 'aside';
+    }
+    .hero__handle {
+      display: none;
+    }
+    .hero__title {
+      font-size: clamp(2.3rem, 11.2vw, 6rem);
+    }
+    .hero__shade {
+      background: linear-gradient(0deg, rgb(20 12 8 / 0.78) 0%, rgb(20 12 8 / 0.35) 45%, rgb(0 0 0 / 0.25) 100%);
+    }
+    .hero__ctas .btn {
+      flex: 1;
+      padding-inline: 1rem;
+    }
+  }
+
+  /* NOUVEAUTÉS */
+  .drop__ctrl {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .drop__arrows {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .arrow {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display: grid;
+    place-items: center;
+    transition:
+      background 0.3s,
+      color 0.3s,
+      border-color 0.3s,
+      opacity 0.3s;
+  }
+  .arrow:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--cotton);
+    border-color: var(--ink);
+  }
+  .arrow:disabled {
+    opacity: 0.3;
+  }
+  .drop__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: clamp(260px, 29vw, 520px);
+    column-gap: clamp(12px, 1.4vw, 24px);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+    cursor: grab;
+  }
+  .drop__track::-webkit-scrollbar {
+    display: none;
+  }
+  .drop__track:global(.is-grabbing) {
+    cursor: grabbing;
+    user-select: none;
+  }
+  .drop__item {
+    scroll-snap-align: start;
+  }
+  .drop__progress {
+    margin-top: 2.25rem;
+    height: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .drop__progress span {
+    display: block;
+    height: 100%;
+    background: var(--ink);
+    transform-origin: left;
+    transform: scaleX(0.1);
+    transition: transform 0.3s var(--ease-out);
+  }
+  @media (max-width: 700px) {
+    .drop__track {
+      grid-auto-columns: 74vw;
+    }
+    .drop__arrows {
+      display: none;
+    }
+  }
+
+  /* PIÈCE SIGNATURE */
+  .sig {
+    background: var(--paper);
+    padding-block: var(--space-lg);
+  }
+  .sig__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+  .sig__main {
+    display: block;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius);
+  }
+  .sig__copy {
+    position: relative;
+    display: grid;
+    gap: 1.5rem;
+    align-content: center;
+    padding-right: 4vw;
+  }
+  .sig__facts {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    gap: 2rem;
+    padding-block: 1.25rem;
+    border-block: 1px solid var(--line);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  .sig__facts .label {
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .sig__detail {
+    width: 34%;
+    max-width: 200px;
+    justify-self: end;
+    border-radius: var(--radius);
+    margin-top: 1rem;
+  }
+  @media (max-width: 860px) {
+    .sig__grid {
+      grid-template-columns: 1fr;
+    }
+    .sig__copy {
+      padding: 0;
+    }
+    .sig__facts {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .sig__detail {
+      display: none;
+    }
+  }
+
+  /* CATÉGORIES */
+  .cats__grid {
+    display: grid;
+    grid-template-columns: 5fr 4fr 3fr;
+    gap: clamp(12px, 1.4vw, 24px);
+    align-items: start;
+  }
+  .cat {
+    display: block;
+    position: relative;
+  }
+  .cat__media {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--radius);
+  }
+  .cat--b {
+    margin-top: 18%;
+  }
+  .cat--c {
+    margin-top: 42%;
+  }
+  .cat__media :global(img) {
+    transition: transform 1.2s var(--ease-out);
+  }
+  .cat:hover .cat__media :global(img) {
+    transform: scale(1.05);
+  }
+  .cat__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    padding-top: 1rem;
+  }
+  .cat__title {
+    font-size: var(--fs-lg);
+  }
+  .cat .label {
+    transition: color 0.3s;
+  }
+  .cat:hover .label {
+    color: var(--framboise);
+  }
+  @media (max-width: 860px) {
+    .cats__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .cat--a {
+      grid-column: 1 / -1;
+    }
+    .cat--b,
+    .cat--c {
+      margin-top: 0;
+    }
+  }
+
+  /* RIBBON */
+  .ribbon-wrap {
+    overflow: hidden;
+    padding-block: 1.5rem;
+  }
+  .ribbon {
+    background: var(--framboise);
+    color: var(--cotton);
+    overflow: hidden;
+    padding-block: clamp(1rem, 2vw, 1.75rem);
+    transform: rotate(-1.4deg) scale(1.03);
+  }
+  .ribbon__track {
+    display: flex;
+    width: max-content;
+    animation: ribbon 32s linear infinite;
+  }
+  .ribbon__set {
+    display: flex;
+    align-items: center;
+  }
+  .ribbon__word {
+    font-family: var(--f-script);
+    font-weight: 600;
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    line-height: 1;
+    padding-inline: 0.4em;
+  }
+  .ribbon__caps {
+    font-size: clamp(1.25rem, 3vw, 2.75rem);
+    padding-inline: 0.6em;
+    color: var(--candy);
+  }
+  .ribbon__ring {
+    width: clamp(12px, 1.2vw, 18px);
+    aspect-ratio: 1;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+  }
+  @keyframes ribbon {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* STORY */
+  .story__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+  .story__copy {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  .story__copy h2 {
+    max-width: 14ch;
+  }
+  .story__visual {
+    position: relative;
+  }
+  .story__img {
+    border-radius: var(--radius);
+  }
+  .story__badge {
+    position: absolute;
+    left: -2.5rem;
+    bottom: -2.5rem;
+    width: clamp(96px, 10vw, 150px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--framboise);
+    color: var(--cotton);
+    display: grid;
+    place-items: center;
+    font-size: clamp(2rem, 3.4vw, 3.5rem);
+    animation: spin 18s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .story__facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: var(--space-lg);
+  }
+  .story__facts li {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-strong);
+    font-size: var(--fs-sm);
+  }
+  .story__facts .display {
+    font-size: var(--fs-lg);
+  }
+  @media (max-width: 860px) {
+    .story__grid {
+      grid-template-columns: 1fr;
+    }
+    .story__badge {
+      left: auto;
+      right: 1rem;
+      bottom: -2rem;
+    }
+    .story__facts {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* LOOKBOOK TEASER */
+  .look__hero {
+    display: block;
+    position: relative;
+    height: clamp(460px, 82vh, 900px);
+    color: var(--cotton);
+  }
+  .look__img {
+    position: absolute;
+    inset: -10% 0;
+  }
+  .look__overlay {
+    position: absolute;
+    inset: auto 0 0;
+    padding-block: 8rem var(--space-md);
+    background: linear-gradient(0deg, rgb(20 12 8 / 0.55), transparent);
+  }
+  .look__overlay .label {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  /* SOCIAL */
+  .social__head {
+    flex-wrap: wrap;
+  }
+  .social__grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: clamp(8px, 1vw, 16px);
+  }
+  .social__item {
+    display: block;
+    border-radius: var(--radius);
+  }
+  .social__hover {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgb(163 23 77 / 0.75);
+    color: var(--cotton);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .social__item:hover .social__hover,
+  .social__item:focus-visible .social__hover {
+    opacity: 1;
+  }
+  @media (max-width: 860px) {
+    .social__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

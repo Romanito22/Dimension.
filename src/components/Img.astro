@@ -1,0 +1,43 @@
+---
+import { media } from '../lib/media';
+
+interface Props {
+  k: string;
+  alt?: string;
+  class?: string;
+  eager?: boolean;
+  sizes?: string;
+  vt?: string;
+}
+const { k, alt, class: className, eager = false, sizes = '100vw', vt } = Astro.props;
+const m = media(k, alt);
+---
+
+{
+  vt ? (
+    <img
+      src={m.src}
+      alt={m.alt}
+      width={m.width}
+      height={m.height}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+      decoding="async"
+      sizes={sizes}
+      class={className}
+      transition:name={vt}
+    />
+  ) : (
+    <img
+      src={m.src}
+      alt={m.alt}
+      width={m.width}
+      height={m.height}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+      decoding="async"
+      sizes={sizes}
+      class={className}
+    />
+  )
+}

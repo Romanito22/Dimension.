@@ -703,6 +703,10 @@ const tiktok = brand.socials.find((s) => s.name === 'TikTok')!.url;
   .social__head {
     flex-wrap: wrap;
   }
+  .social__head h2 {
+    font-size: clamp(1.5rem, 7.4vw, 4.25rem);
+    overflow-wrap: anywhere;
+  }
   .social__grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);

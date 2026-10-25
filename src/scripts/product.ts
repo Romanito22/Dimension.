@@ -82,7 +82,7 @@ export function initProduct(signal: AbortSignal) {
           color: getColor(),
           size,
           max: s.stock,
-          image: data.image,
+          image: new URL(data.image, location.href).href,
         });
         btn.classList.add('is-added');
         btn.querySelector('[data-add-label]')!.textContent = 'Ajouté ✓';

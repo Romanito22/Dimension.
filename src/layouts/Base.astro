@@ -9,6 +9,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/CartDrawer.astro';
 import Search from '../components/Search.astro';
+import TabBar from '../components/TabBar.astro';
 import { media } from '../lib/media';
 import { products, imageKeys, categoryLabel } from '../lib/shop';
 import brand from '../data/brand.json';
@@ -27,7 +28,7 @@ interface Props {
 const {
   title,
   description = brand.description,
-  image = '/ph/hero--desktop.svg',
+  image = '/ph/hero--desktop.webp',
   header = 'solid',
   page = 'default',
   jsonld,
@@ -112,7 +113,6 @@ const orgLd = {
       <p class="loader__tag label">Love over everything</p>
       <p class="loader__count display" data-loader-count>000</p>
     </div>
-    <div class="grain" aria-hidden="true"></div>
     <a class="skip-link" href="#main">Aller au contenu</a>
     <Header />
     <main id="main" data-page={page} class:list={['main', header === 'solid' && 'main--offset']} transition:name="main">
@@ -121,6 +121,7 @@ const orgLd = {
     <Footer />
     <CartDrawer />
     <Search />
+    <TabBar />
     <script type="application/json" id="catalog" set:html={JSON.stringify(catalog)} />
     <div class="toast" data-toast role="status" aria-live="polite" transition:persist="toast">
       <img data-toast-img src="data:," alt="" width="56" height="70" />
@@ -362,30 +363,6 @@ const orgLd = {
     }
     .toast__btn {
       flex: 1;
-    }
-  }
-
-  /* Grain photo sur tout le site */
-  .grain {
-    position: fixed;
-    inset: -60%;
-    z-index: 95;
-    pointer-events: none;
-    opacity: 0.06;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    animation: grain 0.9s steps(6) infinite;
-  }
-  @keyframes grain {
-    0% { transform: translate(0, 0); }
-    20% { transform: translate(-4%, 3%); }
-    40% { transform: translate(3%, -5%); }
-    60% { transform: translate(-6%, -2%); }
-    80% { transform: translate(5%, 4%); }
-    100% { transform: translate(-2%, 6%); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .grain {
-      animation: none;
     }
   }
 

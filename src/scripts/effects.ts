@@ -1,6 +1,6 @@
 // Effets globaux : intro, inclinaison 3D des cartes, boutons aimantés,
-// titres révélés lettre par lettre, vitesse de scroll.
-import { lenis, reducedMotion } from './scroll';
+// titres révélés lettre par lettre.
+import { reducedMotion } from './scroll';
 
 const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
@@ -11,7 +11,7 @@ export const introDone = new Promise<void>((resolve) => {
   if (!html.classList.contains('is-loading') || !loader) return resolve();
   const counter = loader.querySelector<HTMLElement>('[data-loader-count]');
   const start = performance.now();
-  const DURATION = 1700;
+  const DURATION = 1000;
   const tick = (t: number) => {
     const p = Math.min(1, (t - start) / DURATION);
     const eased = 1 - Math.pow(1 - p, 3);
@@ -21,7 +21,7 @@ export const introDone = new Promise<void>((resolve) => {
       const fonts = document.fonts?.ready ?? Promise.resolve();
       fonts.then(() => {
         loader.classList.add('is-out');
-        setTimeout(resolve, 380);
+        setTimeout(resolve, 300);
         setTimeout(() => {
           html.classList.remove('is-loading');
           try {
@@ -29,20 +29,12 @@ export const introDone = new Promise<void>((resolve) => {
           } catch {
             /* ignore */
           }
-        }, 1200);
+        }, 900);
       });
     }
   };
   requestAnimationFrame(tick);
 });
-
-/* ---------- Vitesse de scroll (pour les inclinaisons) ---------- */
-if (lenis && !reducedMotion) {
-  lenis.on('scroll', (e: { velocity: number }) => {
-    const v = Math.max(-40, Math.min(40, e.velocity));
-    document.documentElement.style.setProperty('--vel', v.toFixed(2));
-  });
-}
 
 /* ---------- Cartes inclinables + boutons aimantés ---------- */
 if (fine && !reducedMotion) {

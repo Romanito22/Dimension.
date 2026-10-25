@@ -1,0 +1,141 @@
+---
+// Barre d'onglets mobile, comme dans une appli : toujours à portée de pouce.
+// Masquée sur la fiche produit (le bouton d'achat collant prend sa place) et au paiement.
+---
+
+<nav class="tabbar" aria-label="Navigation rapide" transition:persist="tabbar">
+  <a href="/" class="tabbar__item" data-tab="/">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"></path></svg>
+    <span>Accueil</span>
+  </a>
+  <a href="/boutique" class="tabbar__item" data-tab="/boutique">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3 3 6.5l2 4 2-1V21h10V9.5l2 1 2-4L15.5 3c-.5 1.8-1.8 3-3.5 3s-3-1.2-3.5-3z"></path></svg>
+    <span>Boutique</span>
+  </a>
+  <button type="button" class="tabbar__item" data-search-open>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg>
+    <span>Chercher</span>
+  </button>
+  <a href="/favoris" class="tabbar__item" data-tab="/favoris">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5S3 15 3 8.8C3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 6.2-9 11.7-9 11.7z"></path></svg>
+    <span>Favoris</span>
+    <b class="tabbar__badge" data-wish-count hidden>0</b>
+  </a>
+  <button type="button" class="tabbar__item" data-cart-open aria-haspopup="dialog" aria-controls="cart-drawer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"></path><path d="M9 10V6.5a3 3 0 0 1 6 0V10"></path></svg>
+    <span>Panier</span>
+    <b class="tabbar__badge tabbar__badge--cart" data-cart-count>0</b>
+  </button>
+</nav>
+
+<style is:global>
+  .tabbar {
+    display: none;
+  }
+  @media (max-width: 860px) {
+    :root {
+      --tabbar-h: 62px;
+    }
+    .tabbar {
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: calc(10px + env(safe-area-inset-bottom));
+      z-index: 70;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      height: var(--tabbar-h);
+      padding: 0 4px;
+      border: 2px solid var(--ink);
+      border-radius: 20px;
+      background: var(--cotton);
+      color: var(--ink);
+      box-shadow: 4px 4px 0 var(--brand);
+      transition: transform 0.4s var(--ease-out);
+    }
+    body:has(main[data-page='product']) .tabbar,
+    body:has(main[data-page='checkout']) .tabbar {
+      display: none;
+    }
+    body:not(:has(main[data-page='product'], main[data-page='checkout'])) {
+      padding-bottom: calc(var(--tabbar-h) + 20px + env(safe-area-inset-bottom));
+    }
+    body:not(:has(main[data-page='product'], main[data-page='checkout'])) .toast {
+      bottom: calc(var(--tabbar-h) + 22px + env(safe-area-inset-bottom));
+    }
+    /* La recherche et les favoris sont dans la barre : l'en-tête mobile s'allège. */
+    body:not(:has(main[data-page='product'], main[data-page='checkout'])) .bar__search,
+    body:not(:has(main[data-page='product'], main[data-page='checkout'])) .bar__icon {
+      display: none;
+    }
+    .tabbar__item {
+      position: relative;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 3px;
+      font-family: var(--f-mono);
+      font-size: 0.5625rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tabbar__item svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      transition: transform 0.25s var(--ease-out);
+    }
+    .tabbar__item:active svg {
+      transform: scale(0.86);
+    }
+    .tabbar__item[aria-current='page'] {
+      color: var(--brand);
+    }
+    .tabbar__item[aria-current='page'] svg {
+      fill: var(--brand);
+      stroke: var(--ink);
+    }
+    .tabbar__item[aria-current='page']::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+    .tabbar__badge {
+      position: absolute;
+      top: 7px;
+      left: calc(50% + 6px);
+      min-width: 17px;
+      height: 17px;
+      padding: 0 4px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 1.5px solid var(--ink);
+      background: var(--brand);
+      color: #fff;
+      font-size: 0.5625rem;
+      letter-spacing: 0;
+    }
+    .tabbar__badge--cart:not(.has-items) {
+      display: none;
+    }
+    .tabbar__badge.bump {
+      animation: bump 0.6s var(--ease-out);
+    }
+  }
+  @keyframes bump {
+    40% {
+      transform: scale(1.35);
+    }
+  }
+</style>

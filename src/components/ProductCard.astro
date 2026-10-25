@@ -53,6 +53,9 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
     </button>
     {
       !soldOut && (
+        <button type="button" class="card__plus" data-qa-toggle aria-expanded="false" aria-label={`Ajout rapide : ${p.name}`}>
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12"></path></svg>
+        </button>
         <div class="card__qa">
           <p class="label card__qa-title">Ajout rapide</p>
           <div class="card__qa-sizes" role="group" aria-label={`Ajouter ${p.name} au panier`}>
@@ -148,10 +151,8 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
     padding: 0.6rem;
     border-radius: 12px;
     border: 2px solid var(--ink);
-    background: rgb(243 241 236 / 0.92);
+    background: var(--cotton);
     color: var(--ink);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     opacity: 0;
     transform: translateY(10px);
     transition:
@@ -233,6 +234,53 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
       display: none;
     }
   }
+  .card__plus {
+    display: none;
+  }
+  /* Tactile : les tailles s'ouvrent avec le bouton « + » pour laisser voir la photo. */
+  @media (hover: none) {
+    .card__qa {
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+    }
+    .card:global(.is-qa) .card__qa {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+    .card__plus {
+      position: absolute;
+      right: 0.6rem;
+      bottom: 0.6rem;
+      z-index: 5;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      background: var(--cotton);
+      color: var(--ink);
+      box-shadow: 2px 2px 0 var(--ink);
+      transition:
+        transform 0.25s var(--ease-out),
+        background 0.2s;
+    }
+    .card__plus svg {
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+    }
+    .card:global(.is-qa) .card__plus {
+      bottom: auto;
+      top: 0.6rem;
+      right: 3.4rem;
+      background: var(--brand);
+      color: #fff;
+      transform: rotate(45deg);
+    }
+  }
   .card__meta {
     display: flex;
     justify-content: space-between;
@@ -255,6 +303,11 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
   }
   .card__id {
     color: var(--muted);
+  }
+  @media (max-width: 700px) {
+    .card__id {
+      display: none;
+    }
   }
   .card__stock {
     color: var(--ok);

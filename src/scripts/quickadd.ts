@@ -17,7 +17,8 @@ export interface QuickProduct {
 let toastTimer = 0;
 
 function flyToCart(from: HTMLElement) {
-  const target = document.querySelector<HTMLElement>('.bar__count');
+  // Cible visible : la barre d'onglets sur mobile, sinon le compteur de l'en-tête.
+  const target = [...document.querySelectorAll<HTMLElement>('.tabbar [data-cart-open], .bar__count')].find((el) => el.offsetParent !== null);
   if (!target || reducedMotion) return;
   const a = from.getBoundingClientRect();
   const b = target.getBoundingClientRect();
@@ -64,6 +65,21 @@ export function quickAdd(p: QuickProduct, size: string, from: HTMLElement) {
 
 // Cartes produit : délégation sur [data-qa-size]
 export function initQuickAdd() {
+  // Bouton « + » des cartes (tactile) : ouvre une seule carte à la fois.
+  document.addEventListener('click', (e) => {
+    const toggle = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-qa-toggle]');
+    const current = document.querySelector<HTMLElement>('.card.is-qa');
+    if (current && (!toggle || !current.contains(toggle)) && !(e.target as HTMLElement).closest('.card.is-qa .card__qa')) {
+      current.classList.remove('is-qa');
+      current.querySelector('[data-qa-toggle]')?.setAttribute('aria-expanded', 'false');
+    }
+    if (!toggle) return;
+    e.preventDefault();
+    const card = toggle.closest<HTMLElement>('.card')!;
+    const open = !card.classList.contains('is-qa');
+    card.classList.toggle('is-qa', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  });
   document.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-qa-size]');
     if (!btn) return;
@@ -71,6 +87,7 @@ export function initQuickAdd() {
     if (!card) return;
     e.preventDefault();
     quickAdd(JSON.parse(card.dataset.qa!) as QuickProduct, btn.dataset.qaSize!, btn);
+    setTimeout(() => card.classList.remove('is-qa'), 700);
   });
   document.addEventListener('click', (e) => {
     if ((e.target as HTMLElement).closest('[data-toast-close]')) document.querySelector('[data-toast]')?.classList.remove('is-visible');

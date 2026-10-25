@@ -1,5 +1,5 @@
 // Résout une image : la vraie photo si elle existe dans /public/images,
-// sinon le visuel provisoire généré (/ph/*.svg).
+// sinon le visuel provisoire généré (/ph/*.webp, rendu depuis un SVG au build).
 import fs from 'node:fs';
 import path from 'node:path';
 import { SPECS, encodeKey } from './placeholder';
@@ -24,7 +24,7 @@ export function media(key: string, alt?: string): Media {
       return { src: `/${rel}`, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: false };
     }
   }
-  return { src: `/ph/${encodeKey(key)}.svg`, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: true };
+  return { src: `/ph/${encodeKey(key)}.webp`, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: true };
 }
 
 export function brandAsset(name: string): string | null {

@@ -1,6 +1,6 @@
 // Point d'entrée client : chargé une seule fois, réinitialise les pages
 // à chaque navigation (astro:page-load) grâce au ClientRouter.
-import { lenis, reducedMotion, lockScroll, unlockScroll } from './scroll';
+import { lenis, reducedMotion, lockScroll, unlockScroll, onScrollFrame, docTop } from './scroll';
 import { initCartUI } from './cart-ui';
 import { initShop } from './shop';
 import { initProduct } from './product';
@@ -8,7 +8,7 @@ import { initCheckout } from './checkout';
 import { initForms } from './forms';
 import { initCarousels } from './carousel';
 import { introDone, splitChars } from './effects';
-import { initHScroll, initFlip, initScrub } from './home';
+import { initFlip, initScrub } from './home';
 import { initDropViewer } from './dropviewer';
 import { initQuickAdd } from './quickadd';
 import { initTable } from './table';
@@ -72,14 +72,26 @@ if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   );
   document.addEventListener('pointerleave', () => cursor.classList.add('is-hidden'));
   document.addEventListener('pointerenter', () => cursor.classList.remove('is-hidden'));
+  let running = false;
   const tick = () => {
-    const k = reducedMotion ? 1 : 0.2;
+    const k = reducedMotion ? 1 : 0.24;
     cx += (x - cx) * k;
     cy += (y - cy) * k;
-    cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-    requestAnimationFrame(tick);
+    cursor.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0)`;
+    // Boucle active seulement tant que le curseur n'a pas rattrapé la souris.
+    running = Math.abs(x - cx) + Math.abs(y - cy) > 0.3;
+    if (running) requestAnimationFrame(tick);
   };
-  tick();
+  window.addEventListener(
+    'pointermove',
+    () => {
+      if (!running) {
+        running = true;
+        requestAnimationFrame(tick);
+      }
+    },
+    { passive: true },
+  );
   document.addEventListener('astro:after-swap', () => cursor.classList.remove('is-label', 'is-hover'));
 }
 
@@ -107,28 +119,35 @@ function initReveal(signal: AbortSignal) {
 
 /* ---------- Parallaxe légère ---------- */
 function initParallax(signal: AbortSignal) {
-  const els = [...document.querySelectorAll<HTMLElement>('[data-parallax]')];
+  const els = [...document.querySelectorAll<HTMLElement>('[data-parallax]')].map((el) => ({
+    el,
+    k: Number(el.dataset.parallax),
+    top: 0,
+    h: 0,
+    last: NaN,
+  }));
   if (!els.length || reducedMotion) return;
-  let ticking = false;
-  const update = () => {
-    ticking = false;
-    const vh = window.innerHeight;
-    for (const el of els) {
-      const r = el.parentElement!.getBoundingClientRect();
-      if (r.bottom < -200 || r.top > vh + 200) continue;
-      const offset = (r.top + r.height / 2 - vh / 2) * Number(el.dataset.parallax);
-      el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
-    }
-  };
-  const onScroll = () => {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(update);
-    }
-  };
-  window.addEventListener('scroll', onScroll, { passive: true, signal });
-  window.addEventListener('resize', onScroll, { signal });
-  update();
+  let vh = window.innerHeight;
+  onScrollFrame(
+    (y) => {
+      for (const it of els) {
+        const top = it.top - y;
+        if (top + it.h < -200 || top > vh + 200) continue;
+        const offset = Math.round((top + it.h / 2 - vh / 2) * it.k * 2) / 2;
+        if (offset === it.last) continue;
+        it.last = offset;
+        it.el.style.transform = `translate3d(0, ${offset}px, 0)`;
+      }
+    },
+    signal,
+    () => {
+      vh = window.innerHeight;
+      for (const it of els) {
+        it.top = docTop(it.el.parentElement!);
+        it.h = it.el.parentElement!.offsetHeight;
+      }
+    },
+  );
 }
 
 /* ---------- Navigation active ---------- */
@@ -138,6 +157,12 @@ function markActive() {
     const href = new URL(a.href).pathname.replace(/\/$/, '') || '/';
     const active = href !== '/' && (path === href || path.startsWith(href + '/'));
     if (active) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+  document.querySelectorAll<HTMLElement>('[data-tab]').forEach((a) => {
+    const tab = a.dataset.tab!;
+    const on = tab === '/' ? path === '/' : path === tab || (tab === '/boutique' && path.startsWith('/produit'));
+    if (on) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
   const isProduct = path.startsWith('/produit');
@@ -172,7 +197,6 @@ document.addEventListener('astro:page-load', () => {
   initDropViewer(signal, introDone);
   initScrub(signal);
   initTable(signal);
-  initHScroll(signal);
   initFlip(signal);
   initParallax(signal);
   initCarousels(signal);

@@ -197,9 +197,10 @@ body {
 }
 .section-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
-  gap: var(--space-sm);
+  gap: var(--space-sm) var(--space-md);
   margin-bottom: var(--space-md);
 }
 .section-head .label {

@@ -2,7 +2,6 @@
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import Img from '../components/Img.astro';
-import Logo from '../components/Logo.astro';
 import Newsletter from '../components/Newsletter.astro';
 import { media } from '../lib/media';
 import { products, brand, byNewest, formatPrice, imageKeys, categoryLabel, totalStock } from '../lib/shop';
@@ -136,39 +135,37 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     </div>
   </div>
 
-  <!-- NOUVEAUTÉS : défilement horizontal -->
-  <section id="drop" class="hs" data-hscroll aria-labelledby="drop-title">
-    <div class="hs__sticky">
-      <div class="wrap hs__head">
-        <div>
-          <span class="label accent">{brand.drop.name} · {products.length} pièces</span>
-          <h2 id="drop-title" class="display h-2xl patch" data-chars>Nouveautés</h2>
-        </div>
-        <a href="/boutique" class="link link--under label">Tout voir</a>
+  <!-- NOUVEAUTÉS : grille claire (glissable au doigt sur mobile) -->
+  <section id="drop" class="section drop" aria-labelledby="drop-title">
+    <div class="wrap section-head drop__head">
+      <div>
+        <span class="label accent">{brand.drop.name} · {products.length} pièces</span>
+        <h2 id="drop-title" class="display h-2xl patch" data-chars>Nouveautés</h2>
       </div>
-      <div class="hs__viewport">
-        <div class="hs__track" data-hs-track>
-          <div class="hs__intro theme-brand">
-            <p class="display hs__big">5 pièces.<br /><span class="accent">Séries courtes.</span></p>
-            <p class="muted">Brodées, imprimées, tricotées. Quand c'est parti, c'est parti.</p>
-            <span class="label hs__hint" aria-hidden="true">Continue de scroller <span class="hs__arrow">→</span></span>
-          </div>
-          {
-            latest.map((p, i) => (
-              <div class="hs__item" style={`--i:${i}`}>
-                <span class="hs__num display" aria-hidden="true">0{i + 1}</span>
-                <ProductCard product={p} index={i} vt sizes="(max-width: 860px) 74vw, 26vw" />
-              </div>
-            ))
-          }
-          <a href="/boutique" class="hs__end" data-cursor="Boutique">
-            <span class="hs__end-ring" aria-hidden="true"></span>
-            <span class="display">Toute la<br />boutique →</span>
-          </a>
-        </div>
-      </div>
-      <div class="wrap hs__bar"><span data-hs-progress></span></div>
+      <a href="/boutique" class="btn btn--ghost">Toute la boutique <span class="btn__dot" aria-hidden="true"></span></a>
     </div>
+    <div class="drop__rail">
+      <div class="drop__grid">
+        <div class="drop__intro theme-brand">
+          <p class="display drop__big">{products.length} pièces.<br /><span class="drop__ink">Séries courtes.</span></p>
+          <p>Brodées, imprimées, tricotées. Quand c'est parti, c'est parti.</p>
+          <p class="label drop__left">{dropStock} pièces restantes</p>
+        </div>
+        {
+          latest.map((p, i) => (
+            <div class="drop__item">
+              <ProductCard product={p} index={i} vt sizes="(max-width: 700px) 72vw, (max-width: 1100px) 46vw, 30vw" />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <ul class="wrap drop__facts" role="list">
+      <li><span class="display">Brodé</span><span>monogramme au point plein</span></li>
+      <li><span class="display">240 g/m²</span><span>jersey de coton épais</span></li>
+      <li><span class="display">Offerte</span><span>livraison dès {brand.shipping.freeThreshold} €</span></li>
+      <li><span class="display">14 j</span><span>pour changer d'avis</span></li>
+    </ul>
   </section>
 
   <!-- PIÈCE SIGNATURE : devant / dos au scroll -->
@@ -220,41 +217,6 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     </div>
   </section>
 
-  <!-- MANIFESTE : s'allume mot par mot -->
-  <section class="mf theme-brand" data-scrub aria-label="Manifeste">
-    <div class="mf__sticky">
-      <div class="wrap">
-        <p class="label mf__label">Manifeste</p>
-        <p class="display mf__text">
-          {mfWords.map((w) => <span class:list={['mf__w', w.accent && 'is-accent']}>{w.text} </span>)}
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- TABLE DE TRAVAIL : les pièces à plat, déplaçables -->
-  <section class="tb theme-dark" data-table aria-labelledby="tb-title" style={`--gravel-img:url(${gravel.src})`}>
-    <div class="wrap tb__head">
-      <div>
-        <span class="label accent">Touche à tout</span>
-        <h2 id="tb-title" class="display h-2xl patch" data-chars>Le drop à plat</h2>
-      </div>
-      <p class="tb__hint">Attrape les pièces, déplace-les, clique sur celle qui te plaît.</p>
-    </div>
-    <div class="tb__stage" data-table-stage>
-      {
-        tableItems.map((t, i) => (
-          <a class="tb__item" href={t.url} data-drag data-cursor="Attraper" style={`--x:${t.x};--y:${t.y};--r:${t.r}deg;--w:${t.w};--z:${i + 1}`} aria-label={`${t.name}, ${t.price}`}>
-            <img src={t.img} alt="" width="1000" height="1250" loading="lazy" draggable="false" />
-            <span class="tb__tag">
-              <b>{t.name}</b> {t.price}
-            </span>
-          </a>
-        ))
-      }
-    </div>
-  </section>
-
   <!-- CATÉGORIES -->
   <section class="section cats" aria-labelledby="cats-title">
     <div class="wrap">
@@ -290,6 +252,41 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     </div>
   </section>
 
+  <!-- MANIFESTE : s'allume mot par mot -->
+  <section class="mf theme-brand" data-scrub aria-label="Manifeste">
+    <div class="mf__sticky">
+      <div class="wrap">
+        <p class="label mf__label">Manifeste</p>
+        <p class="display mf__text">
+          {mfWords.map((w) => <span class:list={['mf__w', w.accent && 'is-accent']}>{w.text} </span>)}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABLE DE TRAVAIL : les pièces à plat, déplaçables -->
+  <section class="tb theme-dark" data-table aria-labelledby="tb-title" style={`--gravel-img:url(${gravel.src})`}>
+    <div class="wrap tb__head">
+      <div>
+        <span class="label accent">Touche à tout</span>
+        <h2 id="tb-title" class="display h-2xl patch" data-chars>Le drop à plat</h2>
+      </div>
+      <p class="tb__hint">Attrape les pièces, déplace-les, clique sur celle qui te plaît.</p>
+    </div>
+    <div class="tb__stage" data-table-stage>
+      {
+        tableItems.map((t, i) => (
+          <a class="tb__item" href={t.url} data-drag data-cursor="Attraper" style={`--x:${t.x};--y:${t.y};--r:${t.r}deg;--w:${t.w};--z:${i + 1}`} aria-label={`${t.name}, ${t.price}`}>
+            <img src={t.img} alt="" width="1000" height="1250" loading="lazy" draggable="false" />
+            <span class="tb__tag">
+              <b>{t.name}</b> {t.price}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
   <!-- BANDEAU SCRIPT -->
   <div class="ribbon-wrap" aria-hidden="true"><div class="ribbon">
     <div class="ribbon__track">
@@ -309,32 +306,6 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       }
     </div>
   </div></div>
-
-  <!-- STORY -->
-  <section class="section story theme-sand" aria-labelledby="story-title">
-    <div class="wrap story__grid">
-      <div class="story__copy">
-        <span class="label accent" data-reveal>{brand.story.kicker}</span>
-        <h2 id="story-title" class="display h-xl" data-reveal style="--i:1">{brand.story.title}</h2>
-        <p class="lede" data-reveal style="--i:2">{brand.story.intro}</p>
-        <a href="/la-marque" class="btn btn--ghost" data-reveal style="--i:3">Notre histoire <span class="btn__dot" aria-hidden="true"></span></a>
-      </div>
-      <div class="story__visual">
-        <div class="media ratio-45 story__img" data-reveal="clip">
-          <Img k="story/1" sizes="(max-width: 860px) 100vw, 40vw" />
-        </div>
-        <div class="story__badge" aria-hidden="true">
-          <Logo variant="mono" />
-        </div>
-      </div>
-    </div>
-    <ul class="wrap story__facts" role="list">
-      <li data-reveal><span class="display">Brodé</span><span class="muted">monogramme au point plein</span></li>
-      <li data-reveal style="--i:1"><span class="display">240 g/m²</span><span class="muted">jersey de coton épais</span></li>
-      <li data-reveal style="--i:2"><span class="display">Séries</span><span class="muted">courtes, par drops</span></li>
-      <li data-reveal style="--i:3"><span class="display">14 j</span><span class="muted">pour changer d'avis</span></li>
-    </ul>
-  </section>
 
   <!-- LOOKBOOK TEASER -->
   <section class="look" aria-labelledby="look-title">
@@ -711,6 +682,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     .dv__info {
       grid-template-columns: 1fr;
       gap: 1rem;
+      /* laisse la place à la barre d'onglets flottante */
+      padding-bottom: calc(var(--tabbar-h, 0px) + 1.75rem + env(safe-area-inset-bottom));
     }
     .dv__name {
       font-size: clamp(1.6rem, 7.4vw, 2.4rem);
@@ -899,16 +872,14 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       min-width: 0;
     }
     .tb__tag {
-      opacity: 1;
-      transform: translateX(-50%) rotate(calc(var(--r) * -1));
-      font-size: 0.625rem;
+      display: none;
     }
   }
 
   /* ================= MANIFESTE ================= */
   .mf {
     --mp: 0;
-    height: 260vh;
+    height: 190vh;
     position: relative;
   }
   .mf__sticky {
@@ -948,170 +919,127 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     }
   }
 
-  /* ================= DÉFILEMENT HORIZONTAL ================= */
-  .hs {
-    position: relative;
-    padding-block: var(--space-lg) var(--space-md);
-  }
-  .hs__head,
-  .hs__bar {
-    width: 100%;
-  }
-  .hs__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: 1rem;
+  /* ================= NOUVEAUTÉS ================= */
+  .drop__head {
     margin-bottom: var(--space-md);
   }
-  .hs__head .label {
-    display: block;
-    margin-bottom: 0.9rem;
-  }
-  .hs__viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-  .hs__viewport::-webkit-scrollbar {
-    display: none;
-  }
-  .hs__track {
-    display: flex;
-    align-items: stretch;
-    gap: clamp(14px, 1.6vw, 28px);
+  .drop__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(2rem, 3vw, 3rem) clamp(14px, 1.6vw, 28px);
     padding-inline: var(--gutter);
-    width: max-content;
+    max-width: 1720px;
+    margin-inline: auto;
   }
-  .hs__intro,
-  .hs__item,
-  .hs__end {
-    flex: none;
-    width: clamp(260px, 25vw, 440px);
-    scroll-snap-align: start;
-  }
-  .hs__intro {
-    border: 1px solid var(--line-strong);
+  .drop__intro {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 1.5rem;
-    padding: 2rem;
-    border-radius: var(--radius);
-    background: var(--brand);
-    color: #fff;
+    padding: clamp(1.5rem, 2.4vw, 2.5rem);
     border: 2px solid var(--ink);
     border-radius: 16px;
     box-shadow: 6px 6px 0 var(--ink);
+    aspect-ratio: 4 / 5;
   }
-  .hs__intro .muted {
-    color: var(--fg-2);
+  .drop__big {
+    font-size: clamp(1.6rem, 2.6vw, 2.8rem);
   }
-  .hs__big {
-    font-size: clamp(1.4rem, 2.1vw, 2.3rem);
-  }
-  .hs__big .accent {
+  .drop__ink {
     color: var(--ink);
   }
-  .hs__arrow {
-    display: inline-block;
-    animation: nudge 1.6s var(--ease-in-out) infinite;
+  .drop__left {
+    display: inline-flex;
+    align-self: start;
+    padding: 0.4rem 0.7rem;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
   }
-  @keyframes nudge {
-    50% {
-      transform: translateX(8px);
+  .drop__facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: var(--space-lg);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .drop__facts li {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.25rem clamp(1rem, 2vw, 1.75rem);
+  }
+  .drop__facts li + li {
+    border-left: 2px dashed var(--line-strong);
+  }
+  .drop__facts .display {
+    font-size: clamp(1.1rem, 1.6vw, 1.6rem);
+    color: var(--brand);
+  }
+  .drop__facts li > span:last-child {
+    font-size: var(--fs-sm);
+    color: var(--fg-2);
+  }
+  @media (max-width: 1100px) {
+    .drop__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .drop__facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .drop__facts li:nth-child(3) {
+      border-left: 0;
+    }
+    .drop__facts li:nth-child(n + 3) {
+      border-top: 2px dashed var(--line-strong);
     }
   }
-  .hs__item {
-    position: relative;
-    transform: skewX(calc(var(--vel, 0) * -0.18deg));
-    transition: transform 0.4s var(--ease-out);
-  }
-  .hs__num {
-    position: absolute;
-    top: -0.62em;
-    right: 0.1em;
-    z-index: 2;
-    font-size: clamp(2rem, 3.2vw, 3.4rem);
-    color: transparent;
-    -webkit-text-stroke: 1.5px var(--brand);
-    pointer-events: none;
-  }
-  .hs__end {
-    border: 2px solid var(--ink) !important;
-    box-shadow: 6px 6px 0 var(--ink);
-    display: grid;
-    place-items: center;
-    align-content: center;
-    gap: 1.5rem;
-    text-align: center;
-    border-radius: var(--radius);
-    border: 1px solid var(--line-strong);
-    font-size: clamp(1.2rem, 1.7vw, 1.8rem);
-    transition:
-      background 0.5s var(--ease-out),
-      color 0.5s var(--ease-out);
-  }
-  .hs__end:hover {
-    background: var(--brand);
-    color: #fff;
-  }
-  .hs__end-ring {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    border: 2px solid currentColor;
-    transition: transform 0.6s var(--ease-out);
-  }
-  .hs__end:hover .hs__end-ring {
-    transform: scale(1.4);
-  }
-  .hs__bar {
-    margin-top: 2rem;
-  }
-  .hs__bar span {
-    display: block;
-    height: 2px;
-    background: var(--fg);
-    transform-origin: left;
-    transform: scaleX(var(--hp, 0.04));
-    box-shadow: 0 0 0 0 var(--line);
-  }
-  .hs__bar {
-    height: 2px;
-    background: var(--line);
-    background-clip: content-box;
-  }
-  /* Version épinglée (desktop) */
-  .hs:global(.is-pinned) {
-    padding: 0;
-  }
-  .hs:global(.is-pinned) .hs__sticky {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
-    padding-top: calc(var(--header-total) * 0.6);
-  }
-  .hs:global(.is-pinned) .hs__viewport {
-    overflow: visible;
-    scroll-snap-type: none;
-  }
-  .hs:global(.is-pinned) .hs__track {
-    will-change: transform;
+  /* Mobile : rail horizontal natif, avec aimantation sur chaque carte */
+  @media (max-width: 700px) {
+    .drop__rail {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+    }
+    .drop__rail::-webkit-scrollbar {
+      display: none;
+    }
+    .drop__grid {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+      max-width: none;
+      padding-bottom: 10px;
+    }
+    .drop__intro,
+    .drop__item {
+      flex: none;
+      width: 72vw;
+      scroll-snap-align: start;
+    }
+    .drop__intro {
+      width: 60vw;
+    }
   }
 
   /* ================= DEVANT / DOS ================= */
   .flip {
     --fp: 0;
     position: relative;
-    height: 320vh;
-    background:
-      radial-gradient(circle at 72% 52%, rgb(var(--brand-rgb) / calc(0.25 + var(--fp) * 0.55)), transparent 52%),
-      var(--bg);
+    height: 230vh;
+    background: var(--bg);
+  }
+  /* Halo framboise : seule son opacité varie (composée par le GPU, sans repeindre). */
+  .flip__sticky::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 72% 52%, rgb(var(--brand-rgb) / 0.8), transparent 52%);
+    opacity: calc(0.3 + var(--fp) * 0.7);
+    will-change: opacity;
+    pointer-events: none;
   }
   .flip__sticky {
     position: sticky;
@@ -1123,6 +1051,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     overflow: hidden;
   }
   .flip__grid {
+    position: relative;
+    z-index: 1;
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1.1fr;
@@ -1224,7 +1154,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     width: 76%;
     aspect-ratio: 4 / 5;
     transform-style: preserve-3d;
-    transform: rotateY(calc(var(--rot, 0) * 1deg)) rotateX(6deg) rotateZ(calc(-4deg + var(--fp) * 8deg));
+    transform: rotateX(6deg) rotateZ(-4deg);
+    will-change: transform;
   }
   .flip__face {
     position: absolute;
@@ -1275,7 +1206,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   }
   @media (max-width: 860px) {
     .flip {
-      height: 300vh;
+      height: 220vh;
     }
     .flip__grid {
       grid-template-columns: 1fr;
@@ -1307,49 +1238,59 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     }
   }
 
-  /* CATÉGORIES */
+  /* CATÉGORIES : tuiles cousues, titre en étiquette */
   .cats__grid {
     display: grid;
-    grid-template-columns: 5fr 4fr 3fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(12px, 1.4vw, 24px);
-    align-items: start;
   }
   .cat {
-    display: block;
     position: relative;
+    display: block;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  /* (sélecteurs renforcés pour passer devant les styles d'apparition) */
+  .cats__grid .cat {
+    transition:
+      clip-path 1.1s var(--ease-out) calc(var(--i, 0) * 90ms),
+      transform 0.25s var(--ease-out),
+      box-shadow 0.25s var(--ease-out);
+  }
+  .cats__grid .cat:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 6px 6px 0 var(--brand);
   }
   .cat__media {
-    aspect-ratio: 3 / 4;
-    border-radius: var(--radius);
-  }
-  .cat--b {
-    margin-top: 18%;
-  }
-  .cat--c {
-    margin-top: 42%;
+    aspect-ratio: 4 / 5;
   }
   .cat__media :global(img) {
-    transition: transform 1.2s var(--ease-out);
+    transition: transform 0.8s var(--ease-out);
   }
   .cat:hover .cat__media :global(img) {
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
   .cat__meta {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
-    padding-top: 1rem;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    padding: 0.8rem 1rem;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    background: var(--cotton);
+    color: var(--ink);
   }
   .cat__title {
-    font-size: var(--fs-lg);
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
   }
   .cat .label {
-    transition: color 0.3s;
-  }
-  .cat:hover .label {
-    color: var(--accent);
+    color: var(--brand);
   }
   @media (max-width: 860px) {
     .cats__grid {
@@ -1358,9 +1299,17 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     .cat--a {
       grid-column: 1 / -1;
     }
-    .cat--b,
-    .cat--c {
-      margin-top: 0;
+    .cat--a .cat__media {
+      aspect-ratio: 16 / 11;
+    }
+    .cat--b .cat__meta,
+    .cat--c .cat__meta {
+      flex-direction: column;
+      align-items: start;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      padding: 0.6rem 0.7rem;
     }
   }
 
@@ -1385,8 +1334,6 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   .ribbon__set {
     display: flex;
     align-items: center;
-    transform: skewX(calc(var(--vel, 0) * -0.35deg));
-    transition: transform 0.35s var(--ease-out);
   }
   .ribbon__word {
     font-family: var(--f-display);
@@ -1410,76 +1357,6 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   @keyframes ribbon {
     to {
       transform: translateX(-50%);
-    }
-  }
-
-  /* STORY */
-  .story__grid {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: var(--space-lg);
-    align-items: center;
-  }
-  .story__copy {
-    display: grid;
-    gap: 1.5rem;
-    justify-items: start;
-  }
-  .story__copy h2 {
-    max-width: 20ch;
-  }
-  .story__visual {
-    position: relative;
-  }
-  .story__img {
-    border-radius: var(--radius);
-  }
-  .story__badge {
-    position: absolute;
-    left: -2.5rem;
-    bottom: -2.5rem;
-    width: clamp(96px, 10vw, 150px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--on-accent);
-    display: grid;
-    place-items: center;
-    font-size: clamp(2rem, 3.4vw, 3.5rem);
-    animation: spin 18s linear infinite;
-  }
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  .story__facts {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-top: var(--space-lg);
-  }
-  .story__facts li {
-    display: grid;
-    gap: 0.4rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--line-strong);
-    font-size: var(--fs-sm);
-  }
-  .story__facts .display {
-    font-size: var(--fs-lg);
-  }
-  @media (max-width: 860px) {
-    .story__grid {
-      grid-template-columns: 1fr;
-    }
-    .story__badge {
-      left: auto;
-      right: 1rem;
-      bottom: -2rem;
-    }
-    .story__facts {
-      grid-template-columns: 1fr 1fr;
     }
   }
 

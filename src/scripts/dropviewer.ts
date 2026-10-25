@@ -361,9 +361,11 @@ export function initDropViewer(signal: AbortSignal, introDone: Promise<void>) {
     renderUI(current);
   };
 
-  let dpr = Math.min(2, window.devicePixelRatio || 1);
+  // Résolution plafonnée : la scène reste nette et le GPU garde de la marge pour le scroll.
+  const maxDpr = window.matchMedia('(pointer: coarse)').matches ? 1.25 : 1.5;
+  let dpr = Math.min(maxDpr, window.devicePixelRatio || 1);
   function resize() {
-    dpr = Math.min(2, window.devicePixelRatio || 1);
+    dpr = Math.min(maxDpr, window.devicePixelRatio || 1);
     const r = canvas.getBoundingClientRect();
     canvas.width = Math.round(r.width * dpr);
     canvas.height = Math.round(r.height * dpr);
@@ -374,10 +376,14 @@ export function initDropViewer(signal: AbortSignal, introDone: Promise<void>) {
 
   let visible = true;
   let raf = 0;
-  const io = new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible && !raf) raf = requestAnimationFrame(frame);
-  });
+  // La scène s'arrête dès qu'elle est presque sortie de l'écran : le GPU est libéré pour le scroll.
+  const io = new IntersectionObserver(
+    ([e]) => {
+      visible = e.intersectionRatio > 0.2;
+      if (visible && !raf) raf = requestAnimationFrame(frame);
+    },
+    { threshold: [0, 0.2, 0.4] },
+  );
   io.observe(root);
 
   function frame(t: number) {

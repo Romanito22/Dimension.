@@ -59,7 +59,7 @@
   --space-sm: 1rem;
   --space-md: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
   --space-lg: clamp(3rem, 2rem + 4vw, 6rem);
-  --space-xl: clamp(4.5rem, 3rem + 7vw, 10rem);
+  --space-xl: clamp(4rem, 2.5rem + 5vw, 7.5rem);
   --header-h: 64px;
   --radius: 2px;
   --radius-pill: 999px;

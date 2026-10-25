@@ -141,7 +141,7 @@ export function initCartUI() {
   let prev = $count.get();
   $count.listen((n) => {
     if (n > prev) {
-      document.querySelectorAll('.bar__count').forEach((el) => {
+      document.querySelectorAll('.bar__count, .tabbar__badge--cart').forEach((el) => {
         el.classList.remove('bump');
         void (el as HTMLElement).offsetWidth;
         el.classList.add('bump');

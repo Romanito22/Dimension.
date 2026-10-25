@@ -1,6 +1,7 @@
 ---
 import Img from './Img.astro';
-import { formatPrice, imageKeys, availableSizes, SIZES, type Product } from '../lib/shop';
+import { media } from '../lib/media';
+import { formatPrice, imageKeys, availableSizes, totalStock, SIZES, LOW_STOCK, type Product } from '../lib/shop';
 
 interface Props {
   product: Product;
@@ -12,12 +13,20 @@ const { product: p, index = 0, vt = false, sizes = '(max-width: 700px) 50vw, 25v
 const [k1, k2] = imageKeys(p);
 const avail = availableSizes(p);
 const soldOut = avail.length === 0;
-const productSizes = SIZES.filter((s) => p.sizes.some((x) => x.size === s));
+const stock = totalStock(p);
+const orderedSizes = SIZES.map((s) => p.sizes.find((x) => x.size === s)).filter(Boolean) as Product['sizes'];
+const url = `/produit/${p.slug}`;
+const lowSizes = p.sizes.filter((s) => s.stock > 0 && s.stock <= LOW_STOCK).map((s) => s.size);
+const hot = stock > 0 && stock <= 15;
+const stockLabel = soldOut ? 'Épuisé' : hot ? `Plus que ${stock}` : `${stock} en stock`;
+// Données pour l'ajout rapide (lues par scripts/quickadd.ts)
+const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price, color: p.colors[0].name, image: media(k1).src, sizes: p.sizes });
 ---
 
 <article
   class="card"
   data-card
+  data-qa={qa}
   data-category={p.category}
   data-sizes={avail.join(',')}
   data-colors={p.colors.map((c) => c.slug).join(',')}
@@ -26,51 +35,62 @@ const productSizes = SIZES.filter((s) => p.sizes.some((x) => x.size === s));
   data-name={p.name}
   style={`--i:${index % 4}`}
 >
-  <a href={`/produit/${p.slug}`} class="card__link" aria-label={`${p.name} — ${formatPrice(p.price)}`}>
-    <div class="card__media media ratio-45" data-tilt>
-      <span class="card__glare" aria-hidden="true"></span>
+  <div class="card__media media ratio-45" data-tilt>
+    <a href={url} class="card__imglink" tabindex="-1" aria-hidden="true">
+      <span class="card__glare"></span>
       <Img k={k1} class="card__img card__img--1" sizes={sizes} vt={vt ? `media-${p.slug}` : undefined} />
       <Img k={k2} class="card__img card__img--2" sizes={sizes} />
-      {
-        (p.badge || soldOut) && (
-          <span class:list={['badge card__badge', p.badge === 'Nouveau' && 'badge--accent', p.badge === 'Best-seller' && 'badge--candy']}>
-            {soldOut ? 'Épuisé' : p.badge}
-          </span>
-        )
-      }
-      <ul class="card__sizes label" role="list" aria-label="Tailles disponibles">
-        {
-          productSizes.map((s) => (
-            <li class:list={[!avail.includes(s) && 'is-out']}>{s}</li>
-          ))
-        }
-      </ul>
+    </a>
+    {
+      (p.badge || soldOut) && (
+        <span class:list={['badge card__badge', p.badge === 'Nouveau' && 'badge--accent', p.badge === 'Best-seller' && 'badge--candy']}>
+          {soldOut ? 'Épuisé' : p.badge}
+        </span>
+      )
+    }
+    {
+      !soldOut && (
+        <div class="card__qa">
+          <p class="label card__qa-title">Ajout rapide</p>
+          <div class="card__qa-sizes" role="group" aria-label={`Ajouter ${p.name} au panier`}>
+            {orderedSizes.map((s) => (
+              <button
+                type="button"
+                data-qa-size={s.size}
+                disabled={s.stock === 0}
+                class:list={[lowSizes.includes(s.size) && 'is-low']}
+                aria-label={`Ajouter ${p.name}, taille ${s.size}${s.stock === 0 ? ' (épuisé)' : ''}`}
+              >
+                {s.size}
+              </button>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+  <a href={url} class="card__meta">
+    <div>
+      <h3 class="card__name">{p.name}</h3>
+      <p class="card__sub">
+        <span class="label card__id">{p.id}</span>
+        <span class:list={['label card__stock', (hot || soldOut) && 'is-hot']}>{stockLabel}</span>
+      </p>
     </div>
-    <div class="card__meta">
-      <div>
-        <h3 class="card__name">{p.name}</h3>
-        <p class="card__sub muted">
-          {
-            p.colors.map((c) => (
-              <span class="swatch" style={`background:${c.hex}`} title={c.name} />
-            ))
-          }
-          <span>{p.colors.map((c) => c.name).join(', ')}</span>
-        </p>
-      </div>
-      <p class="card__price">{formatPrice(p.price)}</p>
-    </div>
+    <p class="card__price">{formatPrice(p.price)}</p>
   </a>
 </article>
 
 <style>
-  .card__link {
-    display: block;
-  }
   .card__media {
     border-radius: var(--radius);
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     transition: transform 0.6s var(--ease-out);
+  }
+  .card__imglink {
+    position: absolute;
+    inset: 0;
+    display: block;
   }
   .card__glare {
     position: absolute;
@@ -93,52 +113,106 @@ const productSizes = SIZES.filter((s) => p.sizes.some((x) => x.size === s));
     opacity: 0;
     transform: scale(1.04);
   }
-  @media (hover: hover) {
-    .card__link:hover .card__img--2 {
-      opacity: 1;
-      transform: none;
-    }
-    .card__link:hover .card__img--1 {
-      transform: scale(1.03);
-    }
-    .card__link:hover .card__sizes {
-      opacity: 1;
-      transform: none;
-    }
-  }
   .card__badge {
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
+    z-index: 4;
   }
-  .card__sizes {
+  .card__qa {
     position: absolute;
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: 0.75rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 0.55rem;
-    border-radius: var(--radius-pill);
-    background: rgb(246 245 242 / 0.88);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    letter-spacing: 0.08em;
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    z-index: 4;
+    display: grid;
+    gap: 0.4rem;
+    padding: 0.6rem;
+    border-radius: 10px;
+    background: rgb(var(--bg-rgb) / 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
     transition:
       opacity 0.4s var(--ease-out),
       transform 0.4s var(--ease-out);
   }
-  .card__sizes li {
-    padding: 0 0.35rem;
-  }
-  .card__sizes .is-out {
+  .card__qa-title {
     color: var(--muted);
+    text-align: center;
+  }
+  .card__qa-sizes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+    gap: 4px;
+  }
+  .card__qa button {
+    position: relative;
+    height: 34px;
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
+    font-family: var(--f-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .card__qa button:hover {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+  .card__qa button:disabled {
+    opacity: 0.3;
     text-decoration: line-through;
-    opacity: 0.6;
+  }
+  .card__qa button.is-low::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .card__qa button:global(.is-added) {
+    animation: qa-added 0.7s var(--ease-out);
+  }
+  @keyframes qa-added {
+    30% {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      transform: scale(0.9);
+    }
+  }
+  @media (hover: hover) {
+    .card:hover .card__img--2 {
+      opacity: 1;
+      transform: none;
+    }
+    .card:hover .card__img--1 {
+      transform: scale(1.03);
+    }
+    .card:hover .card__qa,
+    .card:focus-within .card__qa {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (hover: none) {
+    .card__qa {
+      opacity: 1;
+      transform: none;
+      padding: 0.4rem;
+    }
+    .card__qa-title {
+      display: none;
+    }
   }
   .card__meta {
     display: flex;
@@ -151,20 +225,30 @@ const productSizes = SIZES.filter((s) => p.sizes.some((x) => x.size === s));
     font-weight: 600;
     line-height: 1.3;
   }
+  .card__meta:hover .card__name {
+    color: var(--accent-2);
+  }
   .card__sub {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    margin-top: 0.3rem;
-    font-size: var(--fs-xs);
+    gap: 0.75rem;
+    margin-top: 0.35rem;
   }
-  .card__sub .swatch {
-    width: 10px;
-    height: 10px;
+  .card__id {
+    color: var(--muted);
+  }
+  .card__stock {
+    color: var(--ok);
+  }
+  .card__stock.is-hot {
+    color: var(--accent-2);
   }
   .card__price {
-    font-size: var(--fs-sm);
-    font-weight: 600;
+    font-family: var(--f-display);
+    font-stretch: 75%;
+    font-weight: 800;
+    font-size: 1.35rem;
+    line-height: 1;
     white-space: nowrap;
   }
 </style>

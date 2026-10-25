@@ -97,8 +97,7 @@ Soit 5 pièces × 4 = **20 photos** (`dim-001` = Love Over Everything, `dim-002`
 
 | Fichier | Format | Taille | Contenu |
 |---|---|---|---|
-| `cutout/love-back.png` | 4:5, **PNG détouré (fond transparent)** | 2000 × 2500 | Le t-shirt Love Over Everything vu de dos, posé à plat : il flotte au centre du hero et dans la section « Devant / Dos » |
-| `cutout/love-front.png` | 4:5, **PNG détouré** | 2000 × 2500 | Le même, vu de face (section « Devant / Dos ») |
+| `cutout/dim-00X-front.png` et `cutout/dim-00X-back.png` | 4:5, **PNG détouré (fond transparent)** | 2000 × 2500 | Chaque pièce à plat, face et dos, sans fond : elles apparaissent sous le projecteur du hero et dans la section « Devant / Dos » (10 fichiers) |
 | `hero/desktop.jpg` | 16:9 | 2560 × 1440 | Image de partage sur les réseaux (Open Graph) |
 | `categories/t-shirts.jpg`, `categories/maille.jpg`, `categories/love.jpg` | 3:4 | 1500 × 2000 | Tuiles catégories de l'accueil |
 | `story/1.jpg`, `story/3.jpg` | 4:5 | 1600 × 2000 | Page « La marque » (détails, atelier, mains) |
@@ -106,7 +105,7 @@ Soit 5 pièces × 4 = **20 photos** (`dim-001` = Love Over Everything, `dim-002`
 | `lookbook/1.jpg` … `lookbook/9.jpg` | 1, 5, 9 en 16:9 · les autres en 4:5 | 2560 × 1440 / 1600 × 2000 | Lookbook Drop 01 |
 | `social/1.jpg` … `social/6.jpg` | 1:1 | 1080 × 1080 | Grille TikTok / Instagram |
 
-**Total : 20 photos produit + 2 détourés + 21 photos de pages.** Astuce détourage : remove.bg ou Photoshop « Sélectionner le sujet », puis export PNG.
+**Total : 20 photos produit + 10 détourés + 21 photos de pages.** Astuce détourage : remove.bg ou Photoshop « Sélectionner le sujet », puis export PNG.
 
 ---
 

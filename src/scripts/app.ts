@@ -8,7 +8,9 @@ import { initCheckout } from './checkout';
 import { initForms } from './forms';
 import { initCarousels } from './carousel';
 import { introDone, splitChars } from './effects';
-import { initHero, initHScroll, initFlip } from './home';
+import { initHScroll, initFlip, initScrub } from './home';
+import { initDropViewer } from './dropviewer';
+import { initQuickAdd } from './quickadd';
 
 /* ---------- En-tête ---------- */
 const header = document.querySelector<HTMLElement>('[data-header]');
@@ -147,6 +149,7 @@ document.addEventListener('keydown', (e) => {
 
 /* ---------- Cycle de vie des pages ---------- */
 initCartUI();
+initQuickAdd();
 let controller: AbortController | null = null;
 
 document.addEventListener('astro:page-load', () => {
@@ -160,7 +163,8 @@ document.addEventListener('astro:page-load', () => {
   markActive();
   splitChars();
   initReveal(signal);
-  initHero(signal, introDone);
+  initDropViewer(signal, introDone);
+  initScrub(signal);
   initHScroll(signal);
   initFlip(signal);
   initParallax(signal);

@@ -7,8 +7,14 @@
   "email": "contact@dimensionbrand.fr",
   "handle": "@dimensionbrand",
   "socials": [
-    { "name": "TikTok", "url": "https://www.tiktok.com/@dimensionbrand" },
-    { "name": "Instagram", "url": "https://www.instagram.com/dimensionbrand" }
+    {
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/@dimensionbrand"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com/dimensionbrand"
+    }
   ],
   "drop": {
     "name": "Drop 01",
@@ -19,13 +25,31 @@
     "currency": "EUR",
     "freeThreshold": 80,
     "methods": [
-      { "id": "relay", "label": "Point relais", "delay": "3 à 5 jours ouvrés", "price": 3.9 },
-      { "id": "home", "label": "Domicile — Colissimo", "delay": "2 à 3 jours ouvrés", "price": 5.9 },
-      { "id": "express", "label": "Express — Chronopost", "delay": "24 h ouvrées", "price": 11.9 }
+      {
+        "id": "relay",
+        "label": "Point relais",
+        "delay": "3 à 5 jours ouvrés",
+        "price": 3.9
+      },
+      {
+        "id": "home",
+        "label": "Domicile — Colissimo",
+        "delay": "2 à 3 jours ouvrés",
+        "price": 5.9
+      },
+      {
+        "id": "express",
+        "label": "Express — Chronopost",
+        "delay": "24 h ouvrées",
+        "price": 11.9
+      }
     ],
     "returnsDays": 14
   },
-  "promo": { "code": "BIENVENUE10", "rate": 0.1 },
+  "promo": {
+    "code": "BIENVENUE10",
+    "rate": 0.1
+  },
   "marquee": [
     "Love over everything",
     "Livraison offerte dès 80 €",
@@ -55,5 +79,10 @@
         "text": "On produit par drops, en quantités limitées. Quand une pièce part, elle part : moins de stock dormant, plus de pièces qui comptent."
       }
     ]
+  },
+  "nextDrop": {
+    "name": "Drop 02",
+    "date": "2026-11-21T19:00:00+01:00",
+    "teaser": "Nouvelles pièces, mêmes séries courtes. Les inscrits passent en premier."
   }
 }

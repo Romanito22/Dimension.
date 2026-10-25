@@ -46,7 +46,7 @@
   padding: 0.4rem 0;
 }
 .line__remove:hover {
-  color: var(--framboise);
+  color: var(--accent);
 }
 .qty {
   display: inline-flex;
@@ -64,7 +64,7 @@
   font-size: 1rem;
 }
 .qty button:hover {
-  color: var(--framboise);
+  color: var(--accent);
 }
 .qty button:disabled {
   opacity: 0.3;
@@ -90,8 +90,8 @@
   min-width: 20px;
   height: 20px;
   border-radius: 999px;
-  background: var(--ink);
-  color: var(--cotton);
+  background: var(--fg);
+  color: var(--bg);
   font-size: 0.6875rem;
   display: grid;
   place-items: center;
@@ -108,7 +108,7 @@
 .cart-empty__mark {
   width: 56px;
   height: 56px;
-  border: 1.5px solid var(--framboise);
+  border: 1.5px solid var(--accent);
   border-radius: 50%;
 }
 .cart-empty p {

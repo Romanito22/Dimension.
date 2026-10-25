@@ -89,8 +89,9 @@ const cols = [
 
 <style>
   .footer {
-    background: var(--ink);
-    color: var(--cotton);
+    background: var(--bg-2);
+    color: var(--fg);
+    border-top: 1px solid var(--line);
     padding-top: var(--space-lg);
     overflow: hidden;
   }
@@ -104,7 +105,7 @@ const cols = [
     font-size: clamp(2rem, 4.5vw, 4rem);
   }
   .footer__candy {
-    color: var(--candy);
+    color: var(--accent-2);
   }
   .footer__cols {
     display: grid;
@@ -112,7 +113,7 @@ const cols = [
     gap: 1.5rem;
   }
   .footer__title {
-    color: rgb(246 245 242 / 0.5);
+    color: rgb(var(--fg-rgb) / 0.5);
     margin-bottom: 1.1rem;
   }
   .footer__cols ul {
@@ -126,8 +127,8 @@ const cols = [
     display: flex;
     justify-content: center;
     padding-block: 0.1em 0.18em;
-    border-top: 1px solid rgb(246 245 242 / 0.14);
-    color: var(--cotton);
+    border-top: 1px solid rgb(var(--fg-rgb) / 0.14);
+    color: var(--fg);
   }
   .footer__bottom {
     display: flex;
@@ -135,8 +136,8 @@ const cols = [
     justify-content: space-between;
     gap: 0.75rem 2rem;
     padding-block: 1.5rem 2rem;
-    border-top: 1px solid rgb(246 245 242 / 0.14);
-    color: rgb(246 245 242 / 0.6);
+    border-top: 1px solid rgb(var(--fg-rgb) / 0.14);
+    color: rgb(var(--fg-rgb) / 0.6);
   }
   @media (max-width: 960px) {
     .footer__top {

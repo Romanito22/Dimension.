@@ -38,7 +38,7 @@ const prices = [
       </div>
       <div class="shop__tools">
         <button type="button" class="tool label" data-filters-open aria-expanded="false" aria-controls="filters">
-          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M0 2h16M0 10h16"></path><circle cx="5" cy="2" r="1.8" fill="var(--cotton)"></circle><circle cx="11" cy="10" r="1.8" fill="var(--cotton)"></circle></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M0 2h16M0 10h16"></path><circle cx="5" cy="2" r="1.8" fill="var(--bg)"></circle><circle cx="11" cy="10" r="1.8" fill="var(--bg)"></circle></svg>
           Filtres <span data-filter-count></span>
         </button>
         <label class="tool tool--sort label">
@@ -158,7 +158,7 @@ const prices = [
   .shop__count {
     font-size: 0.28em;
     vertical-align: 2.2em;
-    color: var(--framboise);
+    color: var(--accent);
     margin-left: 0.15em;
     letter-spacing: 0;
   }
@@ -197,15 +197,15 @@ const prices = [
     transition: color 0.3s;
   }
   .pill:hover {
-    border-color: var(--ink);
+    border-color: var(--fg);
   }
   .pill[aria-pressed='true'] {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--cotton);
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
   }
   .pill[aria-pressed='true'] span {
-    color: var(--candy);
+    color: var(--accent-2);
   }
   .shop__tools {
     display: flex;
@@ -297,7 +297,7 @@ const prices = [
   .empty__ring {
     width: 56px;
     height: 56px;
-    border: 1.5px solid var(--framboise);
+    border: 1.5px solid var(--accent);
     border-radius: 50%;
   }
 
@@ -315,7 +315,7 @@ const prices = [
     border-top: 1px solid var(--line-strong);
   }
   .shop__reassure .label {
-    color: var(--framboise);
+    color: var(--accent);
   }
 
   /* Panneau filtres */
@@ -323,7 +323,7 @@ const prices = [
     position: fixed;
     inset: 0;
     z-index: 70;
-    background: rgb(23 21 20 / 0.4);
+    background: rgb(0 0 0 / 0.62);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s var(--ease-out);
@@ -333,7 +333,7 @@ const prices = [
     inset: 0 auto 0 0;
     z-index: 71;
     width: min(420px, 100%);
-    background: var(--cotton);
+    background: var(--bg);
     display: flex;
     flex-direction: column;
     transform: translateX(-100%);
@@ -408,16 +408,16 @@ const prices = [
       border-color 0.2s;
   }
   .opt-size:hover span {
-    border-color: var(--ink);
+    border-color: var(--fg);
   }
   .opt-size input:checked + span {
-    background: var(--ink);
-    color: var(--cotton);
-    border-color: var(--ink);
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
   }
   .opt-size input:focus-visible + span,
   .opt-row input:focus-visible ~ span:last-child {
-    outline: 2px solid var(--framboise);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
   .opt-row {
@@ -435,8 +435,8 @@ const prices = [
   }
   .opt-row input:checked + .swatch {
     box-shadow:
-      0 0 0 2px var(--cotton),
-      0 0 0 3.5px var(--framboise);
+      0 0 0 2px var(--bg),
+      0 0 0 3.5px var(--accent);
   }
   .opt-row input:checked ~ span:last-child {
     font-weight: 700;
@@ -451,7 +451,7 @@ const prices = [
       background 0.2s;
   }
   .opt-row input:checked + .radio {
-    border: 5px solid var(--framboise);
+    border: 5px solid var(--accent);
   }
   .filters__foot {
     display: grid;

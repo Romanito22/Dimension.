@@ -154,7 +154,7 @@ const faqLd = {
     gap: 1rem;
     justify-items: start;
     padding: 2rem;
-    background: var(--paper);
+    background: var(--surface);
     border-radius: var(--radius);
     outline: none;
   }
@@ -165,7 +165,7 @@ const faqLd = {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: var(--framboise);
+    background: var(--accent);
   }
   .faq,
   .guide {
@@ -185,7 +185,7 @@ const faqLd = {
   }
   .faq__gtitle {
     margin-bottom: 0.5rem;
-    color: var(--framboise);
+    color: var(--accent);
   }
   .faq__item {
     border-bottom: 1px solid var(--line);
@@ -208,21 +208,21 @@ const faqLd = {
     width: 12px;
     height: 12px;
     margin-top: 0.35em;
-    border: 1.5px solid var(--ink);
+    border: 1.5px solid var(--fg);
     border-radius: 50%;
     transition: background 0.3s;
   }
   .faq__item[open] summary::after {
-    background: var(--framboise);
-    border-color: var(--framboise);
+    background: var(--accent);
+    border-color: var(--accent);
   }
   .faq__item summary:hover {
-    color: var(--framboise);
+    color: var(--accent);
   }
   .faq__item p {
     padding-bottom: 1.25rem;
     max-width: 62ch;
-    color: var(--ink-2);
+    color: var(--fg-2);
   }
   @media (max-width: 860px) {
     .contact,

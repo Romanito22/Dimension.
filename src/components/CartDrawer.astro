@@ -47,7 +47,7 @@ import brand from '../data/brand.json';
   .drawer__overlay {
     position: absolute;
     inset: 0;
-    background: rgb(23 21 20 / 0.4);
+    background: rgb(0 0 0 / 0.62);
     opacity: 0;
     transition: opacity 0.5s var(--ease-out);
   }
@@ -60,7 +60,7 @@ import brand from '../data/brand.json';
     right: 0;
     bottom: 0;
     width: min(460px, 100%);
-    background: var(--cotton);
+    background: var(--bg);
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
@@ -82,7 +82,7 @@ import brand from '../data/brand.json';
   }
   .drawer__title sup {
     font-size: 0.55em;
-    color: var(--framboise);
+    color: var(--accent);
     vertical-align: 0.8em;
     margin-left: 0.1em;
   }
@@ -96,7 +96,7 @@ import brand from '../data/brand.json';
   }
   .drawer__ship-bar {
     height: 3px;
-    background: var(--paper);
+    background: var(--surface);
     border-radius: 3px;
     overflow: hidden;
   }
@@ -104,7 +104,7 @@ import brand from '../data/brand.json';
     display: block;
     height: 100%;
     width: 0;
-    background: var(--framboise);
+    background: var(--accent);
     transition: width 0.8s var(--ease-out);
   }
   .drawer__body {

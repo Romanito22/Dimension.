@@ -216,7 +216,7 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
   .co__steps li::before {
     counter-increment: s;
     content: '0' counter(s) ' ';
-    color: var(--framboise);
+    color: var(--accent);
   }
   .co__layout {
     display: grid;
@@ -238,7 +238,7 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
     align-items: center;
     gap: 0.9rem;
     font-family: var(--f-display);
-    font-stretch: 112%;
+    font-stretch: 75%;
     font-weight: 700;
     font-size: var(--fs-md);
     text-transform: uppercase;
@@ -257,14 +257,14 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
       color 0.3s;
   }
   .step:global(.is-open) .step__num {
-    background: var(--framboise);
-    border-color: var(--framboise);
-    color: var(--cotton);
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
   }
   .step:global(.is-done) .step__num {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--cotton);
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
   }
   .step:not(:global(.is-open)):not(:global(.is-done)) .step__title {
     color: var(--muted);
@@ -312,7 +312,7 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
     cursor: pointer;
   }
   .check input {
-    accent-color: var(--framboise);
+    accent-color: var(--accent);
     width: 18px;
     height: 18px;
     margin-top: 2px;
@@ -342,8 +342,8 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
       background 0.2s;
   }
   .ship__opt:has(input:checked) {
-    border-color: var(--ink);
-    background: var(--paper);
+    border-color: var(--fg);
+    background: var(--surface);
   }
   .ship__opt input {
     position: absolute;
@@ -357,10 +357,10 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
     transition: border 0.2s;
   }
   .ship__opt input:checked + .ship__radio {
-    border: 5px solid var(--framboise);
+    border: 5px solid var(--accent);
   }
   .ship__opt input:focus-visible + .ship__radio {
-    outline: 2px solid var(--framboise);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
   }
   .ship__text {
@@ -374,8 +374,8 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
   .demo {
     padding: 0.75rem 1rem;
     border-radius: var(--radius);
-    background: var(--candy-soft);
-    color: var(--framboise-deep);
+    background: var(--accent-soft);
+    color: var(--accent-deep);
   }
   .co__legal {
     font-size: var(--fs-xs);
@@ -385,7 +385,7 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
     top: calc(var(--header-total) + 1rem);
   }
   .sum__inner {
-    background: var(--paper);
+    background: var(--surface);
     padding: clamp(1.25rem, 2.5vw, 2rem);
     border-radius: var(--radius);
     display: grid;
@@ -401,11 +401,11 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
   }
   .promo__msg {
     font-size: var(--fs-xs);
-    color: #1f6b43;
+    color: var(--ok);
     margin-top: -0.5rem;
   }
   .promo__msg:global(.is-error) {
-    color: var(--framboise);
+    color: var(--accent);
   }
   .promo__msg:empty {
     display: none;
@@ -452,11 +452,11 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
   .confirm__ring {
     width: 64px;
     height: 64px;
-    border: 1.5px solid var(--framboise);
+    border: 1.5px solid var(--accent);
     border-radius: 50%;
   }
   .confirm__ring {
-    background: var(--framboise);
+    background: var(--accent);
     animation: pop 0.8s var(--ease-out);
   }
   @keyframes pop {

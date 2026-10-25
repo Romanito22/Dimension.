@@ -22,7 +22,33 @@ export function validateAll(root: HTMLElement) {
   return results.every(Boolean);
 }
 
+function initCountdowns(signal: AbortSignal) {
+  document.querySelectorAll<HTMLElement>('[data-countdown]').forEach((el) => {
+    const target = new Date(el.dataset.countdown!).getTime();
+    const parts = { d: el.querySelector('[data-cd="d"]'), h: el.querySelector('[data-cd="h"]'), m: el.querySelector('[data-cd="m"]'), s: el.querySelector('[data-cd="s"]') };
+    const tick = () => {
+      let t = Math.max(0, Math.floor((target - Date.now()) / 1000));
+      const d = Math.floor(t / 86400);
+      t -= d * 86400;
+      const h = Math.floor(t / 3600);
+      t -= h * 3600;
+      const m = Math.floor(t / 60);
+      const s = t - m * 60;
+      [
+        [parts.d, d],
+        [parts.h, h],
+        [parts.m, m],
+        [parts.s, s],
+      ].forEach(([node, v]) => node && ((node as Element).textContent = String(v).padStart(2, '0')));
+    };
+    tick();
+    const id = window.setInterval(tick, 1000);
+    signal.addEventListener('abort', () => clearInterval(id));
+  });
+}
+
 export function initForms(signal: AbortSignal) {
+  initCountdowns(signal);
   document.querySelectorAll<HTMLFormElement>('[data-newsletter]').forEach((form) => {
     const msg = form.querySelector<HTMLElement>('[data-nl-msg]');
     form.addEventListener(
@@ -38,7 +64,7 @@ export function initForms(signal: AbortSignal) {
         }
         input.setAttribute('aria-invalid', 'false');
         form.querySelector('.nl__field')?.setAttribute('hidden', '');
-        if (msg) msg.textContent = 'Bienvenue dans la famille. Ton code −10 % : BIENVENUE10';
+        if (msg) msg.textContent = 'Tu es sur la liste. Ton code −10 % : BIENVENUE10';
       },
       { signal },
     );

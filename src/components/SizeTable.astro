@@ -42,7 +42,7 @@ const tables = Object.entries(sizes.tables).filter(([k]) => !only || k === only)
         fill="none"
         stroke="currentColor"
         stroke-width="1.5"></path>
-      <g stroke="var(--framboise)" stroke-width="1.5" fill="var(--framboise)">
+      <g stroke="var(--accent)" stroke-width="1.5" fill="var(--accent)">
         <path d="M104 150H296"></path><circle cx="104" cy="150" r="3"></circle><circle cx="296" cy="150" r="3"></circle>
         <path d="M200 58V280" stroke-dasharray="4 4"></path><circle cx="200" cy="58" r="3"></circle><circle cx="200" cy="280" r="3"></circle>
       </g>
@@ -88,14 +88,14 @@ const tables = Object.entries(sizes.tables).filter(([k]) => !only || k === only)
     font-weight: 700;
   }
   tbody tr:hover {
-    background: var(--paper);
+    background: var(--surface);
   }
   .sizes__note {
     font-size: var(--fs-xs);
   }
   .sizes__how svg {
     max-width: 360px;
-    color: var(--ink);
+    color: var(--fg);
   }
   .sizes__how figcaption {
     font-size: var(--fs-xs);

@@ -1,4 +1,5 @@
-// Accueil : hero interactif, nouveautés en défilement horizontal, pièce signature qui se retourne.
+// Accueil : nouveautés en défilement horizontal, pièce signature qui se retourne,
+// manifeste qui s'allume mot par mot.
 import { reducedMotion } from './scroll';
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -6,78 +7,6 @@ const smooth = (a: number, b: number, v: number) => {
   const t = clamp((v - a) / (b - a));
   return t * t * (3 - 2 * t);
 };
-
-/* ---------- Hero ---------- */
-export function initHero(signal: AbortSignal, introDone: Promise<void>) {
-  const hero = document.querySelector<HTMLElement>('[data-hero]');
-  if (!hero) return;
-  introDone.then(() => requestAnimationFrame(() => hero.classList.add('is-ready')));
-  if (reducedMotion) return;
-
-  const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  let tx = 0,
-    ty = 0,
-    mx = 0,
-    my = 0;
-  let bx = innerWidth / 2,
-    by = innerHeight / 2,
-    tbx = bx,
-    tby = by;
-  let visible = true;
-  let raf = 0;
-
-  hero.addEventListener(
-    'pointermove',
-    (e) => {
-      const r = hero.getBoundingClientRect();
-      tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-      ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
-      tbx = e.clientX - r.left;
-      tby = e.clientY - r.top;
-    },
-    { signal, passive: true },
-  );
-  hero.addEventListener(
-    'pointerleave',
-    () => {
-      tx = 0;
-      ty = 0;
-    },
-    { signal },
-  );
-
-  const loop = (t: number) => {
-    if (!fine) {
-      // Sur mobile : léger mouvement autonome
-      tx = Math.sin(t / 2200) * 0.5;
-      ty = Math.cos(t / 2900) * 0.35;
-      tbx = innerWidth * (0.5 + Math.sin(t / 3100) * 0.3);
-      tby = innerHeight * (0.5 + Math.cos(t / 2700) * 0.25);
-    }
-    mx += (tx - mx) * 0.07;
-    my += (ty - my) * 0.07;
-    bx += (tbx - bx) * 0.06;
-    by += (tby - by) * 0.06;
-    const sp = clamp(window.scrollY / hero.offsetHeight);
-    hero.style.setProperty('--mx', mx.toFixed(4));
-    hero.style.setProperty('--my', my.toFixed(4));
-    hero.style.setProperty('--sp', sp.toFixed(4));
-    hero.style.setProperty('--bx', `${bx.toFixed(1)}px`);
-    hero.style.setProperty('--by', `${by.toFixed(1)}px`);
-    raf = visible ? requestAnimationFrame(loop) : 0;
-  };
-  raf = requestAnimationFrame(loop);
-
-  const io = new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible && !raf) raf = requestAnimationFrame(loop);
-  });
-  io.observe(hero);
-  signal.addEventListener('abort', () => {
-    io.disconnect();
-    cancelAnimationFrame(raf);
-  });
-}
 
 /* ---------- Nouveautés : défilement horizontal épinglé ---------- */
 export function initHScroll(signal: AbortSignal) {
@@ -170,5 +99,23 @@ export function initFlip(signal: AbortSignal) {
     { passive: true, signal },
   );
   window.addEventListener('resize', update, { signal });
+  update();
+}
+
+/* ---------- Manifeste : les mots s'allument au scroll ---------- */
+export function initScrub(signal: AbortSignal) {
+  const root = document.querySelector<HTMLElement>('[data-scrub]');
+  if (!root) return;
+  const words = [...root.querySelectorAll<HTMLElement>('.mf__w')];
+  let lit = -1;
+  function update() {
+    const total = root!.offsetHeight - innerHeight;
+    const p = total > 0 ? clamp(-root!.getBoundingClientRect().top / total) : 1;
+    const n = reducedMotion ? words.length : Math.round(smooth(0.05, 0.85, p) * words.length);
+    if (n === lit) return;
+    lit = n;
+    words.forEach((w, i) => w.classList.toggle('is-lit', i < n));
+  }
+  window.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true, signal });
   update();
 }

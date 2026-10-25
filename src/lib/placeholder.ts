@@ -356,11 +356,13 @@ add('story/2', 1600, 900, '16:9', '2560 × 1440', 'Les pièces du Drop 01 à pla
 );
 add('story/3', 800, 1000, '4:5', '1600 × 2000', 'Détail de la maille jacquard', (path) => detail(P(4), path));
 
-// Détourés (PNG transparent) pour le hero et la section « Devant / Dos »
-(['front', 'back'] as View[]).forEach((view) => {
-  add(`cutout/love-${view}`, 1000, 1250, '4:5', '2000 × 2500 (PNG détouré)', `T-shirt Love Over Everything — ${view === 'front' ? 'devant' : 'dos'}, détouré`, () =>
-    doc(1000, 1250, place(garment(P(0), view), 500, 640, 2.3)),
-  );
+// Détourés (PNG transparent) : scène du hero et section « Devant / Dos »
+products.forEach((p) => {
+  (['front', 'back'] as View[]).forEach((view) => {
+    add(`cutout/${p.id.toLowerCase()}-${view}`, 1000, 1250, '4:5', '2000 × 2500 (PNG détouré)', `${p.name} — ${view === 'front' ? 'devant' : 'dos'}, détouré`, () =>
+      doc(1000, 1250, place(garment(p, view), 500, 640, 2.3)),
+    );
+  });
 });
 
 const LOOKS: { kind: Bg; ratio: '4:5' | '16:9'; shots: Omit<Shot, 'product'>[]; p: number[] }[] = [

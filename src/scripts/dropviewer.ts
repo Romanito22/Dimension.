@@ -57,11 +57,12 @@ void main(){
   vec4 b=rgbSplit(uB,uv-vec2(0.,(1.-reveal)*.03),split);
   vec4 c=mix(a,b,reveal);
   float band=(1.-smoothstep(0.,.075,abs(nv-e)))*step(.001,uP)*step(uP,.999);
-  vec3 hot=mix(vec3(.95,.08,.24),vec3(1.,.9,.75),smoothstep(.55,1.,band));
+  vec3 holo=.62+.38*cos(6.2832*(uv.y*1.6+uv.x*.8+uT*.15+vec3(0.,.33,.67)));
+  vec3 hot=mix(holo,vec3(1.),smoothstep(.6,1.,band));
   c.rgb+=hot*band*1.9*max(a.a,b.a);
   float spot=exp(-pow(d/(uRes.y*.55),2.));
   float light=mix(1.,.66+.55*spot,uSpot);
-  c.rgb*=light;
+  c.rgb*=light*vec3(.97,.99,1.04);
   c.rgb+=(hash(px+uT)-.5)*.05*c.a;
   gl_FragColor=vec4(c.rgb*c.a,c.a);
 }`;

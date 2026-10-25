@@ -1,7 +1,6 @@
 ---
-import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource-variable/unbounded';
 import '@fontsource-variable/inter-tight';
-import '@fontsource-variable/grenze-gotisch';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import '../styles/cart.css';
@@ -208,8 +207,9 @@ const orgLd = {
     }
   }
   .loader__word {
-    font-family: var(--f-script);
+    font-family: var(--f-display);
     font-weight: 600;
+    letter-spacing: -0.04em;
     font-size: clamp(1.6rem, 3vw, 2.4rem);
     opacity: 0;
     animation: fade-up 0.8s var(--ease-out) 0.9s forwards;
@@ -238,7 +238,10 @@ const orgLd = {
     bottom: 0.6rem;
     font-size: clamp(3rem, 9vw, 8rem);
     line-height: 0.8;
-    color: var(--accent);
+    background-image: var(--chrome);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     font-variant-numeric: tabular-nums;
   }
 
@@ -249,7 +252,7 @@ const orgLd = {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--holo);
     box-shadow: 0 0 24px rgb(var(--accent-rgb) / 0.8);
     pointer-events: none;
   }
@@ -430,7 +433,7 @@ const orgLd = {
   .cursor__label {
     position: absolute;
     transform: translate(-50%, -50%);
-    color: #fff;
+    color: var(--on-accent);
     font-family: var(--f-mono);
     font-weight: 700;
     font-size: 0.625rem;

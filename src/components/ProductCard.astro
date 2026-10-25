@@ -97,7 +97,9 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
     inset: 0;
     z-index: 3;
     pointer-events: none;
-    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.4), transparent 55%);
+    background:
+      radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.55), transparent 50%),
+      var(--holo);
     mix-blend-mode: soft-light;
     opacity: var(--go, 0);
     transition: opacity 0.5s;
@@ -186,7 +188,7 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
     30% {
       background: var(--accent);
       border-color: var(--accent);
-      color: #fff;
+      color: var(--on-accent);
       transform: scale(0.9);
     }
   }
@@ -245,9 +247,8 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
   }
   .card__price {
     font-family: var(--f-display);
-    font-stretch: 75%;
-    font-weight: 800;
-    font-size: 1.35rem;
+    font-weight: 700;
+    font-size: 1rem;
     line-height: 1;
     white-space: nowrap;
   }

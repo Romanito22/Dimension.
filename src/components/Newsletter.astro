@@ -10,10 +10,10 @@ const next = brand.nextDrop;
       <p class="label accent"><span class="nl__dot" aria-hidden="true"></span>Accès anticipé</p>
       <h2 id="nl-title" class="display nl__title" data-chars>{next.name} arrive</h2>
       <div class="nl__count" data-countdown={next.date} aria-label={`Lancement du ${next.name}`}>
-        <div><span class="display" data-cd="d">00</span><span class="label">jours</span></div>
-        <div><span class="display" data-cd="h">00</span><span class="label">heures</span></div>
-        <div><span class="display" data-cd="m">00</span><span class="label">min</span></div>
-        <div><span class="display" data-cd="s">00</span><span class="label">sec</span></div>
+        <div><span class="display chrome" data-cd="d">00</span><span class="label">jours</span></div>
+        <div><span class="display chrome" data-cd="h">00</span><span class="label">heures</span></div>
+        <div><span class="display chrome" data-cd="m">00</span><span class="label">min</span></div>
+        <div><span class="display chrome" data-cd="s">00</span><span class="label">sec</span></div>
       </div>
     </div>
     <form class="nl__form" data-newsletter novalidate>
@@ -69,7 +69,7 @@ const next = brand.nextDrop;
     }
   }
   .nl__title {
-    font-size: clamp(3rem, 8vw, 8.5rem);
+    font-size: clamp(2.1rem, 5vw, 5.6rem);
   }
   .nl__count {
     display: grid;
@@ -82,10 +82,9 @@ const next = brand.nextDrop;
     gap: 0.4rem;
   }
   .nl__count .display {
-    font-size: clamp(3rem, 7vw, 7rem);
+    font-size: clamp(2rem, 4.4vw, 4.6rem);
     font-variant-numeric: tabular-nums;
-    color: var(--accent-2);
-    line-height: 0.85;
+    line-height: 0.95;
   }
   .nl__count .label {
     color: var(--muted);

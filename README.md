@@ -25,8 +25,8 @@ Node.js ≥ 22.12 requis. Pour mettre en ligne : importer le dépôt sur **Verce
 | | |
 |---|---|
 | **Concept** | « Love over everything » : coton blanc, broderie framboise, soleil sur le gravier. Le petit cercle du logo (« ° ») est le motif récurrent : curseur, puces, séparateurs, états actifs. |
-| **Palette** (`src/styles/tokens.css`) | Coton `#F6F5F2` · Encre `#171514` · **Framboise `#A3174D`** (accent, tiré du print LOVE) · Rose bonbon `#F2A2CC` · Gris studio `#D4D1D0` (fond produit, comme tes mockups) · Gravier `#5C4A3D` |
-| **Typographies** | *Archivo Expanded* (titres, capitales larges comme « OVER EVERYTHING ») · *Inter Tight* (texte) · *Grenze Gotisch* (mot-symbole provisoire, en attendant le logo vectoriel) |
+| **Palette** (`src/styles/tokens.css`) | « Chrome Y2K » : noir bleuté `#0B0C0F`, blanc `#E6E9EE`, titres en dégradé chrome argenté, bleu glacé `#8FD8FF` pour les signaux (stock, sélection), reflets holographiques en touches rares. Fonds produits gris studio clair. |
+| **Typographies** | *Unbounded* (titres, large et arrondie, en écho au logo liquide) · *Inter Tight* (texte) · *JetBrains Mono* (étiquettes, stock, références) |
 | **Accueil** | Intro animée (le monogramme se dessine, une fois par visite) · hero rose bonbon avec matière liquide qui suit la souris, t-shirt détouré en 3D flottante et point cliquable sur le print · nouveautés en défilement horizontal pendant le scroll · pièce signature qui se retourne devant/dos au scroll avec les détails qui s'allument · ruban qui s'incline selon la vitesse de scroll |
 | **Interactions** | Cartes produit inclinables avec reflet, boutons aimantés, titres révélés lettre par lettre, grain photo, second visuel au survol des produits, tailles dispo au survol, zoom produit qui suit la souris + plein écran, transitions de page avec morphing de l'image produit, apparitions au scroll, parallaxe légère, curseur cercle, carrousel glissable. Tout est désactivé si l'utilisateur a choisi « réduire les animations ». Bonus : touche **G** pour afficher la grille de mise en page. |
 

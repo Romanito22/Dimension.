@@ -238,7 +238,6 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
     align-items: center;
     gap: 0.9rem;
     font-family: var(--f-display);
-    font-stretch: 75%;
     font-weight: 700;
     font-size: var(--fs-md);
     text-transform: uppercase;
@@ -259,7 +258,7 @@ const countries = ['France', 'Belgique', 'Suisse', 'Luxembourg', 'Allemagne', 'E
   .step:global(.is-open) .step__num {
     background: var(--accent);
     border-color: var(--accent);
-    color: #fff;
+    color: var(--on-accent);
   }
   .step:global(.is-done) .step__num {
     background: var(--fg);

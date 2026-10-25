@@ -83,12 +83,12 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     <div class="wrap dv__info">
       <div class="dv__meta">
         <p class="label dv__kicker"><span data-dv-index>01</span> / {String(dvData.length).padStart(2, '0')} — <span data-dv-cat>{first.category}</span></p>
-        <p class="display dv__name" data-dv-name>{first.name}</p>
+        <p class="chrome dv__name" data-dv-name>{first.name}</p>
         <p class="dv__short" data-dv-short>{first.short}</p>
       </div>
       <div class="dv__buy">
         <div class="dv__price-row">
-          <p class="display dv__price" data-dv-price>{formatPrice(first.price)}</p>
+          <p class="display chrome dv__price" data-dv-price>{formatPrice(first.price)}</p>
           <p class="label dv__stock" data-dv-stock>{firstStock} pièces en stock</p>
         </div>
         <p class="label dv__hint">Choisis ta taille — ajout instantané</p>
@@ -133,7 +133,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       <div class="hs__viewport">
         <div class="hs__track" data-hs-track>
           <div class="hs__intro">
-            <p class="display hs__big">5 pièces.<br /><span class="accent">Séries courtes.</span></p>
+            <p class="display chrome hs__big">5 pièces.<br /><span class="accent">Séries courtes.</span></p>
             <p class="muted">Brodées, imprimées, tricotées. Quand c'est parti, c'est parti.</p>
             <span class="label hs__hint" aria-hidden="true">Continue de scroller <span class="hs__arrow">→</span></span>
           </div>
@@ -177,7 +177,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
             </li>
           </ol>
           <div class="flip__buy">
-            <span class="flip__price display">{formatPrice(signature.price)}</span>
+            <span class="flip__price display chrome">{formatPrice(signature.price)}</span>
             <a href={sigUrl} class="btn btn--accent btn--lg">Je le veux <span class="btn__dot" aria-hidden="true"></span></a>
           </div>
         </div>
@@ -352,7 +352,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     overflow: hidden;
     isolation: isolate;
     background:
-      radial-gradient(ellipse 60% 55% at 50% 52%, #1c1c1c 0%, transparent 70%),
+      radial-gradient(ellipse 60% 55% at 50% 52%, #1a1f2a 0%, transparent 70%),
       var(--bg);
   }
   .dv__word {
@@ -365,10 +365,10 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     overflow: hidden;
   }
   .dv__word span {
-    font-size: clamp(9rem, 38vw, 48rem);
+    font-size: clamp(6rem, 24vw, 30rem);
     line-height: 0.8;
     color: transparent;
-    -webkit-text-stroke: 1px rgb(var(--fg-rgb) / 0.13);
+    -webkit-text-stroke: 1px rgb(var(--fg-rgb) / 0.1);
     white-space: nowrap;
     letter-spacing: -0.01em;
     transform: translateY(-2%);
@@ -521,9 +521,14 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     margin-bottom: 0.75rem;
   }
   .dv__name {
-    font-size: clamp(2.8rem, 6.4vw, 7rem);
-    max-width: 9ch;
-    min-height: 1.72em;
+    font-family: var(--f-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-size: clamp(1.9rem, 3.6vw, 4rem);
+    max-width: 11ch;
+    min-height: 2.05em;
     display: flex;
     align-items: end;
   }
@@ -544,7 +549,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     gap: 1rem;
   }
   .dv__price {
-    font-size: clamp(2.6rem, 4vw, 4rem);
+    font-size: clamp(1.8rem, 2.6vw, 2.8rem);
   }
   .dv__stock {
     color: var(--muted);
@@ -603,7 +608,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     30% {
       background: var(--accent);
       border-color: var(--accent);
-      color: #fff;
+      color: var(--on-accent);
       transform: scale(0.92);
     }
   }
@@ -648,7 +653,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       gap: 1rem;
     }
     .dv__name {
-      font-size: clamp(2.2rem, 11vw, 3.4rem);
+      font-size: clamp(1.6rem, 7.4vw, 2.4rem);
       min-height: 0;
       max-width: none;
     }
@@ -663,7 +668,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       justify-content: space-between;
     }
     .dv__price {
-      font-size: 2.2rem;
+      font-size: 1.7rem;
     }
     .dv__sizes {
       justify-content: start;
@@ -751,8 +756,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     margin-bottom: 1.5rem;
   }
   .mf__text {
-    font-size: clamp(2.4rem, 6.2vw, 7.4rem);
-    line-height: 0.92;
+    font-size: clamp(1.5rem, 3.5vw, 4.2rem);
+    line-height: 1.04;
   }
   .mf__w {
     opacity: 0.1;
@@ -816,20 +821,23 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     scroll-snap-align: start;
   }
   .hs__intro {
+    border: 1px solid var(--line-strong);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 1.5rem;
     padding: 2rem;
     border-radius: var(--radius);
-    background: var(--fg);
-    color: var(--bg);
+    background:
+      radial-gradient(circle at 20% 0%, rgb(var(--accent-rgb) / 0.16), transparent 60%),
+      var(--surface);
+    color: var(--fg);
   }
   .hs__intro .muted {
-    color: rgb(var(--bg-rgb) / 0.65);
+    color: var(--fg-2);
   }
   .hs__big {
-    font-size: clamp(2rem, 3.4vw, 3.6rem);
+    font-size: clamp(1.4rem, 2.1vw, 2.3rem);
   }
   .hs__big .accent {
     color: var(--accent);
@@ -853,9 +861,9 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     top: -0.62em;
     right: 0.1em;
     z-index: 2;
-    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-size: clamp(2rem, 3.2vw, 3.4rem);
     color: transparent;
-    -webkit-text-stroke: 1.5px var(--accent);
+    -webkit-text-stroke: 1px rgb(var(--fg-rgb) / 0.5);
     pointer-events: none;
   }
   .hs__end {
@@ -866,14 +874,14 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     text-align: center;
     border-radius: var(--radius);
     border: 1px solid var(--line-strong);
-    font-size: clamp(1.6rem, 2.4vw, 2.6rem);
+    font-size: clamp(1.2rem, 1.7vw, 1.8rem);
     transition:
       background 0.5s var(--ease-out),
       color 0.5s var(--ease-out);
   }
   .hs__end:hover {
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent);
   }
   .hs__end-ring {
     width: 64px;
@@ -955,7 +963,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     align-content: center;
   }
   .flip__title {
-    font-size: clamp(2.2rem, 4.6vw, 5rem);
+    font-size: clamp(1.7rem, 2.9vw, 3.3rem);
   }
   .flip__steps {
     display: grid;
@@ -983,7 +991,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     margin-top: 0.2rem;
   }
   .flip__n {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     color: transparent;
     -webkit-text-stroke: 1.2px var(--accent);
     transition: color 0.5s;
@@ -998,7 +1006,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     flex-wrap: wrap;
   }
   .flip__price {
-    font-size: 2.4rem;
+    font-size: 1.9rem;
   }
   .flip__stage {
     position: relative;
@@ -1032,7 +1040,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(4rem, 11vw, 12rem);
+    font-size: clamp(2.6rem, 7vw, 8rem);
     color: transparent;
     -webkit-text-stroke: 1.5px rgb(var(--fg-rgb) / 0.1);
     white-space: nowrap;
@@ -1109,7 +1117,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       gap: 0.75rem;
     }
     .flip__title {
-      font-size: 1.9rem;
+      font-size: 1.45rem;
     }
     .flip__copy > .label {
       display: none;
@@ -1122,7 +1130,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       display: grid;
     }
     .flip__price {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
     }
   }
 
@@ -1189,8 +1197,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     padding-block: 1.5rem;
   }
   .ribbon {
-    background: var(--accent);
-    color: #fff;
+    background: var(--chrome-btn);
+    color: var(--on-accent);
     overflow: hidden;
     padding-block: clamp(1rem, 2vw, 1.75rem);
     transform: rotate(-1.4deg) scale(1.03);
@@ -1207,16 +1215,17 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     transition: transform 0.35s var(--ease-out);
   }
   .ribbon__word {
-    font-family: var(--f-script);
-    font-weight: 600;
-    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    font-family: var(--f-display);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    font-size: clamp(1.8rem, 4.4vw, 4rem);
     line-height: 1;
     padding-inline: 0.4em;
   }
   .ribbon__caps {
-    font-size: clamp(1.25rem, 3vw, 2.75rem);
+    font-size: clamp(1rem, 2vw, 1.8rem);
     padding-inline: 0.6em;
-    color: var(--accent-2);
+    color: var(--accent-deep);
   }
   .ribbon__ring {
     width: clamp(12px, 1.2vw, 18px);
@@ -1259,7 +1268,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     aspect-ratio: 1;
     border-radius: 50%;
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent);
     display: grid;
     place-items: center;
     font-size: clamp(2rem, 3.4vw, 3.5rem);
@@ -1345,7 +1354,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     display: grid;
     place-items: center;
     background: rgb(var(--accent-rgb) / 0.8);
-    color: #fff;
+    color: var(--on-accent);
     opacity: 0;
     transition: opacity 0.35s;
   }

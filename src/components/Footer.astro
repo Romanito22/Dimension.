@@ -37,7 +37,7 @@ const cols = [
 <footer class="footer">
   <div class="wrap">
     <div class="footer__top">
-      <p class="footer__claim display">
+      <p class="footer__claim display chrome">
         Love<br />over<br /><span class="footer__candy">everything<span class="dot" aria-hidden="true"></span></span>
       </p>
       <div class="footer__cols">
@@ -102,10 +102,10 @@ const cols = [
     padding-bottom: var(--space-lg);
   }
   .footer__claim {
-    font-size: clamp(2rem, 4.5vw, 4rem);
+    font-size: clamp(1.5rem, 2.8vw, 2.7rem);
   }
   .footer__candy {
-    color: var(--accent-2);
+    -webkit-text-fill-color: var(--accent);
   }
   .footer__cols {
     display: grid;
@@ -122,13 +122,17 @@ const cols = [
     font-size: var(--fs-sm);
   }
   .footer__brand {
-    font-size: clamp(3.5rem, 15.5vw, 16rem);
+    font-size: clamp(2.6rem, 10.5vw, 11rem);
     line-height: 0.9;
     display: flex;
     justify-content: center;
     padding-block: 0.1em 0.18em;
     border-top: 1px solid rgb(var(--fg-rgb) / 0.14);
     color: var(--fg);
+    background-image: var(--chrome);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   .footer__bottom {
     display: flex;

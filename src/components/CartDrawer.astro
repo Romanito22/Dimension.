@@ -17,7 +17,17 @@ import brand from '../data/brand.json';
       <div class="drawer__ship-bar"><span data-ship-bar></span></div>
     </div>
 
-    <div class="drawer__body" data-cart-lines></div>
+    <div class="drawer__body">
+      <div data-cart-lines></div>
+      <div class="drawer__undo" data-undo hidden>
+        <span>Retiré : <strong data-undo-name></strong></span>
+        <button type="button" class="link link--under label" data-undo-btn>Annuler</button>
+      </div>
+      <div class="upsell" data-upsell hidden>
+        <p class="label upsell__title">Complète ton look</p>
+        <div class="upsell__list" data-upsell-list></div>
+      </div>
+    </div>
 
     <footer class="drawer__foot" data-cart-foot>
       <div class="drawer__row">
@@ -106,6 +116,88 @@ import brand from '../data/brand.json';
     width: 0;
     background: var(--accent);
     transition: width 0.8s var(--ease-out);
+  }
+  .drawer__undo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 12px;
+    font-size: var(--fs-sm);
+    animation: undo-in 0.4s var(--ease-out);
+  }
+  @keyframes undo-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+  .upsell {
+    margin-block: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 2px solid var(--ink);
+  }
+  .upsell__title {
+    margin-bottom: 0.9rem;
+    color: var(--muted);
+  }
+  .upsell__list {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .upsell__list :global(.up) {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 0.9rem;
+    padding: 0.6rem;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--bg);
+  }
+  .upsell__list :global(.up img) {
+    width: 64px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: var(--media);
+  }
+  .upsell__list :global(.up__top) {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  .upsell__list :global(.up__sizes) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 0.5rem;
+  }
+  .upsell__list :global(.up__sizes button) {
+    min-width: 34px;
+    height: 30px;
+    padding: 0 0.35rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 7px;
+    font-family: var(--f-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+  }
+  .upsell__list :global(.up__sizes button:hover) {
+    background: var(--ink);
+    color: var(--cotton);
+  }
+  .upsell__list :global(.up__sizes button:disabled) {
+    opacity: 0.3;
+    text-decoration: line-through;
+  }
+  .upsell__list :global(.up__sizes button.is-added) {
+    background: var(--brand);
+    color: #fff;
   }
   .drawer__body {
     flex: 1;

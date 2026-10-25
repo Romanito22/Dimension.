@@ -12,6 +12,9 @@ import { initHScroll, initFlip, initScrub } from './home';
 import { initDropViewer } from './dropviewer';
 import { initQuickAdd } from './quickadd';
 import { initTable } from './table';
+import { initSearch } from './search';
+import { initWish } from './wish';
+import { initProductExtras } from './product-extras';
 
 /* ---------- En-tête ---------- */
 const header = document.querySelector<HTMLElement>('header[data-header]');
@@ -151,6 +154,8 @@ document.addEventListener('keydown', (e) => {
 /* ---------- Cycle de vie des pages ---------- */
 initCartUI();
 initQuickAdd();
+initSearch();
+initWish();
 let controller: AbortController | null = null;
 
 document.addEventListener('astro:page-load', () => {
@@ -174,6 +179,7 @@ document.addEventListener('astro:page-load', () => {
   initForms(signal);
   initShop(signal);
   initProduct(signal);
+  initProductExtras(signal);
   initCheckout(signal);
 
   document.querySelectorAll<HTMLAnchorElement>('[data-to-top]').forEach((a) =>

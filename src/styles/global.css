@@ -465,6 +465,48 @@ body {
   padding-right: 2.5rem;
 }
 
+/* ---------- Cœur favoris ---------- */
+.wish-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cotton);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  transition:
+    transform 0.15s var(--ease-out),
+    box-shadow 0.15s,
+    background 0.2s,
+    color 0.2s;
+}
+.wish-btn svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+.wish-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.wish-btn[aria-pressed='true'] {
+  background: var(--brand);
+  color: #fff;
+}
+.wish-btn[aria-pressed='true'] svg {
+  fill: currentColor;
+}
+.wish-btn.is-pop {
+  animation: wish-pop 0.5s var(--ease-out);
+}
+@keyframes wish-pop {
+  40% {
+    transform: scale(1.3) rotate(-8deg);
+  }
+}
+
 /* ---------- Badges & pastilles ---------- */
 .badge {
   display: inline-flex;

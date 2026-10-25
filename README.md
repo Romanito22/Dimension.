@@ -32,6 +32,19 @@ Node.js ≥ 22.12 requis. Pour mettre en ligne : importer le dépôt sur **Verce
 
 ---
 
+## Fonctionnalités d'achat
+
+| | |
+|---|---|
+| **Recherche instantanée** | Bouton de l'en-tête, touche `/` ou `Ctrl/⌘ + K`. Insensible aux accents, navigation au clavier (↑ ↓ Entrée), suggestions et pièces vues récemment. |
+| **Favoris** | Cœur sur chaque carte et fiche, compteur dans l'en-tête, page `/favoris` avec ajout au panier par taille (enregistré dans le navigateur). |
+| **Achat instantané** | Tailles cliquables dans le hero, sur les cartes, dans les favoris et dans les suggestions du panier. |
+| **Assistant de taille** | Dans le guide des tailles : taille + poids + coupe voulue → taille conseillée, sélectionnée en un clic et mémorisée pour les autres fiches. |
+| **Alerte de réassort** | « Préviens-moi » sur les tailles épuisées (envoi simulé, à relier à l'outil d'e-mailing). |
+| **Livraison estimée** | Dates calculées en jours ouvrés (envoi le jour même avant 14 h). |
+| **Panier** | Suggestions « Complète ton look », barre de livraison offerte, « Annuler » après un retrait. |
+| **Fiche produit** | Pièces vues récemment, bouton Partager (partage natif ou copie du lien). |
+
 ## Modifier le contenu
 
 | Quoi | Où |

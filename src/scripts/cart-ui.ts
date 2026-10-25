@@ -2,6 +2,8 @@ import { $cart, $count, $subtotal, $drawerOpen, setQty, removeItem, openDrawer, 
 import { formatPrice } from '../lib/shop';
 import brand from '../data/brand.json';
 import { lockScroll, unlockScroll } from './scroll';
+import { catalog } from '../lib/catalog';
+import { addItem } from '../lib/cart';
 
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
@@ -52,8 +54,43 @@ function shippingMessage(subtotal: number) {
   };
 }
 
+function renderUpsell(items: CartItem[]) {
+  const box = document.querySelector<HTMLElement>('[data-upsell]');
+  if (!box) return;
+  const inCart = new Set(items.map((i) => i.id));
+  const picks = catalog()
+    .filter((p) => !inCart.has(p.id) && p.sizes.some((s) => s.stock > 0))
+    .slice(0, 2);
+  box.hidden = items.length === 0 || picks.length === 0;
+  box.querySelector('[data-upsell-list]')!.innerHTML = picks
+    .map((p) => {
+      const qa = esc(JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price, color: p.color, image: p.image, sizes: p.sizes }));
+      return `<div class="up" data-qa="${qa}">
+        <img src="${esc(p.image)}" alt="" width="128" height="160" loading="lazy">
+        <div><div class="up__top"><a href="${esc(p.url)}" data-cart-close>${esc(p.name)}</a><span>${formatPrice(p.price)}</span></div>
+        <div class="up__sizes" role="group" aria-label="Ajouter ${esc(p.name)}">${p.sizes
+          .map((s) => `<button type="button" data-qa-size="${s.size}" ${s.stock === 0 ? 'disabled' : ''}>${s.size}</button>`)
+          .join('')}</div></div>
+      </div>`;
+    })
+    .join('');
+}
+
+let lastRemoved: CartItem | null = null;
+let undoTimer = 0;
+function showUndo(item: CartItem) {
+  lastRemoved = item;
+  const bar = document.querySelector<HTMLElement>('[data-undo]');
+  if (!bar) return;
+  bar.querySelector('[data-undo-name]')!.textContent = `${item.name} (${item.size})`;
+  bar.hidden = false;
+  clearTimeout(undoTimer);
+  undoTimer = window.setTimeout(() => (bar.hidden = true), 6000);
+}
+
 function render() {
   const items = $cart.get();
+  renderUpsell(items);
   const count = $count.get();
   const subtotal = $subtotal.get();
 
@@ -131,11 +168,25 @@ export function initCartUI() {
     const q = t.closest<HTMLElement>('[data-qty]');
     if (q) {
       const item = $cart.get().find((i) => i.key === q.dataset.qty);
-      if (item) setQty(item.key, item.qty + Number(q.dataset.delta));
+      if (item) {
+        if (item.qty + Number(q.dataset.delta) <= 0) showUndo(item);
+        setQty(item.key, item.qty + Number(q.dataset.delta));
+      }
       return;
     }
     const r = t.closest<HTMLElement>('[data-remove]');
-    if (r) removeItem(r.dataset.remove!);
+    if (r) {
+      const item = $cart.get().find((i) => i.key === r.dataset.remove);
+      if (item) showUndo(item);
+      removeItem(r.dataset.remove!);
+      return;
+    }
+    if (t.closest('[data-undo-btn]') && lastRemoved) {
+      const { key: _k, qty, ...rest } = lastRemoved;
+      addItem(rest, qty);
+      lastRemoved = null;
+      document.querySelector<HTMLElement>('[data-undo]')!.hidden = true;
+    }
   });
 
   document.addEventListener('keydown', (e) => {

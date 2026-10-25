@@ -1,0 +1,236 @@
+---
+// Recherche instantanée : bouton de l'en-tête, touche « / » ou Ctrl/⌘ + K.
+const chips = ['T-shirt', 'Maille', 'Love', 'Noir', 'Sable', 'Brodé'];
+---
+
+<div class="search" data-search hidden transition:persist="search">
+  <div class="search__backdrop" data-search-close></div>
+  <div class="search__panel" role="dialog" aria-modal="true" aria-label="Rechercher une pièce">
+    <div class="search__bar">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6.5"></circle><path d="m13.5 13.5 5 5"></path></svg>
+      <label for="search-input" class="visually-hidden">Rechercher</label>
+      <input
+        id="search-input"
+        type="search"
+        data-search-input
+        placeholder="Une pièce, une couleur, un print…"
+        autocomplete="off"
+        spellcheck="false"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="search-results"
+        aria-autocomplete="list"
+      />
+      <kbd class="search__kbd">Échap</kbd>
+      <button type="button" class="search__close" data-search-close aria-label="Fermer la recherche">×</button>
+    </div>
+    <div class="search__body" data-lenis-prevent>
+      <div class="search__empty" data-search-empty>
+        <p class="label">Suggestions</p>
+        <div class="search__chips">
+          {chips.map((c) => <button type="button" class="search__chip" data-search-q={c}>{c}</button>)}
+        </div>
+        <div data-search-recent></div>
+      </div>
+      <p class="label search__count" data-search-count hidden></p>
+      <ul id="search-results" class="search__results" role="listbox" data-search-results aria-label="Résultats"></ul>
+      <div class="search__none" data-search-none hidden>
+        <p>Rien ne correspond à <strong data-search-term></strong>.</p>
+        <a href="/boutique" class="btn" data-search-close>Voir toute la boutique</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .search {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+    padding: clamp(1rem, 8vh, 6rem) var(--gutter) 1rem;
+  }
+  .search[hidden] {
+    display: none;
+  }
+  .search__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(17 17 17 / 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: search-fade 0.3s ease;
+  }
+  @keyframes search-fade {
+    from {
+      opacity: 0;
+    }
+  }
+  .search__panel {
+    position: relative;
+    width: min(720px, 100%);
+    max-height: min(78vh, 720px);
+    display: flex;
+    flex-direction: column;
+    background: var(--cotton);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    box-shadow: 8px 8px 0 var(--brand);
+    overflow: hidden;
+    animation: search-in 0.45s var(--ease-out);
+  }
+  @keyframes search-in {
+    from {
+      opacity: 0;
+      transform: translateY(-16px) scale(0.98);
+    }
+  }
+  .search__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .search__bar input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: clamp(1rem, 2.4vw, 1.35rem);
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .search__bar input:focus {
+    outline: none;
+  }
+  .search__bar input::-webkit-search-cancel-button {
+    display: none;
+  }
+  .search__kbd {
+    font-family: var(--f-mono);
+    font-size: 0.6875rem;
+    padding: 0.2rem 0.45rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+  }
+  .search__close {
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+    border-radius: 50%;
+  }
+  .search__close:hover {
+    background: var(--ink);
+    color: var(--cotton);
+  }
+  .search__body {
+    overflow-y: auto;
+    padding: 1.25rem;
+  }
+  .search__empty {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .search__empty .label,
+  .search__count {
+    color: #6b655e;
+  }
+  .search__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .search__chip {
+    padding: 0.5rem 0.9rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    font-size: var(--fs-sm);
+    box-shadow: 2px 2px 0 var(--ink);
+    transition:
+      transform 0.15s,
+      box-shadow 0.15s,
+      background 0.2s;
+  }
+  .search__chip:hover {
+    background: var(--brand);
+    color: #fff;
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .search__results,
+  .search__recent {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .search__results {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .search__count {
+    margin-bottom: 0.6rem;
+  }
+  .search__item a {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: 12px;
+    border: 1.5px solid transparent;
+  }
+  .search__item a:hover,
+  .search__item[aria-selected='true'] a {
+    border-color: var(--ink);
+    background: #fff;
+    box-shadow: 3px 3px 0 var(--brand);
+  }
+  .search__item img {
+    width: 56px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: var(--media);
+  }
+  .search__item strong {
+    display: block;
+    font-size: var(--fs-sm);
+  }
+  .search__item mark {
+    background: var(--accent-soft);
+    color: var(--brand);
+    border-radius: 3px;
+  }
+  .search__meta {
+    font-size: var(--fs-xs);
+    color: #6b655e;
+  }
+  .search__price {
+    font-family: var(--f-display);
+    font-weight: 700;
+  }
+  .search__none {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+  .search__recent {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+  @media (max-width: 600px) {
+    .search {
+      padding-top: 0.75rem;
+    }
+    .search__kbd {
+      display: none;
+    }
+  }
+</style>

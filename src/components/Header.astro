@@ -49,7 +49,15 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
       </a>
 
       <div class="bar__actions">
-        <a class="link label bar__contact" href="/contact" data-nav>Contact</a>
+        <button class="bar__search label" type="button" data-search-open aria-label="Rechercher (touche /)">
+          <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6.5"></circle><path d="m13.5 13.5 5 5"></path></svg>
+          <span class="bar__search-text">Rechercher</span>
+          <kbd class="bar__kbd" aria-hidden="true">/</kbd>
+        </button>
+        <a class="bar__icon" href="/favoris" data-nav aria-label="Favoris">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20.5S3 15 3 8.8C3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 6.2-9 11.7-9 11.7z"></path></svg>
+          <span class="bar__badge" data-wish-count hidden>0</span>
+        </a>
         <button class="bar__cart label" type="button" data-cart-open aria-haspopup="dialog" aria-controls="cart-drawer">
           <span>Panier</span>
           <span class="bar__count" data-cart-count>0</span>
@@ -203,6 +211,63 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
     justify-content: end;
     gap: clamp(1rem, 2.4vw, 2.4rem);
   }
+  .bar__search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 40px;
+    padding: 0 0.6rem 0 0.75rem;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+  .bar__search:hover {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+  }
+  .bar__kbd {
+    font-family: var(--f-mono);
+    font-size: 0.625rem;
+    min-width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    opacity: 0.7;
+  }
+  .bar__icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: color 0.2s;
+  }
+  .bar__icon:hover,
+  .bar__icon[aria-current='page'] {
+    color: var(--brand);
+  }
+  .bar__badge {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+    border: 1.5px solid var(--ink);
+    font-family: var(--f-mono);
+    font-size: 0.5625rem;
+    display: grid;
+    place-items: center;
+  }
   .bar__cart {
     display: inline-flex;
     align-items: center;
@@ -331,8 +396,17 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
   }
 
   @media (max-width: 860px) {
-    .bar__nav,
-    .bar__contact {
+    .bar__nav {
+      display: none;
+    }
+    .bar__search {
+      border: 0;
+      padding: 0;
+      width: 40px;
+      justify-content: center;
+    }
+    .bar__search-text,
+    .bar__kbd {
       display: none;
     }
     .burger {

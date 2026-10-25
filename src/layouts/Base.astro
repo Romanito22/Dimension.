@@ -8,6 +8,9 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/CartDrawer.astro';
+import Search from '../components/Search.astro';
+import { media } from '../lib/media';
+import { products, imageKeys, categoryLabel } from '../lib/shop';
 import brand from '../data/brand.json';
 import { MONO_VIEWBOX, MONO_BOWL, MONO_STEM, MONO_RING } from '../lib/logo';
 
@@ -31,6 +34,25 @@ const {
   noindex = false,
 } = Astro.props;
 
+// Catalogue embarqué pour la recherche, les favoris et les suggestions du panier
+const catalog = products.map((p) => {
+  const [k1, k2] = imageKeys(p);
+  return {
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    short: p.short,
+    price: p.price,
+    category: categoryLabel(p.category),
+    color: p.colors[0].name,
+    image: media(k1).src,
+    hover: media(k2).src,
+    url: `/produit/${p.slug}`,
+    badge: p.badge,
+    sizes: p.sizes,
+  };
+});
+
 const fullTitle = title ? `${title} — dimension.` : `dimension. — ${brand.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
@@ -52,7 +74,7 @@ const orgLd = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
-    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="theme-color" content="#C2124F" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
     <meta property="og:type" content="website" />
@@ -98,6 +120,8 @@ const orgLd = {
     </main>
     <Footer />
     <CartDrawer />
+    <Search />
+    <script type="application/json" id="catalog" set:html={JSON.stringify(catalog)} />
     <div class="toast" data-toast role="status" aria-live="polite" transition:persist="toast">
       <img data-toast-img src="data:," alt="" width="56" height="70" />
       <div class="toast__body">

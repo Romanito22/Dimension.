@@ -2,107 +2,123 @@
   "groups": [
     {
       "title": "Commandes & livraison",
-      "items": [
-        {
-          "q": "Quels sont les délais de livraison ?",
-          "a": "Les commandes partent sous 24 à 48 h ouvrées. Compte ensuite 3 à 5 jours en point relais, 2 à 3 jours à domicile, ou 24 h en express.",
-          "en": {
-            "q": "How long does delivery take?",
-            "a": "Orders ship within 24 to 48 working hours. Then allow 3 to 5 days to a pickup point, 2 to 3 days to your door, or 24 h with express."
-          }
-        },
-        {
-          "q": "La livraison est-elle offerte ?",
-          "a": "Oui, dès 80 € d'achat en France métropolitaine. En dessous, la livraison démarre à 3,90 € en point relais.",
-          "en": {
-            "q": "Is delivery free?",
-            "a": "Yes, from €80 in metropolitan France. Below that, delivery starts at €3.90 to a pickup point."
-          }
-        },
-        {
-          "q": "Livrez-vous hors de France ?",
-          "a": "Oui, dans toute l'Union européenne, la Suisse et le Royaume-Uni. Les frais sont calculés au moment de la commande.",
-          "en": {
-            "q": "Do you ship outside France?",
-            "a": "Yes, across the European Union, Switzerland and the United Kingdom. Costs are calculated at checkout."
-          }
-        },
-        {
-          "q": "Comment suivre ma commande ?",
-          "a": "Tu reçois un e-mail avec ton numéro de suivi dès que ton colis quitte l'atelier. Tu peux aussi suivre chaque étape sur la page Suivi de commande.",
-          "en": {
-            "q": "How do I track my order?",
-            "a": "You'll get an email with your tracking number as soon as your parcel leaves the studio. You can also follow each step on the order tracking page."
-          }
-        }
-      ],
       "en": {
         "title": "Orders & delivery"
-      }
+      },
+      "items": [
+        {
+          "q": "Quand est-ce que je reçois mon colis ?",
+          "a": "On prépare ta commande sous 24 à 48 h ouvrées. Ensuite, compte 3 à 5 jours en point relais, 2 à 3 jours à domicile, ou 24 h en express. La date estimée s'affiche sur chaque fiche et au moment de payer.",
+          "en": {
+            "q": "When will my parcel arrive?",
+            "a": "We pack your order within 24 to 48 working hours. Then allow 3 to 5 days to a pickup point, 2 to 3 days to your door, or 24 h with express. The estimated date shows on every product page and at checkout."
+          }
+        },
+        {
+          "q": "La livraison est offerte ?",
+          "a": "Oui, dès 80 € d'achat en France métropolitaine (hors express). En dessous, elle démarre à 3,90 € en point relais. La barre dans ton panier te dit combien il te manque.",
+          "en": {
+            "q": "Is delivery free?",
+            "a": "Yes, from €80 in metropolitan France (except express). Below that, it starts at €3.90 to a pickup point. The bar in your bag tells you how much you're missing."
+          }
+        },
+        {
+          "q": "Vous livrez hors de France ?",
+          "a": "Oui : dans toute l'Union européenne, en Suisse et au Royaume-Uni. Les frais s'affichent au moment de commander, avant de payer.",
+          "en": {
+            "q": "Do you ship outside France?",
+            "a": "Yes: across the European Union, Switzerland and the United Kingdom. Costs show up at checkout, before you pay."
+          }
+        },
+        {
+          "q": "Comment je suis ma commande ?",
+          "a": "Va sur la page Suivi de commande avec ton numéro (DIM-…) et ton e-mail : tu vois où en est ton colis, étape par étape. Le lien est aussi dans ton e-mail de confirmation.",
+          "en": {
+            "q": "How do I track my order?",
+            "a": "Head to the order tracking page with your number (DIM-…) and your email: you'll see where your parcel is, step by step. The link is also in your confirmation email."
+          }
+        },
+        {
+          "q": "Je peux modifier ma commande ?",
+          "a": "Écris-nous vite avec ton numéro de commande. Tant que le colis n'est pas parti, on fait tout pour changer une taille ou une adresse.",
+          "en": {
+            "q": "Can I change my order?",
+            "a": "Write to us quickly with your order number. As long as the parcel hasn't left, we'll do our best to change a size or an address."
+          }
+        }
+      ]
     },
     {
       "title": "Retours & échanges",
-      "items": [
-        {
-          "q": "Puis-je retourner un article ?",
-          "a": "Tu as 14 jours après réception pour nous retourner un article non porté, non lavé, avec ses étiquettes. Écris-nous et on t'envoie l'étiquette retour.",
-          "en": {
-            "q": "Can I return an item?",
-            "a": "You have 14 days after delivery to send back an unworn, unwashed item with its tags. Write to us and we'll send you a return label."
-          }
-        },
-        {
-          "q": "Puis-je échanger une taille ?",
-          "a": "Oui, l'échange de taille est gratuit (dans la limite des stocks). Précise-le simplement dans ta demande de retour.",
-          "en": {
-            "q": "Can I exchange a size?",
-            "a": "Yes, size exchanges are free (subject to stock). Just mention it in your return request."
-          }
-        },
-        {
-          "q": "Quand suis-je remboursé·e ?",
-          "a": "Sous 5 jours ouvrés après réception et vérification de ton retour, sur le moyen de paiement utilisé.",
-          "en": {
-            "q": "When will I be refunded?",
-            "a": "Within 5 working days after we receive and check your return, to the original payment method."
-          }
-        }
-      ],
       "en": {
         "title": "Returns & exchanges"
-      }
+      },
+      "items": [
+        {
+          "q": "Comment je retourne une pièce ?",
+          "a": "Tu as 14 jours après réception. Va sur Suivi de commande, ouvre ta commande et clique sur « Retourner ou échanger » : tu choisis les pièces, la raison, et c'est parti. La pièce doit revenir non portée, non lavée, avec ses étiquettes.",
+          "en": {
+            "q": "How do I return a piece?",
+            "a": "You have 14 days after delivery. Go to order tracking, open your order and click « Return or exchange »: pick the pieces, the reason, and you're done. The piece must come back unworn, unwashed, with its tags."
+          }
+        },
+        {
+          "q": "Je peux échanger une taille ?",
+          "a": "Oui, et l'échange de taille est offert (dans la limite des stocks). Choisis « Échange » dans ta demande de retour : ta nouvelle taille part dès qu'on reçoit l'ancienne.",
+          "en": {
+            "q": "Can I exchange a size?",
+            "a": "Yes, and size exchanges are free (subject to stock). Choose « Exchange » in your return request: your new size ships as soon as we get the old one back."
+          }
+        },
+        {
+          "q": "Quand est-ce que je suis remboursé·e ?",
+          "a": "Dès qu'on a reçu et vérifié ton retour, on te rembourse sur le moyen de paiement utilisé, sous 14 jours maximum — en général bien plus vite.",
+          "en": {
+            "q": "When will I get my refund?",
+            "a": "As soon as we've received and checked your return, we refund you to the original payment method, within 14 days at most — usually much sooner."
+          }
+        }
+      ]
     },
     {
-      "title": "Produits & tailles",
+      "title": "Pièces & tailles",
+      "en": {
+        "title": "Pieces & sizing"
+      },
       "items": [
         {
           "q": "Comment taillent vos t-shirts ?",
-          "a": "Nos t-shirts ont une coupe ample (boxy) avec épaules tombées. Prends ta taille habituelle pour l'effet voulu, une taille en dessous pour un tombé plus classique.",
+          "a": "Large ! Nos t-shirts ont une coupe boxy avec les épaules tombées. Prends ta taille habituelle pour l'effet ample, une taille en dessous si tu préfères un tombé plus classique. Le guide des tailles te donne une recommandation en 10 secondes.",
           "en": {
             "q": "How do your t-shirts fit?",
-            "a": "Our t-shirts have a relaxed (boxy) fit with dropped shoulders. Take your usual size for the intended look, one size down for a more classic drape."
+            "a": "Roomy! Our t-shirts have a boxy fit with dropped shoulders. Take your usual size for the loose look, one size down if you prefer a more classic drape. The size guide gives you a recommendation in 10 seconds."
           }
         },
         {
-          "q": "Comment entretenir les broderies et les prints ?",
-          "a": "Lave à 30 °C, à l'envers, sans sèche-linge. Repasse toujours sur l'envers et jamais directement sur la broderie ou l'impression.",
+          "q": "Comment je prends soin de la broderie et des prints ?",
+          "a": "Lave à 30 °C, à l'envers, et oublie le sèche-linge. Si tu repasses, fais-le sur l'envers et jamais directement sur la broderie ou le print. Ta pièce te dira merci.",
           "en": {
-            "q": "How do I care for embroidery and prints?",
-            "a": "Wash at 30 °C, inside out, no tumble dryer. Always iron inside out and never directly on the embroidery or print."
+            "q": "How do I look after the embroidery and prints?",
+            "a": "Wash at 30 °C, inside out, and skip the tumble dryer. If you iron, do it inside out and never directly on the embroidery or the print. Your piece will thank you."
           }
         },
         {
-          "q": "Une pièce est épuisée, va-t-elle revenir ?",
-          "a": "Nos drops sont produits en séries courtes. Certaines pièces reviennent, d'autres non : inscris-toi à la newsletter pour être prévenu·e en premier.",
+          "q": "Une pièce est épuisée, elle va revenir ?",
+          "a": "Parfois oui, parfois non : on produit en petites séries. Sur une taille épuisée, touche « Préviens-moi » et inscris-toi à la newsletter — tu seras au courant avant tout le monde.",
           "en": {
             "q": "A piece is sold out — will it come back?",
-            "a": "Our drops are made in short runs. Some pieces come back, others don't: join the newsletter to be the first to know."
+            "a": "Sometimes yes, sometimes no: we make small runs. On a sold-out size, tap « Notify me » and join the newsletter — you'll know before anyone else."
+          }
+        },
+        {
+          "q": "Ça veut dire quoi, « Love over everything » ?",
+          "a": "L'amour avant tout. Pour les tiens, pour ta bande, pour ce qui te fait vibrer. C'est notre devise, et c'est elle qui guide chaque pièce qu'on dessine.",
+          "en": {
+            "q": "What does « Love over everything » mean?",
+            "a": "Love first. For your people, your crew, whatever makes you feel alive. It's our motto, and it guides every piece we design."
           }
         }
-      ],
-      "en": {
-        "title": "Products & sizing"
-      }
+      ]
     }
   ]
 }

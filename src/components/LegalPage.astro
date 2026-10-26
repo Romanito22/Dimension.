@@ -41,6 +41,41 @@ const t = translator(localeFromPath(Astro.url.pathname));
     color: var(--accent-deep);
     padding: 0 0.2em;
   }
+  .legal__body > :global(* + *) {
+    margin-top: 1em;
+  }
+  .legal__body :global(ul) {
+    list-style: disc;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 0.4em;
+  }
+  .legal__body :global(.legal__summary) {
+    padding: 1.25rem 1.4rem;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    background: var(--cotton);
+    box-shadow: 5px 5px 0 var(--brand);
+  }
+  .legal__body :global(.legal__summary ul) {
+    margin-top: 0.6rem;
+  }
+  .legal__body :global(.legal__box) {
+    padding: 1rem 1.2rem;
+    border-left: 3px solid var(--brand);
+    background: var(--surface, #fff);
+    font-size: var(--fs-sm);
+  }
+  .legal__body :global(.legal__box p + p) {
+    margin-top: 0.75rem;
+  }
+  .legal__body :global(h3) {
+    font-size: 1.05rem;
+    margin-top: 1.5rem;
+  }
+  .legal__body :global(h2) {
+    scroll-margin-top: calc(var(--header-total) + 1rem);
+  }
   @media (max-width: 860px) {
     .legal {
       grid-template-columns: 1fr;

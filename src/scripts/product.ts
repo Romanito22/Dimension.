@@ -41,10 +41,10 @@ export function initProduct(signal: AbortSignal) {
     errEl.textContent = '';
     sizeset.classList.remove('is-error');
     if (s.stock <= data.low) {
-      stockEl.textContent = t(`Plus que ${s.stock} en ${size} — dépêche-toi`, `Only ${s.stock} left in ${size} — be quick`);
+      stockEl.textContent = t(`Plus que ${s.stock} en ${size}`, `Only ${s.stock} left in ${size}`);
       stockEl.classList.add('is-low');
     } else {
-      stockEl.textContent = t('En stock — expédié sous 48 h', 'In stock — ships within 48 h');
+      stockEl.textContent = t('En stock, prêt à partir sous 48 h', 'In stock, ready to ship within 48 h');
       stockEl.classList.add('is-ok');
     }
     addBtns.forEach((b) => (b.querySelector('[data-add-label]')!.textContent = t('Ajouter au panier', 'Add to bag')));

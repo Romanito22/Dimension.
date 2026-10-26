@@ -20,8 +20,8 @@ export function initResume(signal: AbortSignal) {
     const cart = root.querySelector<HTMLElement>('[data-resume-cart]')!;
     cart.hidden = n === 0;
     root.querySelector('[data-resume-cart-text]')!.textContent = t(
-      `${n} pièce${n > 1 ? 's' : ''} · ${price($subtotal.get())} — les séries partent vite.`,
-      `${n} piece${n > 1 ? 's' : ''} · ${price($subtotal.get())} — runs sell out fast.`,
+      `${n} pièce${n > 1 ? 's' : ''} · ${price($subtotal.get())} — il n'attend que toi.`,
+      `${n} piece${n > 1 ? 's' : ''} · ${price($subtotal.get())} — it's all yours.`,
     );
     root.querySelector('[data-resume-list]')!.innerHTML = recent
       .map(

@@ -53,7 +53,7 @@ export function initReturns(box: HTMLElement, signal: AbortSignal) {
           <li>${t('Tu reçois l’étiquette retour par e-mail.', 'You get the return label by email.')}</li>
           <li>${t(`Dépose le colis en point relais avant le ${fmt.format(deadline)}.`, `Drop the parcel at a pickup point before ${fmt.format(deadline)}.`)}</li>
           ${exchange ? `<li>${t('Ta nouvelle taille part dès réception — l’échange est gratuit.', 'Your new size ships as soon as we receive it — exchanges are free.')}</li>` : ''}
-          ${refund ? `<li>${t('Remboursement sous 5 jours ouvrés après vérification, sur ton moyen de paiement.', 'Refund within 5 working days after checking, to your payment method.')}</li>` : ''}
+          ${refund ? `<li>${t('Remboursement dès que ton retour est vérifié, sous 14 jours maximum, sur ton moyen de paiement.', 'Refund as soon as your return is checked, within 14 days at most, to your payment method.')}</li>` : ''}
         </ol>
         <button type="button" class="link link--under label" data-ret-cancel>${t('Annuler la demande', 'Cancel the request')}</button>
       </div>`;

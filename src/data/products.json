@@ -3,7 +3,7 @@
     "id": "DIM-001",
     "slug": "t-shirt-love-over-everything",
     "name": "T-shirt Love Over Everything",
-    "short": "Monogramme brodé, cœur imprimé au dos",
+    "short": "Monogramme brodé devant, cœur LOVE imprimé au dos",
     "category": "t-shirts",
     "price": 49,
     "date": "2026-10-20",
@@ -42,40 +42,36 @@
         "stock": 0
       }
     ],
-    "description": "La pièce qui a tout lancé. Le monogramme « d » brodé en framboise sur le cœur, et dans le dos, un grand LOVE en forme de cœur, gonflé comme une bulle, avec sa signature : over everything.",
+    "description": "Notre pièce signature. Devant, le « d° » brodé côté cœur, en fil framboise cerné de noir : discret de loin, en relief sous les doigts. Dans le dos, un grand LOVE en forme de cœur, gonflé comme une bulle, et trois mots juste en dessous : over everything. À porter pour toi, ou à offrir à quelqu'un qui compte.",
     "details": [
-      "Monogramme brodé devant, fil framboise & noir",
-      "Print LOVE bicolore au dos",
-      "Col côtelé épais, coutures épaule tombée",
-      "Coupe ample (boxy) — prends ta taille habituelle"
+      "Monogramme « d° » brodé côté cœur, fil framboise cerné de noir",
+      "Cœur LOVE imprimé au dos, en deux tons de rose",
+      "Col côtelé, épaules tombées",
+      "Coupe boxy : prends ta taille habituelle"
     ],
-    "fabric": "100 % coton, jersey épais 240 g/m².",
+    "fabric": "",
     "care": [
-      "Lavage 30 °C à l'envers",
-      "Pas de sèche-linge",
-      "Repassage à l'envers, jamais sur la broderie ni le print"
+      "Lave-le à 30 °C, à l'envers",
+      "Laisse-le sécher à l'air libre, pas de sèche-linge",
+      "Repasse sur l'envers, jamais directement sur la broderie ou le print"
     ],
-    "fit": "Coupe boxy.",
-    "model": {
-      "height": 180,
-      "size": "M"
-    },
+    "fit": "Coupe boxy, épaules tombées.",
     "en": {
-      "short": "Embroidered monogram, heart printed on the back",
-      "description": "The piece that started it all. The « d » monogram embroidered in raspberry over the heart, and on the back, a big heart-shaped LOVE, puffed up like a bubble, signed: over everything.",
+      "short": "Embroidered monogram on the front, LOVE heart printed on the back",
+      "description": "Our signature piece. On the front, the « d° » embroidered over the heart in raspberry thread outlined in black: subtle from afar, raised under your fingers. On the back, a big heart-shaped LOVE, puffed up like a bubble, with three words right below: over everything. Wear it for yourself, or give it to someone who matters.",
       "details": [
-        "Embroidered monogram on the front, raspberry & black thread",
-        "Two-tone LOVE print on the back",
-        "Thick ribbed collar, dropped-shoulder seams",
-        "Relaxed (boxy) fit — take your usual size"
+        "« d° » monogram embroidered over the heart, raspberry thread outlined in black",
+        "LOVE heart printed on the back in two shades of pink",
+        "Ribbed collar, dropped shoulders",
+        "Boxy fit: take your usual size"
       ],
-      "fabric": "100% cotton, heavyweight 240 g/m² jersey.",
+      "fabric": "",
       "care": [
-        "Wash at 30 °C inside out",
-        "Do not tumble dry",
-        "Iron inside out, never on the embroidery or print"
+        "Wash at 30 °C, inside out",
+        "Air dry, no tumble dryer",
+        "Iron inside out, never directly on the embroidery or print"
       ],
-      "fit": "Boxy fit.",
+      "fit": "Boxy fit, dropped shoulders.",
       "colors": [
         {
           "name": "White",
@@ -90,7 +86,7 @@
     "id": "DIM-002",
     "slug": "t-shirt-crew",
     "name": "T-shirt Crew",
-    "short": "Silhouettes au pochoir, wordmark gothique",
+    "short": "Trois silhouettes au pochoir dans le dos, DIMENSI*N devant",
     "category": "t-shirts",
     "price": 45,
     "date": "2026-10-24",
@@ -129,38 +125,36 @@
         "stock": 3
       }
     ],
-    "description": "Trois silhouettes qui avancent ensemble, un BMX, une veste siglée. Le dos est imprimé façon pochoir, grain de bombe compris. Devant, juste le wordmark DIMENSI*N en gothique liquide.",
+    "description": "Trois silhouettes qui avancent ensemble, dont une sur un BMX. Le dos est imprimé façon pochoir, avec le grain de la bombe et ses petites bavures. Devant, juste DIMENSI*N en lettres gothiques, côté cœur. Le t-shirt de la bande — celle avec qui tu traînes jusqu'à pas d'heure.",
     "details": [
-      "Wordmark DIMENSI*N imprimé côté cœur",
-      "Grand print pochoir au dos, effet spray",
-      "Col côtelé, coupe ample épaule tombée"
+      "DIMENSI*N imprimé côté cœur",
+      "Grand print pochoir au dos, effet bombe",
+      "Col côtelé, épaules tombées",
+      "Coupe boxy : prends ta taille habituelle"
     ],
-    "fabric": "100 % coton, jersey épais 240 g/m², teint sable.",
+    "fabric": "",
     "care": [
-      "Lavage 30 °C à l'envers",
-      "Pas de sèche-linge",
-      "Repassage à l'envers"
+      "Lave-le à 30 °C, à l'envers",
+      "Laisse-le sécher à l'air libre, pas de sèche-linge",
+      "Repasse sur l'envers, jamais directement sur la broderie ou le print"
     ],
-    "fit": "Coupe boxy.",
-    "model": {
-      "height": 180,
-      "size": "M"
-    },
+    "fit": "Coupe boxy, épaules tombées.",
     "en": {
-      "short": "Stencilled silhouettes, gothic wordmark",
-      "description": "Three silhouettes moving together, a BMX, a branded jacket. The back is stencil-printed, spray-paint grain included. On the front, just the DIMENSI*N wordmark in liquid gothic.",
+      "short": "Three stencilled figures on the back, DIMENSI*N on the front",
+      "description": "Three figures moving forward together, one of them on a BMX. The back is printed stencil-style, with the spray-can grain and its little overspray. On the front, just DIMENSI*N in gothic letters, over the heart. The crew tee — for the people you stay out with until late.",
       "details": [
-        "DIMENSI*N wordmark printed over the heart",
+        "DIMENSI*N printed over the heart",
         "Large stencil print on the back, spray effect",
-        "Ribbed collar, relaxed dropped-shoulder fit"
+        "Ribbed collar, dropped shoulders",
+        "Boxy fit: take your usual size"
       ],
-      "fabric": "100% cotton, heavyweight 240 g/m² jersey, sand-dyed.",
+      "fabric": "",
       "care": [
-        "Wash at 30 °C inside out",
-        "Do not tumble dry",
-        "Iron inside out"
+        "Wash at 30 °C, inside out",
+        "Air dry, no tumble dryer",
+        "Iron inside out, never directly on the embroidery or print"
       ],
-      "fit": "Boxy fit.",
+      "fit": "Boxy fit, dropped shoulders.",
       "colors": [
         {
           "name": "Sand",
@@ -175,7 +169,7 @@
     "id": "DIM-003",
     "slug": "t-shirt-splash",
     "name": "T-shirt Splash",
-    "short": "Wordmark liquide, éclaboussure au dos",
+    "short": "« dimension » liquide devant, éclaboussure au dos",
     "category": "t-shirts",
     "price": 45,
     "date": "2026-10-22",
@@ -214,38 +208,36 @@
         "stock": 1
       }
     ],
-    "description": "Noir profond, encre blanche. Le mot « dimension » coule sur la poitrine dans un lettrage liquide. Au dos, une éclaboussure qui traverse le tissu et un badge ovale, comme un tampon.",
+    "description": "Noir profond, encre blanche. Devant, « dimension » coule sur la poitrine en lettres liquides. Dans le dos, une éclaboussure qui part dans tous les sens, avec un badge ovale en plein milieu, comme un tampon. Calme de face, bruyant de dos.",
     "details": [
-      "Wordmark liquide imprimé devant",
-      "Print éclaboussure + badge ovale au dos",
-      "Encre blanche opaque, toucher doux"
+      "Lettrage liquide imprimé devant",
+      "Éclaboussure et badge ovale imprimés au dos",
+      "Encre blanche sur coton noir",
+      "Coupe boxy : prends ta taille habituelle"
     ],
-    "fabric": "100 % coton, jersey épais 240 g/m².",
+    "fabric": "",
     "care": [
-      "Lavage 30 °C à l'envers",
-      "Pas de sèche-linge",
-      "Repassage à l'envers"
+      "Lave-le à 30 °C, à l'envers",
+      "Laisse-le sécher à l'air libre, pas de sèche-linge",
+      "Repasse sur l'envers, jamais directement sur la broderie ou le print"
     ],
-    "fit": "Coupe boxy.",
-    "model": {
-      "height": 180,
-      "size": "M"
-    },
+    "fit": "Coupe boxy, épaules tombées.",
     "en": {
-      "short": "Liquid wordmark, splash on the back",
-      "description": "Deep black, white ink. The word « dimension » drips across the chest in liquid lettering. On the back, a splash that runs across the fabric and an oval badge, like a stamp.",
+      "short": "Liquid « dimension » on the front, splash on the back",
+      "description": "Deep black, white ink. On the front, « dimension » drips across the chest in liquid letters. On the back, a splash that goes everywhere, with an oval badge right in the middle, like a stamp. Quiet from the front, loud from the back.",
       "details": [
-        "Liquid wordmark printed on the front",
-        "Splash print + oval badge on the back",
-        "Opaque white ink, soft hand feel"
+        "Liquid lettering printed on the front",
+        "Splash and oval badge printed on the back",
+        "White ink on black cotton",
+        "Boxy fit: take your usual size"
       ],
-      "fabric": "100% cotton, heavyweight 240 g/m² jersey.",
+      "fabric": "",
       "care": [
-        "Wash at 30 °C inside out",
-        "Do not tumble dry",
-        "Iron inside out"
+        "Wash at 30 °C, inside out",
+        "Air dry, no tumble dryer",
+        "Iron inside out, never directly on the embroidery or print"
       ],
-      "fit": "Boxy fit.",
+      "fit": "Boxy fit, dropped shoulders.",
       "colors": [
         {
           "name": "Black",
@@ -260,7 +252,7 @@
     "id": "DIM-004",
     "slug": "t-shirt-doodle",
     "name": "T-shirt Doodle",
-    "short": "Dessin au trait, signature DIMENSION",
+    "short": "Dessin au trait devant, signé DIMENSION",
     "category": "t-shirts",
     "price": 45,
     "date": "2026-10-18",
@@ -299,38 +291,34 @@
         "stock": 2
       }
     ],
-    "description": "Un visage, une étoile, quelques traits jetés sans lever le crayon. Le Doodle, c'est le carnet de croquis porté sur la poitrine — signé DIMENSION en petites capitales.",
+    "description": "Une étoile, un visage, une main, quelques traits jetés sans lever le crayon. Le Doodle, c'est une page de carnet qu'on porte sur la poitrine, signée DIMENSION en petites capitales. Le genre de dessin qu'on fait au fond de la classe — et qu'on garde.",
     "details": [
       "Dessin au trait imprimé devant, encre noire",
       "Signature DIMENSION en capitales espacées",
-      "Dos uni"
+      "Coupe boxy : prends ta taille habituelle"
     ],
-    "fabric": "100 % coton, jersey épais 240 g/m², teint écru.",
+    "fabric": "",
     "care": [
-      "Lavage 30 °C à l'envers",
-      "Pas de sèche-linge",
-      "Repassage à l'envers"
+      "Lave-le à 30 °C, à l'envers",
+      "Laisse-le sécher à l'air libre, pas de sèche-linge",
+      "Repasse sur l'envers, jamais directement sur la broderie ou le print"
     ],
-    "fit": "Coupe boxy.",
-    "model": {
-      "height": 180,
-      "size": "M"
-    },
+    "fit": "Coupe boxy, épaules tombées.",
     "en": {
-      "short": "Line drawing, DIMENSION signature",
-      "description": "A face, a star, a few lines drawn without lifting the pen. The Doodle is a sketchbook worn on the chest — signed DIMENSION in small capitals.",
+      "short": "Line drawing on the front, signed DIMENSION",
+      "description": "A star, a face, a hand, a few lines drawn without lifting the pen. The Doodle is a sketchbook page you wear on your chest, signed DIMENSION in small capitals. The kind of drawing you make at the back of the class — and keep.",
       "details": [
         "Line drawing printed on the front, black ink",
         "DIMENSION signature in spaced capitals",
-        "Plain back"
+        "Boxy fit: take your usual size"
       ],
-      "fabric": "100% cotton, heavyweight 240 g/m² jersey, ecru-dyed.",
+      "fabric": "",
       "care": [
-        "Wash at 30 °C inside out",
-        "Do not tumble dry",
-        "Iron inside out"
+        "Wash at 30 °C, inside out",
+        "Air dry, no tumble dryer",
+        "Iron inside out, never directly on the embroidery or print"
       ],
-      "fit": "Boxy fit.",
+      "fit": "Boxy fit, dropped shoulders.",
       "colors": [
         {
           "name": "Ecru",
@@ -345,7 +333,7 @@
     "id": "DIM-005",
     "slug": "pull-camo-maille",
     "name": "Pull Camo",
-    "short": "Maille jacquard camouflage, wordmark blanc",
+    "short": "Maille jacquard camouflage, DIMENSI*N en blanc",
     "category": "maille",
     "price": 95,
     "date": "2026-10-25",
@@ -384,41 +372,37 @@
         "stock": 1
       }
     ],
-    "description": "Un camouflage dessiné à la main puis tricoté en jacquard : noir, gris et grège qui s'entremêlent comme des coups de pinceau. Le wordmark DIMENSI*N est tricoté en blanc côté cœur.",
+    "description": "Un camouflage qui n'a aucune envie de se cacher : des coups de pinceau noirs, gris et grège, tricotés en jacquard. DIMENSI*N en blanc côté cœur, des bords-côtes noirs au col, aux poignets et à la taille. Le pull qu'on attrape dès que l'air se rafraîchit, et qu'on ne quitte plus de l'hiver.",
     "details": [
-      "Maille jacquard épaisse, motif camouflage peint",
-      "Wordmark DIMENSI*N tricoté devant",
-      "Bord-côtes noirs au col, aux poignets et à la taille",
-      "Série limitée"
+      "Maille jacquard, motif camouflage façon coups de pinceau",
+      "DIMENSI*N en blanc côté cœur",
+      "Bords-côtes noirs au col, aux poignets et à la taille",
+      "Édition limitée"
     ],
-    "fabric": "Maille jacquard, 70 % coton, 30 % laine.",
+    "fabric": "",
     "care": [
-      "Lavage à la main ou programme laine 30 °C",
+      "Lavage à la main ou programme laine à 30 °C",
       "Séchage à plat",
-      "Ne pas essorer"
+      "Pas d'essorage"
     ],
-    "fit": "Coupe ample, légèrement courte.",
-    "model": {
-      "height": 180,
-      "size": "M"
-    },
+    "fit": "Coupe ample.",
     "en": {
       "name": "Camo Knit Sweater",
-      "short": "Camouflage jacquard knit, white wordmark",
-      "description": "A hand-drawn camouflage, then knitted in jacquard: black, grey and greige blending like brushstrokes. The DIMENSI*N wordmark is knitted in white over the heart.",
+      "short": "Camouflage jacquard knit, DIMENSI*N in white",
+      "description": "A camouflage with zero interest in hiding: black, grey and greige brushstrokes, knitted in jacquard. DIMENSI*N in white over the heart, black ribbing at the collar, cuffs and hem. The sweater you grab as soon as the air turns cool, and don't take off all winter.",
       "details": [
-        "Heavy jacquard knit, painted camouflage pattern",
-        "DIMENSI*N wordmark knitted on the front",
+        "Jacquard knit, brushstroke camouflage pattern",
+        "DIMENSI*N in white over the heart",
         "Black ribbing at the collar, cuffs and hem",
-        "Limited series"
+        "Limited edition"
       ],
-      "fabric": "Jacquard knit, 70% cotton, 30% wool.",
+      "fabric": "",
       "care": [
         "Hand wash or wool cycle at 30 °C",
         "Dry flat",
         "Do not wring"
       ],
-      "fit": "Relaxed, slightly cropped fit.",
+      "fit": "Relaxed fit.",
       "colors": [
         {
           "name": "Grey camo",

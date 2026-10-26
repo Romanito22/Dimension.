@@ -2,7 +2,7 @@
   "name": "dimension.",
   "legalName": "dimension.",
   "tagline": "Love over everything.",
-  "description": "dimension. — streetwear brodé et imprimé en petites séries. T-shirts, maille et pièces graphiques pensées pour durer. Love over everything.",
+  "description": "dimension. — streetwear brodé et imprimé, sorti en petites séries. Des t-shirts et de la maille dessinés pour les gens qu'on aime. Love over everything.",
   "url": "https://dimensionbrand.fr",
   "email": "contact@dimensionbrand.fr",
   "handle": "@dimensionbrand",
@@ -53,40 +53,40 @@
   "marquee": [
     "Love over everything",
     "Livraison offerte dès 80 €",
-    "Brodé & imprimé en petites séries",
-    "Retours sous 14 jours",
-    "Drop 01 — disponible maintenant"
+    "Petites séries, pas de restock garanti",
+    "14 jours pour changer d'avis",
+    "Drop 01 — dispo maintenant"
   ],
   "story": {
     "kicker": "La marque",
-    "title": "On fait des vêtements comme on aime : sans compter.",
-    "intro": "dimension. est née d'une envie simple — porter ce qui nous ressemble. Des coupes amples, des cotons épais, des graphismes faits main, brodés ou imprimés en petites séries. Rien de superflu, tout ce qui compte.",
+    "title": "On fait des vêtements pour les gens qu'on aime.",
+    "intro": "dimension., c'est une phrase qu'on porte sur nous : love over everything. L'amour avant tout — pour les tiens, pour ta bande, pour ce qui te fait vibrer. On en fait des vêtements qui la disent sans en faire des tonnes : un monogramme brodé côté cœur, un dessin dans le dos, une coupe large dans laquelle on se sent bien.",
     "chapters": [
       {
         "title": "Le point",
-        "text": "Le petit cercle qui flotte au-dessus du « d », c'est notre point de départ. Une dimension en plus : celle qu'on donne aux choses qu'on aime."
+        "text": "Tu l'as vu, ce petit rond au-dessus du « d » ? C'est notre degré en plus. La dimension qu'on ajoute à ce qu'on aime : un détail, une attention, un fil de couleur là où personne ne regarde."
       },
       {
-        "title": "Le geste",
-        "text": "Chaque graphisme part d'un dessin : un trait, une éclaboussure, un cœur qui déborde. On garde l'accident, la main, l'imperfection qui rend une pièce vivante."
+        "title": "Le trait",
+        "text": "Chaque print part d'un dessin : un cœur qui déborde, une éclaboussure, trois potes qui avancent. On ne lisse pas tout. Le trait qui tremble, c'est lui qui rend la pièce vivante."
       },
       {
-        "title": "La matière",
-        "text": "Des cotons lourds qui tiennent dans le temps, des broderies denses, des encres qui vieillissent bien. On préfère une pièce qu'on garde dix ans à dix pièces qu'on oublie."
+        "title": "La pièce",
+        "text": "Une broderie qu'on sent sous les doigts, un col côtelé, des épaules tombées. On cherche le t-shirt que tu remets trois fois par semaine — celui que tu prêtes et qu'on ne te rend jamais."
       },
       {
-        "title": "Les séries courtes",
-        "text": "On produit par drops, en quantités limitées. Quand une pièce part, elle part : moins de stock dormant, plus de pièces qui comptent."
+        "title": "Les drops",
+        "text": "On sort nos pièces par drops, en petites quantités. Pas pour te mettre la pression : parce qu'on préfère produire juste. Quand une taille part, elle part. Si elle revient, les inscrits le savent en premier."
       }
     ]
   },
   "nextDrop": {
     "name": "Drop 02",
     "date": "2026-11-21T19:00:00+01:00",
-    "teaser": "Nouvelles pièces, mêmes séries courtes. Les inscrits passent en premier."
+    "teaser": "De nouvelles pièces arrivent. Les inscrits les voient avant tout le monde."
   },
   "en": {
-    "description": "dimension. — embroidered and printed streetwear in short runs. T-shirts, knitwear and graphic pieces made to last. Love over everything.",
+    "description": "dimension. — embroidered and printed streetwear, released in small runs. T-shirts and knitwear designed for the people we love. Love over everything.",
     "drop": {
       "season": "Autumn — Winter 2026"
     },
@@ -115,35 +115,35 @@
     "marquee": [
       "Love over everything",
       "Free delivery from €80",
-      "Embroidered & printed in short runs",
-      "Returns within 14 days",
+      "Small runs, no guaranteed restock",
+      "14 days to change your mind",
       "Drop 01 — available now"
     ],
     "story": {
       "kicker": "The brand",
-      "title": "We make clothes the way we love: all in.",
-      "intro": "dimension. was born from a simple urge — to wear what feels like us. Relaxed cuts, heavy cottons, hand-made graphics, embroidered or printed in short runs. Nothing superfluous, everything that matters.",
+      "title": "We make clothes for the people we love.",
+      "intro": "dimension. is a sentence we wear: love over everything. Love first — for your people, your crew, whatever makes you feel alive. We turn it into clothes that say it without shouting: a monogram embroidered over the heart, a drawing on the back, a loose fit you feel good in.",
       "chapters": [
         {
           "title": "The dot",
-          "text": "The little circle floating above the « d » is where it all starts. One more dimension: the one we give to the things we love."
+          "text": "Did you spot the little circle above the « d »? That's our extra degree. The dimension we add to what we love: a detail, some care, a coloured thread where nobody's looking."
         },
         {
-          "title": "The gesture",
-          "text": "Every graphic starts as a drawing: a line, a splash, an overflowing heart. We keep the accident, the hand, the imperfection that makes a piece feel alive."
+          "title": "The line",
+          "text": "Every print starts as a drawing: an overflowing heart, a splash, three friends moving forward. We don't smooth everything out. The shaky line is what makes a piece feel alive."
         },
         {
-          "title": "The fabric",
-          "text": "Heavy cottons that last, dense embroidery, inks that age well. We'd rather make one piece you keep for ten years than ten you forget."
+          "title": "The piece",
+          "text": "Embroidery you can feel under your fingers, a ribbed collar, dropped shoulders. We're after the tee you wear three times a week — the one you lend and never get back."
         },
         {
-          "title": "Short runs",
-          "text": "We produce in drops, in limited quantities. When a piece is gone, it's gone: less dead stock, more pieces that matter."
+          "title": "The drops",
+          "text": "We release our pieces in drops, in small quantities. Not to pressure you: because we'd rather make just enough. When a size is gone, it's gone. If it comes back, subscribers hear first."
         }
       ]
     },
     "nextDrop": {
-      "teaser": "New pieces, same short runs. Subscribers get in first."
+      "teaser": "New pieces are on their way. Subscribers see them before anyone else."
     }
   }
 }

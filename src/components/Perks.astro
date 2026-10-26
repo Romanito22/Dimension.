@@ -17,10 +17,10 @@ const t = translator(locale);
 const brand = getBrand(locale);
 
 const all = [
-  { key: 'made', icon: 'needle', title: t('Brodé & imprimé', 'Embroidered & printed'), text: t('en séries courtes, par drops', 'in short runs, by drops') },
+  { key: 'made', icon: 'needle', title: t('Brodé & imprimé', 'Embroidered & printed'), text: t('en petites séries, drop après drop', 'in small runs, drop after drop') },
   { key: 'ship', icon: 'truck', title: t('Livraison offerte', 'Free delivery'), text: t(`dès ${formatPrice(brand.shipping.freeThreshold, locale)}, expédiée sous 48 h`, `from ${formatPrice(brand.shipping.freeThreshold, locale)}, ships within 48 h`) },
   { key: 'returns', icon: 'returns', title: t(`${brand.shipping.returnsDays} jours`, `${brand.shipping.returnsDays} days`), text: t("pour changer d'avis, échange de taille offert", 'to change your mind, free size exchange') },
-  { key: 'pay', icon: 'lock', title: t('Paiement sécurisé', 'Secure payment'), text: t('carte, Apple Pay, PayPal', 'card, Apple Pay, PayPal') },
+  { key: 'pay', icon: 'lock', title: t('Paiement sécurisé', 'Secure payment'), text: t('par carte bancaire, en toute sécurité', 'by card, safely') },
 ] as const;
 const items = only ? all.filter((p) => only.includes(p.key)) : all;
 ---

@@ -199,6 +199,29 @@ Ce qui a été fait :
 - **Sections lointaines** rendues à l'approche de l'écran (`.cv`, `content-visibility: auto`), animations limitées à `transform` / `opacity`.
 - **Transitions plus vives** : rideau entre les pages ~0,45 s, intro 0,65 s passable d'un clic ou d'un toucher.
 
+## Ton de la marque
+
+Pour garder une voix cohérente quand tu ajoutes des textes :
+- **On tutoie**, on dit « on » : une bande qui parle à une autre, pas une enseigne.
+- **Phrases courtes, concrètes.** On décrit ce qu'on voit et ce qu'on sent (« en relief sous les doigts »), pas des superlatifs (« premium », « exceptionnel »).
+- **Love over everything** = l'amour avant tout : les tiens, ta bande, ce qui te fait vibrer. Le fil rouge, sans le répéter partout.
+- **Pas de fausse urgence** : on dit qu'il reste 3 pièces si c'est vrai, jamais « dépêche-toi ».
+- **Jamais d'info inventée** : composition, grammage, origine, délais… seulement ce qui est vérifié.
+
+## À compléter avant de vendre
+
+Les éléments surlignés en rose sur les pages légales, et ces infos que seule la marque peut donner :
+
+| Où | Quoi |
+|---|---|
+| `src/views/Legal.astro`, `src/views/Terms.astro` | Forme juridique, SIRET, adresse, TVA (ou mention 293 B), téléphone, responsable de la publication |
+| `src/views/Terms.astro` | Prestataire de paiement, frais de retour (à ta charge ou étiquette offerte), **médiateur de la consommation** (obligatoire) |
+| `src/views/Legal.astro` | Prestataires (paiement, transporteurs, e-mailing) |
+| `src/data/products.json` → `fabric` | **Composition exacte** de chaque pièce (obligatoire avant achat) — en attendant, la fiche invite à écrire |
+| `src/data/products.json` → `model` | Taille et mensurations du modèle, à ajouter quand il y aura des photos portées : `"model": { "height": 180, "size": "M" }` |
+| `src/data/brand.json` | Vérifier : prix et délais de livraison, seuil de livraison offerte, durée de retour (14 jours minimum, c'est la loi), code de bienvenue, **date du prochain drop** (compte à rebours) |
+| Textes de la marque (`brand.json` → `story`) | Relire l'histoire : elle doit te ressembler. Rien n'y est inventé sur vos débuts, mais c'est ta voix. |
+
 ## Mettre le site en ligne
 
 **GitHub Pages (gratuit, déjà prêt)** : le workflow `.github/workflows/pages.yml` construit le site et le publie à chaque mise à jour de la branche `claude/compassionate-darwin-ya2ef4`.

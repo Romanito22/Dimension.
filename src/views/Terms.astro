@@ -1,58 +1,282 @@
 ---
+// Conditions générales de vente (droit français de la consommation).
+// Les passages surlignés (<mark>) dépendent de la structure juridique de la marque : à compléter.
 import LegalPage from '../components/LegalPage.astro';
 import { getBrand, formatPrice } from '../lib/shop';
-import { localeFromPath } from '../i18n';
+import { localeFromPath, href } from '../i18n';
 const locale = localeFromPath(Astro.url.pathname);
 const brand = getBrand(locale);
-const free = formatPrice(brand.shipping.freeThreshold, locale);
+const fmt = (n: number) => formatPrice(n, locale);
+const free = fmt(brand.shipping.freeThreshold);
+const days = brand.shipping.returnsDays;
+const methods = brand.shipping.methods;
+const mail = brand.email;
+const track = href(locale, 'track');
+const legal = href(locale, 'legal');
 ---
 
 {
   locale === 'en' ? (
     <LegalPage title="Terms of sale" updated="October 2026" route="terms">
-      <p><mark>Template to be validated — adapt it to your legal structure before going live.</mark></p>
-      <h2>1. Purpose</h2>
-      <p>These terms govern the sale of clothing and accessories on {brand.url} by {brand.legalName}.</p>
-      <h2>2. Prices</h2>
-      <p>Prices are shown in euros, including all taxes, excluding delivery. Delivery costs are shown before the order is confirmed.</p>
-      <h2>3. Orders & payment</h2>
-      <p>An order is confirmed once payment is accepted. A confirmation email summarises the order. Payment is secured by our payment provider.</p>
-      <h2>4. Delivery</h2>
+      <div class="legal__summary">
+        <p class="label">The essentials in 30 seconds</p>
+        <ul>
+          <li>Prices include VAT. Delivery costs are shown before you pay — free from {free} in metropolitan France (except express).</li>
+          <li>You have {days} days after delivery to change your mind, no reason needed.</li>
+          <li>Size exchanges are free, subject to stock.</li>
+          <li>Every piece is covered by the 2-year legal guarantee of conformity.</li>
+          <li>A problem? Write to <a class="link link--under" href={`mailto:${mail}`}>{mail}</a>: a real person reads every message.</li>
+        </ul>
+      </div>
+      <p><mark>Draft to be validated — the highlighted information depends on the brand's legal structure and must be completed before selling.</mark></p>
+
+      <h2 id="seller">1. Who we are</h2>
       <p>
-        Orders ship within 24 to 48 working hours. Free delivery from {free} in metropolitan France (except express). Estimated times:{' '}
-        {brand.shipping.methods.map((m) => `${m.label} ${m.delay}`).join('; ')}.
+        The site {brand.url} is run by {brand.legalName}, <mark>legal form (sole trader, SAS…)</mark>, <mark>share capital if applicable</mark>, registered under SIRET
+        <mark>000 000 000 00000</mark> (<mark>RCS / trade register, city</mark>), registered office <mark>full address</mark>. <mark>Intra-EU VAT number, or « VAT not applicable, art. 293 B of the French tax code »</mark>.
+        Contact: <a class="link link--under" href={`mailto:${mail}`}>{mail}</a> — <mark>phone number</mark>.
       </p>
-      <h2>5. Right of withdrawal & returns</h2>
+
+      <h2 id="scope">2. Scope</h2>
       <p>
-        You have {brand.shipping.returnsDays} days from delivery to withdraw from your purchase, without giving a reason. Items must be returned unworn, unwashed and with their tags. Refunds are issued within 14 days of receiving the return.
+        These terms apply to every order placed on {brand.url} by a consumer, that is, a natural person buying for personal use. By confirming your order, you accept them. The version that applies is the one online on the day of your order: save or print it if you like.
       </p>
-      <h2>6. Warranties</h2>
-      <p>Products are covered by the statutory guarantee of conformity and the guarantee against hidden defects under French law.</p>
-      <h2>7. Disputes</h2>
-      <p>In the event of a dispute, an amicable solution will be sought first. Failing that, consumers may use a consumer mediator free of charge: <mark>mediator name</mark>. French law applies.</p>
+
+      <h2 id="products">3. The pieces</h2>
+      <p>
+        Each product page describes the essential features of the piece: design, colours, sizes, composition, care. Photos are as faithful as possible, but a screen can slightly change a colour. Our pieces are made in small runs: an item is available while it is shown as in stock. If, exceptionally, a piece is no longer available after your order, we let you know straight away and refund you within 14 days at the latest.
+      </p>
+
+      <h2 id="prices">4. Prices</h2>
+      <p>
+        Prices are in euros, all taxes included, excluding delivery. Delivery costs are shown in your bag and on the payment page, before you confirm. We may change our prices at any time; the price that applies is the one shown when you confirm your order. Promotional codes (such as the welcome code) cannot be combined unless stated otherwise and are not exchangeable for cash.
+      </p>
+
+      <h2 id="order">5. Ordering</h2>
+      <p>
+        You choose your pieces and sizes, check your bag, enter your details and delivery method, then pay. Before paying, you can review and correct everything. Clicking « Pay » is an order with an obligation to pay. A confirmation email then summarises your order (pieces, price, delivery, these terms).
+      </p>
+      <p>We may refuse or cancel an order in the event of an abnormal order, a payment problem or an earlier dispute with the customer.</p>
+
+      <h2 id="payment">6. Payment</h2>
+      <p>
+        Payment is made by card at the time of ordering, through our payment provider <mark>name of the provider (Stripe, PayPal…)</mark>. Your card details are encrypted and never pass through our servers. Your order is confirmed once payment is accepted.
+      </p>
+
+      <h2 id="delivery">7. Delivery</h2>
+      <p>We deliver to metropolitan France, the European Union, Switzerland and the United Kingdom. We pack your order within 24 to 48 working hours, then:</p>
+      <ul>
+        {methods.map((m) => (
+          <li>
+            {m.label}: {m.delay} — {fmt(m.price)}
+          </li>
+        ))}
+      </ul>
+      <p>
+        Delivery is free from {free} in metropolitan France, except express. Times are indicative; the estimated date is shown before payment. In any case, we deliver within 30 days of your order at the latest. If we are late, you can ask us to deliver within a reasonable extra period, then cancel the order by email if it still hasn't arrived; we then refund you within 14 days (articles L216-2 and L216-3 of the French Consumer Code).
+      </p>
+      <p>
+        Risks pass to you when you, or the person you designate, physically take possession of the parcel. If the parcel is damaged or incomplete, note it on the carrier's delivery slip and tell us within 3 days at <a class="link link--under" href={`mailto:${mail}`}>{mail}</a>, with a photo: we'll handle it with the carrier.
+      </p>
+
+      <h2 id="withdrawal">8. Right of withdrawal</h2>
+      <p>
+        You have <strong>{days} days</strong> from the day you (or the person you designate) receive the pieces to withdraw from your purchase, without giving a reason (article L221-18 of the French Consumer Code). For an order delivered in several parcels, the period runs from the last one.
+      </p>
+      <p>
+        To withdraw, tell us clearly before the deadline: from the order tracking page (« Return or exchange » button), by email at <a class="link link--under" href={`mailto:${mail}`}>{mail}</a>, or with the form at the bottom of these terms. Then send the pieces back within 14 days of telling us, <mark>at your own cost / with the prepaid return label we send you</mark>.
+      </p>
+      <p>
+        Pieces must come back unworn, unwashed, with their tags. You are responsible for any loss in value caused by handling beyond what is needed to check the piece (trying it on as you would in a shop). We refund all sums paid, including standard delivery costs, within 14 days of your withdrawal, using the same means of payment; we may wait until we receive the pieces, or proof of their return, before refunding. If you chose a more expensive delivery than standard (express), the difference is not refunded.
+      </p>
+
+      <h2 id="exchange">9. Size exchanges</h2>
+      <p>
+        Beyond the legal right of withdrawal, we offer free size exchanges within {days} days of delivery, subject to stock, from the order tracking page. The new size ships as soon as we receive the first one.
+      </p>
+
+      <h2 id="warranty">10. Legal guarantees</h2>
+      <p>
+        All our pieces are covered by the legal guarantee of conformity (articles L217-3 et seq. of the French Consumer Code) and the guarantee against hidden defects (articles 1641 to 1649 of the French Civil Code), regardless of any commercial guarantee.
+      </p>
+      <div class="legal__box">
+        <p>
+          <strong>Legal guarantee of conformity.</strong> The consumer has two years from delivery of the goods to obtain the implementation of the legal guarantee of conformity if a lack of conformity appears. During this period, the consumer only has to establish the existence of the lack of conformity, not the date it appeared. The guarantee entitles the consumer to repair or replacement of the goods within thirty days of the request, free of charge and without major inconvenience. If the goods are repaired under the guarantee, it is extended by six months. The consumer may obtain a price reduction while keeping the goods, or end the contract with a full refund in exchange for returning them, if the seller refuses to repair or replace the goods, if repair or replacement is not carried out within thirty days or causes major inconvenience, or if the lack of conformity persists. The consumer may also obtain a price reduction or cancel the contract immediately when the defect is so serious that it justifies it, without first requesting repair or replacement. A seller who obstructs the legal guarantee of conformity in bad faith faces a civil fine of up to €300,000, which may be increased to 10% of average annual turnover (article L241-5 of the French Consumer Code).
+        </p>
+        <p>
+          <strong>Guarantee against hidden defects.</strong> The consumer also benefits from the guarantee against hidden defects under articles 1641 to 1649 of the French Civil Code, for two years from the discovery of the defect. This guarantee gives the right to a price reduction if the goods are kept, or to a full refund in exchange for returning them.
+        </p>
+      </div>
+      <p>To use these guarantees, write to us at <a class="link link--under" href={`mailto:${mail}`}>{mail}</a> with your order number and a photo of the problem.</p>
+
+      <h2 id="liability">11. Liability</h2>
+      <p>
+        We are responsible for the proper performance of your order. We cannot be held responsible for a failure caused by you, by an unforeseeable act of a third party, or by force majeure. Pieces must be cared for according to their care advice.
+      </p>
+
+      <h2 id="ip">12. Intellectual property</h2>
+      <p>The name dimension., the « d° » monogram, the graphics, prints, photos and texts of the site belong to {brand.legalName}. Buying a piece does not transfer any rights to these designs.</p>
+
+      <h2 id="data">13. Personal data</h2>
+      <p>
+        We use your data to process your order, deliver it and keep you informed. Everything is explained on the <a class="link link--under" href={`${legal}#confidentialite`}>privacy</a> page.
+      </p>
+
+      <h2 id="disputes">14. Disputes & mediation</h2>
+      <p>
+        If something goes wrong, write to us first at <a class="link link--under" href={`mailto:${mail}`}>{mail}</a>: we'll always look for a friendly solution. If no solution is found, you can refer the matter free of charge to the consumer mediator <mark>name, address and website of the mediator</mark> (articles L612-1 et seq. of the French Consumer Code), within one year of your written complaint to us.
+      </p>
+      <p>
+        These terms are governed by French law. Failing an amicable settlement, any dispute falls within the jurisdiction of the competent courts under the applicable rules, the consumer being able to bring the matter before the court of the place where they lived when ordering.
+      </p>
+
+      <h2 id="form">Appendix — Withdrawal form</h2>
+      <p>
+        Fill in and return this form only if you wish to withdraw from the contract (or simply use the « Return or exchange » button on the <a class="link link--under" href={track}>order tracking</a> page).
+      </p>
+      <div class="legal__box">
+        <p>
+          To the attention of {brand.legalName}, <mark>full address</mark>, {mail}:
+          <br />I hereby notify you of my withdrawal from the contract for the sale of the following goods: ………
+          <br />Ordered on ……… / received on ………
+          <br />Order number: DIM-………
+          <br />Name of the consumer: ………
+          <br />Address of the consumer: ………
+          <br />Signature of the consumer (only if this form is sent on paper): ………
+          <br />Date: ………
+        </p>
+      </div>
     </LegalPage>
   ) : (
-<LegalPage title="Conditions générales de vente" updated="octobre 2026" route="terms">
-  <p><mark>Modèle à faire valider — à adapter à ta structure juridique avant la mise en ligne.</mark></p>
-  <h2>1. Objet</h2>
-  <p>Les présentes conditions régissent les ventes de vêtements et accessoires réalisées sur le site {brand.url} par {brand.legalName}.</p>
-  <h2>2. Prix</h2>
-  <p>Les prix sont indiqués en euros, toutes taxes comprises, hors frais de livraison. Les frais de livraison sont précisés avant la validation de la commande.</p>
-  <h2>3. Commande & paiement</h2>
-  <p>La commande est confirmée après acceptation du paiement. Un e-mail de confirmation récapitule la commande. Le paiement est sécurisé par notre prestataire de paiement.</p>
-  <h2>4. Livraison</h2>
-  <p>
-    Les commandes sont expédiées sous 24 à 48 h ouvrées. Livraison offerte dès {free} en France métropolitaine (hors express). Délais indicatifs :{' '}
-    {brand.shipping.methods.map((m) => `${m.label} ${m.delay}`).join(' ; ')}.
-  </p>
-  <h2>5. Droit de rétractation & retours</h2>
-  <p>
-    Tu disposes de {brand.shipping.returnsDays} jours à compter de la réception pour exercer ton droit de rétractation, sans justification. Les articles doivent être retournés non portés, non lavés, avec leurs étiquettes. Le remboursement intervient sous 14 jours après réception du retour.
-  </p>
-  <h2>6. Garanties</h2>
-  <p>Les produits bénéficient de la garantie légale de conformité et de la garantie contre les vices cachés.</p>
-  <h2>7. Litiges</h2>
-  <p>En cas de litige, une solution amiable sera recherchée en priorité. À défaut, le consommateur peut recourir gratuitement à un médiateur de la consommation : <mark>nom du médiateur</mark>.</p>
-</LegalPage>
+    <LegalPage title="Conditions générales de vente" updated="octobre 2026" route="terms">
+      <div class="legal__summary">
+        <p class="label">L'essentiel en 30 secondes</p>
+        <ul>
+          <li>Les prix sont TTC. Les frais de livraison s'affichent avant de payer — offerts dès {free} en France métropolitaine (hors express).</li>
+          <li>Tu as {days} jours après réception pour changer d'avis, sans avoir à te justifier.</li>
+          <li>L'échange de taille est offert, dans la limite des stocks.</li>
+          <li>Chaque pièce est couverte par la garantie légale de conformité de 2 ans.</li>
+          <li>Un souci ? Écris à <a class="link link--under" href={`mailto:${mail}`}>{mail}</a> : une vraie personne lit chaque message.</li>
+        </ul>
+      </div>
+      <p><mark>Version à faire valider — les informations surlignées dépendent de la structure juridique de la marque et doivent être complétées avant de vendre.</mark></p>
+
+      <h2 id="vendeur">1. Qui sommes-nous</h2>
+      <p>
+        Le site {brand.url} est édité par {brand.legalName}, <mark>forme juridique (micro-entreprise, SAS…)</mark>, <mark>capital social le cas échéant</mark>, immatriculée sous le SIRET
+        <mark>000 000 000 00000</mark> (<mark>RCS ou RNE, ville</mark>), dont le siège est situé <mark>adresse complète</mark>. <mark>N° de TVA intracommunautaire, ou « TVA non applicable, art. 293 B du CGI »</mark>.
+        Contact : <a class="link link--under" href={`mailto:${mail}`}>{mail}</a> — <mark>numéro de téléphone</mark>.
+      </p>
+
+      <h2 id="champ">2. À qui s'appliquent ces conditions</h2>
+      <p>
+        Ces conditions s'appliquent à toutes les commandes passées sur {brand.url} par un consommateur, c'est-à-dire une personne physique qui achète pour son usage personnel. En validant ta commande, tu les acceptes. La version qui s'applique est celle en ligne le jour de ta commande : tu peux l'enregistrer ou l'imprimer.
+      </p>
+
+      <h2 id="pieces">3. Les pièces</h2>
+      <p>
+        Chaque fiche produit présente les caractéristiques essentielles de la pièce : design, coloris, tailles, composition, entretien. Les photos sont les plus fidèles possible, mais un écran peut légèrement modifier une couleur. Nos pièces sont produites en petites séries : un article est disponible tant qu'il est affiché en stock. Si, exceptionnellement, une pièce n'était plus disponible après ta commande, on te prévient tout de suite et on te rembourse au plus tard sous 14 jours.
+      </p>
+
+      <h2 id="prix">4. Les prix</h2>
+      <p>
+        Les prix sont indiqués en euros, toutes taxes comprises, hors frais de livraison. Les frais de livraison sont affichés dans ton panier et sur la page de paiement, avant la validation. Nos prix peuvent évoluer ; le prix appliqué est celui affiché au moment où tu valides ta commande. Les codes promo (comme le code de bienvenue) ne sont pas cumulables, sauf mention contraire, et ne peuvent pas être échangés contre de l'argent.
+      </p>
+
+      <h2 id="commande">5. La commande</h2>
+      <p>
+        Tu choisis tes pièces et tes tailles, tu vérifies ton panier, tu renseignes tes coordonnées et ton mode de livraison, puis tu paies. Avant de payer, tu peux tout revoir et corriger. Le clic sur « Payer » vaut commande avec obligation de paiement. Un e-mail de confirmation récapitule ensuite ta commande (pièces, prix, livraison, présentes conditions).
+      </p>
+      <p>Nous pouvons refuser ou annuler une commande en cas de commande anormale, de problème de paiement ou de litige antérieur avec le client.</p>
+
+      <h2 id="paiement">6. Le paiement</h2>
+      <p>
+        Le paiement se fait par carte bancaire au moment de la commande, via notre prestataire de paiement <mark>nom du prestataire (Stripe, PayPal…)</mark>. Tes données bancaires sont chiffrées et ne transitent jamais par nos serveurs. La commande est confirmée dès l'acceptation du paiement.
+      </p>
+
+      <h2 id="livraison">7. La livraison</h2>
+      <p>On livre en France métropolitaine, dans l'Union européenne, en Suisse et au Royaume-Uni. On prépare ta commande sous 24 à 48 h ouvrées, puis :</p>
+      <ul>
+        {methods.map((m) => (
+          <li>
+            {m.label} : {m.delay} — {fmt(m.price)}
+          </li>
+        ))}
+      </ul>
+      <p>
+        La livraison est offerte dès {free} en France métropolitaine, hors express. Les délais sont indicatifs ; la date estimée t'est indiquée avant le paiement. Dans tous les cas, on livre au plus tard 30 jours après ta commande. En cas de retard, tu peux nous demander de livrer dans un délai supplémentaire raisonnable, puis, si le colis n'est toujours pas là, annuler la commande par e-mail ; on te rembourse alors sous 14 jours (articles L216-2 et L216-3 du Code de la consommation).
+      </p>
+      <p>
+        Les risques te sont transférés au moment où toi, ou la personne que tu désignes, prends physiquement possession du colis. Si le colis est abîmé ou incomplet, note-le sur le bon du transporteur et préviens-nous dans les 3 jours à <a class="link link--under" href={`mailto:${mail}`}>{mail}</a>, avec une photo : on s'en occupe avec le transporteur.
+      </p>
+
+      <h2 id="retractation">8. Le droit de rétractation</h2>
+      <p>
+        Tu disposes de <strong>{days} jours</strong> à compter du jour où toi (ou la personne que tu désignes) reçois les pièces pour te rétracter, sans avoir à te justifier (article L221-18 du Code de la consommation). Pour une commande livrée en plusieurs colis, le délai court à partir du dernier.
+      </p>
+      <p>
+        Pour te rétracter, dis-le-nous clairement avant la fin du délai : depuis la page de suivi de commande (bouton « Retourner ou échanger »), par e-mail à <a class="link link--under" href={`mailto:${mail}`}>{mail}</a>, ou avec le formulaire en bas de ces conditions. Renvoie ensuite les pièces dans les 14 jours qui suivent, <mark>à tes frais / avec l'étiquette retour prépayée qu'on t'envoie</mark>.
+      </p>
+      <p>
+        Les pièces doivent revenir non portées, non lavées, avec leurs étiquettes. Ta responsabilité peut être engagée en cas de dépréciation due à des manipulations autres que celles nécessaires pour vérifier la pièce (l'essayer comme en boutique). On te rembourse toutes les sommes versées, frais de livraison standard compris, dans les 14 jours suivant ta rétractation, par le même moyen de paiement ; on peut attendre d'avoir reçu les pièces, ou une preuve de leur expédition, pour rembourser. Si tu as choisi une livraison plus chère que la livraison standard (express), la différence n'est pas remboursée.
+      </p>
+
+      <h2 id="echange">9. L'échange de taille</h2>
+      <p>
+        En plus du droit de rétractation, on t'offre l'échange de taille dans les {days} jours suivant la réception, dans la limite des stocks, depuis la page de suivi de commande. La nouvelle taille part dès qu'on reçoit la première.
+      </p>
+
+      <h2 id="garanties">10. Les garanties légales</h2>
+      <p>
+        Toutes nos pièces bénéficient de la garantie légale de conformité (articles L217-3 et suivants du Code de la consommation) et de la garantie des vices cachés (articles 1641 à 1649 du Code civil), indépendamment de toute garantie commerciale.
+      </p>
+      <div class="legal__box">
+        <p>
+          <strong>Garantie légale de conformité.</strong> Le consommateur dispose d'un délai de deux ans à compter de la délivrance du bien pour obtenir la mise en œuvre de la garantie légale de conformité en cas d'apparition d'un défaut de conformité. Durant ce délai, le consommateur n'est tenu d'établir que l'existence du défaut de conformité et non la date d'apparition de celui-ci. La garantie légale de conformité donne au consommateur droit à la réparation ou au remplacement du bien dans un délai de trente jours suivant sa demande, sans frais et sans inconvénient majeur pour lui. Si le bien est réparé dans le cadre de la garantie légale de conformité, le consommateur bénéficie d'une extension de six mois de la garantie initiale. Le consommateur peut obtenir une réduction du prix d'achat en conservant le bien ou mettre fin au contrat en se faisant rembourser intégralement contre restitution du bien, si le professionnel refuse de réparer ou de remplacer le bien, si la réparation ou le remplacement n'intervient pas dans un délai de trente jours, si la réparation ou le remplacement occasionne un inconvénient majeur pour le consommateur, ou si la non-conformité persiste. Il a également droit à une réduction du prix du bien ou à la résolution du contrat lorsque le défaut de conformité est si grave qu'il justifie que la réduction du prix ou la résolution du contrat soit immédiate ; il n'est alors pas tenu de demander la réparation ou le remplacement du bien au préalable. Le professionnel qui fait obstacle de mauvaise foi à la mise en œuvre de la garantie légale de conformité encourt une amende civile d'un montant maximal de 300 000 euros, qui peut être porté jusqu'à 10 % du chiffre d'affaires moyen annuel (article L241-5 du Code de la consommation).
+        </p>
+        <p>
+          <strong>Garantie des vices cachés.</strong> Le consommateur bénéficie également de la garantie légale des vices cachés en application des articles 1641 à 1649 du Code civil, pendant une durée de deux ans à compter de la découverte du défaut. Cette garantie donne droit à une réduction de prix si le bien est conservé ou à un remboursement intégral contre restitution du bien.
+        </p>
+      </div>
+      <p>Pour faire jouer ces garanties, écris-nous à <a class="link link--under" href={`mailto:${mail}`}>{mail}</a> avec ton numéro de commande et une photo du problème.</p>
+
+      <h2 id="responsabilite">11. Responsabilité</h2>
+      <p>
+        On est responsables de la bonne exécution de ta commande. Notre responsabilité ne peut pas être engagée en cas de manquement qui t'est imputable, de fait imprévisible d'un tiers ou de force majeure. Les pièces doivent être entretenues selon leurs conseils d'entretien.
+      </p>
+
+      <h2 id="propriete">12. Propriété intellectuelle</h2>
+      <p>Le nom dimension., le monogramme « d° », les graphismes, prints, photos et textes du site appartiennent à {brand.legalName}. L'achat d'une pièce ne transfère aucun droit sur ces créations.</p>
+
+      <h2 id="donnees">13. Données personnelles</h2>
+      <p>
+        On utilise tes données pour traiter ta commande, la livrer et te tenir au courant. Tout est expliqué sur la page <a class="link link--under" href={`${legal}#confidentialite`}>confidentialité</a>.
+      </p>
+
+      <h2 id="litiges">14. Litiges & médiation</h2>
+      <p>
+        Si quelque chose ne va pas, écris-nous d'abord à <a class="link link--under" href={`mailto:${mail}`}>{mail}</a> : on cherchera toujours une solution à l'amiable. Si aucune solution n'est trouvée, tu peux saisir gratuitement le médiateur de la consommation <mark>nom, adresse et site du médiateur</mark> (articles L612-1 et suivants du Code de la consommation), dans un délai d'un an à compter de ta réclamation écrite auprès de nous.
+      </p>
+      <p>
+        Ces conditions sont soumises au droit français. À défaut d'accord amiable, tout litige relève des juridictions compétentes selon les règles en vigueur, le consommateur pouvant saisir la juridiction du lieu où il demeurait au moment de la commande.
+      </p>
+
+      <h2 id="formulaire">Annexe — Formulaire de rétractation</h2>
+      <p>
+        Complète et renvoie ce formulaire uniquement si tu souhaites te rétracter (ou utilise simplement le bouton « Retourner ou échanger » de la page <a class="link link--under" href={track}>suivi de commande</a>).
+      </p>
+      <div class="legal__box">
+        <p>
+          À l'attention de {brand.legalName}, <mark>adresse complète</mark>, {mail} :
+          <br />Je vous notifie par la présente ma rétractation du contrat portant sur la vente du bien ci-dessous : ………
+          <br />Commandé le ……… / reçu le ………
+          <br />Numéro de commande : DIM-………
+          <br />Nom du consommateur : ………
+          <br />Adresse du consommateur : ………
+          <br />Signature du consommateur (uniquement en cas de notification sur papier) : ………
+          <br />Date : ………
+        </p>
+      </div>
+    </LegalPage>
   )
 }

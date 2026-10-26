@@ -1,52 +1,114 @@
 ---
+// Mentions légales (LCEN) et politique de confidentialité (RGPD).
+// Les passages surlignés (<mark>) sont à compléter par la marque.
 import LegalPage from '../components/LegalPage.astro';
 import brand from '../data/brand.json';
-import { localeFromPath } from '../i18n';
+import { localeFromPath, href } from '../i18n';
 const locale = localeFromPath(Astro.url.pathname);
+const account = href(locale, 'account');
+const host = 'GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA — pages.github.com';
 ---
 
 {
   locale === 'en' ? (
-    <LegalPage title="Legal notice" updated="October 2026" route="legal">
-      <p><mark>Highlighted information must be completed before going live.</mark></p>
-      <h2>Publisher</h2>
+    <LegalPage title="Legal notice & privacy" updated="October 2026" route="legal">
+      <p><mark>Highlighted information must be completed before selling.</mark></p>
+
+      <h2 id="editeur">Publisher</h2>
       <p>
-        {brand.legalName} — <mark>legal form (sole trader, SAS…)</mark>, <mark>registered address</mark>, SIRET <mark>000 000 000 00000</mark>.<br />
-        Publication manager: <mark>First Last name</mark>. Contact: <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>.
+        {brand.legalName} — <mark>legal form (sole trader, SAS…)</mark>, <mark>share capital if applicable</mark>, SIRET <mark>000 000 000 00000</mark> (<mark>RCS / trade register, city</mark>), <mark>registered address</mark>. <mark>Intra-EU VAT number, or « VAT not applicable, art. 293 B of the French tax code »</mark>.
+        <br />Publication manager: <mark>First and last name</mark>. Contact: <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a> — <mark>phone number</mark>.
       </p>
-      <h2>Hosting</h2>
-      <p><mark>Host name (e.g. Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA)</mark>.</p>
-      <h2>Intellectual property</h2>
-      <p>All content on this site (logo, monogram, graphics, photographs, texts) is the exclusive property of {brand.legalName}. Any reproduction without written permission is prohibited.</p>
-      <h2 id="confidentialite">Personal data & privacy</h2>
+
+      <h2 id="hebergement">Hosting</h2>
+      <p>{host}.</p>
+
+      <h2 id="propriete">Intellectual property</h2>
       <p>
-        Data collected (orders, newsletter, contact) is only used to handle your request and is never sold. Under the GDPR, you have the right to access, correct and delete your data: write to us at {brand.email}.
+        The name dimension., the « d° » monogram, the graphics, prints, photographs and texts on this site belong to {brand.legalName}. Please don't reproduce them without our written permission — but if you want to share a photo of your piece, go for it, and tag us: {brand.handle}.
       </p>
+
+      <h2 id="confidentialite">Privacy</h2>
+      <p>Short version: we only ask for what we need, we never sell your data, and you can ask us to delete it at any time.</p>
+
+      <h3>Who is responsible</h3>
+      <p>{brand.legalName}, contact: <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>.</p>
+
+      <h3>What we collect, and why</h3>
+      <ul>
+        <li><strong>When you order</strong>: name, email, phone, delivery address, order details — to prepare, ship and follow up your order, and for our accounting obligations (performance of the contract, legal obligation).</li>
+        <li><strong>Newsletter</strong>: your email — to tell you about drops and restocks, only if you sign up (consent). Unsubscribe in one click from each email.</li>
+        <li><strong>Contact form and reviews</strong>: name, email, message — to answer you or publish your review (legitimate interest, consent).</li>
+        <li><strong>Payment</strong>: handled directly by our payment provider <mark>name</mark>; we never see your card details.</li>
+      </ul>
+
+      <h3>How long we keep it</h3>
       <p>
-        This site uses your browser's local storage to remember your bag, wishlist, orders (for tracking) and the email you typed (to pre-fill forms). No advertising cookie is set without your consent. TikTok videos only load when you press play.
+        Order data: for the time needed to manage your order and returns, then archived for 10 years for accounting obligations. Newsletter: until you unsubscribe, or 3 years after our last contact. Contact messages: 1 year.
+      </p>
+
+      <h3>Who sees it</h3>
+      <p>Only the people and services that help us run the shop: our payment provider, our carriers, our email tool <mark>names of the providers</mark>. Never for advertising, never for sale.</p>
+
+      <h3>Your rights</h3>
+      <p>
+        You can access, correct, delete or download your data, object to its use or limit it, and withdraw your consent at any time: write to <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>. If you feel we haven't respected your rights, you can file a complaint with the CNIL (cnil.fr).
+      </p>
+
+      <h3>Cookies and storage on your device</h3>
+      <p>
+        This site sets no advertising or tracking cookies. It uses your browser's local storage to remember your bag, wishlist, size, orders (for tracking) and the email you typed (to pre-fill forms). This data stays on your device: you can see and delete it at any time from <a class="link link--under" href={account}>My space</a>. TikTok videos only load when you press play; TikTok may then set its own cookies.
       </p>
     </LegalPage>
   ) : (
-<LegalPage title="Mentions légales" updated="octobre 2026" route="legal">
-  <p><mark>Les informations surlignées sont à compléter avant la mise en ligne.</mark></p>
-  <h2>Éditeur du site</h2>
-  <p>
-    {brand.legalName} — <mark>forme juridique (micro-entreprise, SAS…)</mark>, <mark>adresse du siège</mark>, SIRET <mark>000 000 000 00000</mark>.<br />
-    Responsable de la publication : <mark>Nom Prénom</mark>. Contact : <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>.
-  </p>
-  <h2>Hébergement</h2>
-  <p><mark>Nom de l'hébergeur (ex. Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA)</mark>.</p>
-  <h2>Propriété intellectuelle</h2>
-  <p>
-    L'ensemble des contenus de ce site (logo, monogramme, graphismes, photographies, textes) est la propriété exclusive de {brand.legalName}. Toute reproduction sans autorisation écrite est interdite.
-  </p>
-  <h2 id="confidentialite">Données personnelles & confidentialité</h2>
-  <p>
-    Les données collectées (commande, newsletter, contact) sont utilisées uniquement pour traiter ta demande et ne sont jamais revendues. Conformément au RGPD, tu disposes d'un droit d'accès, de rectification et de suppression : écris-nous à {brand.email}.
-  </p>
-  <p>
-    Ce site utilise le stockage local de ton navigateur pour mémoriser ton panier, tes favoris, tes commandes (pour le suivi) et l'e-mail que tu as saisi (pour pré-remplir les formulaires). Aucun cookie publicitaire n'est déposé sans ton consentement. Les vidéos TikTok ne se chargent que lorsque tu appuies sur lecture.
-  </p>
-</LegalPage>
+    <LegalPage title="Mentions légales & confidentialité" updated="octobre 2026" route="legal">
+      <p><mark>Les informations surlignées sont à compléter avant de vendre.</mark></p>
+
+      <h2 id="editeur">Éditeur du site</h2>
+      <p>
+        {brand.legalName} — <mark>forme juridique (micro-entreprise, SAS…)</mark>, <mark>capital social le cas échéant</mark>, SIRET <mark>000 000 000 00000</mark> (<mark>RCS ou RNE, ville</mark>), <mark>adresse du siège</mark>. <mark>N° de TVA intracommunautaire, ou « TVA non applicable, art. 293 B du CGI »</mark>.
+        <br />Responsable de la publication : <mark>Prénom Nom</mark>. Contact : <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a> — <mark>numéro de téléphone</mark>.
+      </p>
+
+      <h2 id="hebergement">Hébergement</h2>
+      <p>{host}.</p>
+
+      <h2 id="propriete">Propriété intellectuelle</h2>
+      <p>
+        Le nom dimension., le monogramme « d° », les graphismes, prints, photographies et textes de ce site appartiennent à {brand.legalName}. Merci de ne pas les reproduire sans notre accord écrit — par contre, si tu veux partager une photo de ta pièce, vas-y, et identifie-nous : {brand.handle}.
+      </p>
+
+      <h2 id="confidentialite">Confidentialité</h2>
+      <p>En bref : on ne demande que ce dont on a besoin, on ne revend jamais tes données, et tu peux nous demander de les effacer quand tu veux.</p>
+
+      <h3>Qui est responsable</h3>
+      <p>{brand.legalName}, contact : <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>.</p>
+
+      <h3>Ce qu'on collecte, et pourquoi</h3>
+      <ul>
+        <li><strong>Quand tu commandes</strong> : nom, e-mail, téléphone, adresse de livraison, détail de la commande — pour préparer, expédier et suivre ta commande, et pour nos obligations comptables (exécution du contrat, obligation légale).</li>
+        <li><strong>Newsletter</strong> : ton e-mail — pour te prévenir des drops et des retours en stock, seulement si tu t'inscris (consentement). Désinscription en un clic depuis chaque e-mail.</li>
+        <li><strong>Formulaire de contact et avis</strong> : nom, e-mail, message — pour te répondre ou publier ton avis (intérêt légitime, consentement).</li>
+        <li><strong>Paiement</strong> : géré directement par notre prestataire de paiement <mark>nom</mark> ; on ne voit jamais tes données bancaires.</li>
+      </ul>
+
+      <h3>Combien de temps on les garde</h3>
+      <p>
+        Données de commande : le temps de gérer ta commande et les retours, puis archivage 10 ans pour nos obligations comptables. Newsletter : jusqu'à ta désinscription, ou 3 ans après notre dernier échange. Messages de contact : 1 an.
+      </p>
+
+      <h3>Qui les voit</h3>
+      <p>Uniquement les personnes et services qui nous aident à faire tourner la boutique : notre prestataire de paiement, nos transporteurs, notre outil d'e-mailing <mark>noms des prestataires</mark>. Jamais pour de la pub, jamais revendues.</p>
+
+      <h3>Tes droits</h3>
+      <p>
+        Tu peux accéder à tes données, les corriger, les supprimer, les récupérer, t'opposer à leur utilisation ou la limiter, et retirer ton consentement à tout moment : écris à <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>. Si tu estimes qu'on n'a pas respecté tes droits, tu peux adresser une réclamation à la CNIL (cnil.fr).
+      </p>
+
+      <h3>Cookies et stockage sur ton appareil</h3>
+      <p>
+        Ce site ne dépose aucun cookie publicitaire ni de mesure d'audience. Il utilise le stockage local de ton navigateur pour retenir ton panier, tes favoris, ta taille, tes commandes (pour le suivi) et l'e-mail que tu as saisi (pour pré-remplir les formulaires). Ces données restent sur ton appareil : tu peux les voir et les effacer à tout moment depuis <a class="link link--under" href={account}>Mon espace</a>. Les vidéos TikTok ne se chargent que lorsque tu appuies sur lecture ; TikTok peut alors déposer ses propres cookies.
+      </p>
+    </LegalPage>
   )
 }

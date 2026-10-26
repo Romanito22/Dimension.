@@ -43,10 +43,11 @@ const mateImg = mate ? media(imageKeys(mate)[0], undefined, locale) : null;
 const mateData = mate
   ? { id: mate.id, slug: mate.slug, name: mate.name, price: mate.price, color: mate.colors[0].name, image: mateImg!.thumb, sizes: mate.sizes }
   : null;
-const modelLine = t(
-  `Le modèle mesure ${modelHeight(p.model.height, 'fr')} et porte du ${p.model.size}.`,
-  `The model is ${modelHeight(p.model.height, 'en')} and wears a ${p.model.size}.`,
-);
+// Mensurations du modèle : affichées seulement quand une photo portée existe (champ « model » de la pièce)
+const model = (p as { model?: { height: number; size: string } }).model;
+const modelLine = model
+  ? t(`Le modèle mesure ${modelHeight(model.height, 'fr')} et porte du ${model.size}.`, `The model is ${modelHeight(model.height, 'en')} and wears a ${model.size}.`)
+  : '';
 const num = new Intl.NumberFormat(intlLocale(locale), { maximumFractionDigits: 1, minimumFractionDigits: 1 });
 
 const jsonld = {
@@ -185,7 +186,7 @@ const jsonld = {
         <div class="fit">
           <Icon name="person" size={20} />
           <div class="fit__body">
-            <p>{modelLine} <span class="muted">{p.fit}</span></p>
+            <p>{modelLine || p.fit} {modelLine && <span class="muted">{p.fit}</span>}</p>
             <p class="fit__mine" data-mysize hidden>{t('Ta taille conseillée : ', 'Your recommended size: ')}<strong data-mysize-value></strong></p>
             <button type="button" class="fit__cta link link--under label" data-open="size-guide" data-mysize-cta>{t('Trouve ta taille en 10 secondes →', 'Find your size in 10 seconds →')}</button>
           </div>
@@ -278,7 +279,14 @@ const jsonld = {
           <details>
             <summary>{t('Matières & entretien', 'Fabric & care')}</summary>
             <div class="acc__body">
-              <p>{p.fabric}</p>
+              <p>
+                {p.fabric ||
+                  t(
+                    "La composition exacte arrive très vite sur cette fiche. Tu en as besoin avant de commander ? Écris-nous, on te répond.",
+                    'The exact composition is coming to this page very soon. Need it before you order? Write to us and we’ll tell you.',
+                  )}
+              </p>
+              <p class="label">{t('Pour qu’il dure', 'To make it last')}</p>
               <ul>{p.care.map((c) => <li>{c}</li>)}</ul>
             </div>
           </details>
@@ -487,6 +495,19 @@ const jsonld = {
   .info__guide {
     margin-left: auto;
     font-weight: 600;
+  }
+  /* Petits liens-boutons : zone tactile élargie à ~44 px sans changer la mise en page */
+  .info__guide,
+  .fit__cta,
+  .shipcard__help {
+    position: relative;
+  }
+  .info__guide::after,
+  .fit__cta::after,
+  .shipcard__help::after {
+    content: '';
+    position: absolute;
+    inset: -15px -8px;
   }
   .colors {
     display: flex;

@@ -83,7 +83,7 @@ export function initForms(signal: AbortSignal) {
         }
         input.setAttribute('aria-invalid', 'false');
         form.querySelector('.nl__field')?.setAttribute('hidden', '');
-        if (msg) msg.textContent = t('Tu es sur la liste. Ton code −10 % : BIENVENUE10', "You're on the list. Your 10% code: BIENVENUE10");
+        if (msg) msg.textContent = t('Bienvenue dans la bande ! Ton code −10 % : BIENVENUE10', "Welcome to the crew! Your 10% code: BIENVENUE10");
       },
       { signal },
     );

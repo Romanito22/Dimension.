@@ -58,8 +58,8 @@ const ticker = products.map((p) => {
 });
 
 const manifesto = t(
-  "On ne fait pas des vêtements pour remplir des placards. On fait des pièces qui se portent *fort,* qui se lavent cent fois et qu'on garde *dix ans.* Brodées. Imprimées. Tricotées. En séries courtes : quand c'est parti, c'est *parti.*",
-  "We don't make clothes to fill wardrobes. We make pieces you wear *hard,* wash a hundred times and keep for *ten years.* Embroidered. Printed. Knitted. In short runs: when it's gone, it's *gone.*",
+  "On ne fait pas des fringues pour remplir des placards. On fait des pièces qu'on *aime* porter, qu'on prête à sa *meilleure pote* et qu'elle ne rend jamais. Brodées, imprimées, tricotées. En petites séries : quand c'est parti, c'est *parti.*",
+  "We don't make clothes to fill wardrobes. We make pieces you *love* wearing, that you lend to your *best friend* and never get back. Embroidered, printed, knitted. In small runs: when it's gone, it's *gone.*",
 );
 // Table de travail : les pièces à plat sur le gravier, à déplacer
 const TABLE = [
@@ -202,7 +202,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
         <div class="drop__intro theme-brand">
           <Sticker class="drop__sticker" variant="cotton" ring={t('Love over everything · séries courtes', 'Love over everything · short runs')} core="♥" size={110} rot={14} />
           <p class="display drop__big">{products.length} {t('pièces.', 'pieces.')}<br /><span class="drop__ink">{t('Séries courtes.', 'Short runs.')}</span></p>
-          <p>{t("Brodées, imprimées, tricotées. Quand c'est parti, c'est parti.", "Embroidered, printed, knitted. When it's gone, it's gone.")}</p>
+          <p>{t("Brodées, imprimées, tricotées, en petites quantités. Quand une taille part, elle part.", "Embroidered, printed, knitted, in small quantities. When a size is gone, it's gone.")}</p>
           <p class="label drop__left">{t(`${dropStock} pièces restantes`, `${dropStock} pieces left`)}</p>
         </div>
         {
@@ -227,15 +227,15 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
           <ol class="flip__steps" role="list">
             <li data-flip-step="0" class="is-active">
               <span class="flip__n display">01</span>
-              <div><strong>{t('Monogramme brodé', 'Embroidered monogram')}</strong><p>{t('Le « d° » au point plein, fil framboise cerné de noir, côté cœur.', 'The « d° » in satin stitch, raspberry thread outlined in black, over the heart.')}</p></div>
+              <div><strong>{t('Monogramme brodé', 'Embroidered monogram')}</strong><p>{t('Le « d° » brodé côté cœur, fil framboise cerné de noir. Discret de loin, en relief sous les doigts.', 'The « d° » embroidered over the heart, raspberry thread outlined in black. Subtle from afar, raised under your fingers.')}</p></div>
             </li>
             <li data-flip-step="1">
               <span class="flip__n display">02</span>
-              <div><strong>{t('Jersey 240 g/m²', '240 g/m² jersey')}</strong><p>{t('Coton épais, col côtelé, épaules tombées : la coupe boxy qui tient.', 'Heavy cotton, ribbed collar, dropped shoulders: a boxy fit that holds its shape.')}</p></div>
+              <div><strong>{t('Coupe boxy', 'Boxy fit')}</strong><p>{t('Col côtelé, épaules tombées, tombé large : on flotte juste ce qu’il faut.', 'Ribbed collar, dropped shoulders, a loose drape: roomy in all the right places.')}</p></div>
             </li>
             <li data-flip-step="2">
               <span class="flip__n display">03</span>
-              <div><strong>{t('Le cœur LOVE', 'The LOVE heart')}</strong><p>{t('Imprimé au dos en deux tons, gonflé comme une bulle. Signé over everything.', 'Printed on the back in two tones, puffed up like a bubble. Signed over everything.')}</p></div>
+              <div><strong>{t('Le cœur LOVE', 'The LOVE heart')}</strong><p>{t('Imprimé au dos en deux tons de rose, gonflé comme une bulle. Et juste en dessous : over everything.', 'Printed on the back in two shades of pink, puffed up like a bubble. And right below: over everything.')}</p></div>
             </li>
           </ol>
           <div class="flip__buy">
@@ -320,7 +320,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
         <span class="label accent">{t('Touche à tout', 'Hands on')}</span>
         <h2 id="tb-title" class="display h-2xl patch" data-chars>{t('Le drop à plat', 'The drop, laid flat')}</h2>
       </div>
-      <p class="tb__hint">{t('Attrape les pièces, déplace-les, clique sur celle qui te plaît.', 'Grab the pieces, move them around, click the one you like.')}</p>
+      <p class="tb__hint">{t('Attrape les pièces, fais-les glisser, ouvre celle qui te fait de l’œil.', 'Grab the pieces, slide them around, open the one that catches your eye.')}</p>
     </div>
     <div class="tb__stage" data-table-stage>
       {

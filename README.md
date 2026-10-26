@@ -171,7 +171,7 @@ python -m venv .venv && .venv/bin/pip install "rembg[cpu]" scipy opencv-python-h
 .venv/bin/python tools/visuels/composer.py   # régénère tous les visuels
 ```
 
-**T-shirt Love Over Everything** : la boutique et sa fiche utilisent le mockup sur cintre (`dim-001-cintre.jpg`, cintre retiré, encolure refermée) ; ses photos sur gravier servent au reste du site (accueil, devant / dos, table de travail, lookbook, catégories). Pour changer ce choix, modifie `SHOP` dans `composer.py`.
+**T-shirt Love Over Everything** : la boutique et sa fiche utilisent le mockup sur cintre (`dim-001-cintre.jpg`, cintre retiré, encolure refermée) + le gros plan de la vraie broderie du monogramme (le cœur au dos est imprimé) ; ses photos sur gravier servent au reste du site (accueil, devant / dos, table de travail, lookbook, catégories). Pour changer ce choix, modifie `SHOP` dans `composer.py`.
 
 Pour ajouter une photo : dépose-la dans `originales/`, ajoute une ligne dans `JOBS` (`detourer.py`), puis relance les deux scripts. Une image déposée directement dans `public/images/<clé>.webp|jpg|png` est aussi prise telle quelle. Les fiches n'affichent que les vraies photos disponibles (`galleryKeys`) ; un visuel provisoire n'apparaît plus que s'il n'existe aucune photo.
 

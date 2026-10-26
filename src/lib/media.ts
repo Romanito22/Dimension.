@@ -29,7 +29,7 @@ const EN_ALT: Record<string, string> = {
   'story/3': 'Detail of the jacquard knit',
   'texture/gravel': 'Gravel in the sun',
 };
-const EN_VIEW = ['front view', 'back view', 'print detail', 'laid flat, folded'];
+const EN_VIEW = ['front view', 'back view', 'print detail', 'embroidery close-up'];
 
 /** Texte alternatif anglais d'un visuel (le français vient de la fiche du visuel). */
 function englishAlt(key: string, fallback: string) {

@@ -109,9 +109,9 @@ def main():
         save(product_shot(front, seed=n), f'products/{i}-1')
         if back != front:
             save(product_shot(back, seed=n + 10), f'products/{i}-2')
-    stale = os.path.join(PUB, 'products/dim-001-4.webp')
-    if os.path.exists(stale):
-        os.remove(stale)
+    # Le monogramme du Love est brodé (le cœur au dos est imprimé) : vraie photo de la broderie
+    mono = Image.open(os.path.join(SRC, 'dim-001-monogramme.jpg')).convert('RGB')
+    save(mono.crop((740, 375, 1260, 1025)).resize((1040, 1300), Image.LANCZOS), 'products/dim-001-4')
     for i, (name, cx, cy, fw) in DETAILS.items():
         save(detail(name, cx, cy, fw), f'products/{i}-3')
 
@@ -132,7 +132,6 @@ def main():
     scene('categories/love', 1500, 2000, BRAND, [(F['dim-001'], 0.5, 0.5, 0.56, 6)], 9)
     scene('story/2', 2560, 1440, BRAND, [(F['dim-004'], 0.22, 0.5, 0.6, -10), (B['dim-001'], 0.5, 0.48, 0.6, 4), (B['dim-003'], 0.78, 0.52, 0.6, -4)], 10)
     # Gros plan du monogramme brodé (vraie photo, recadrée dans le tissu)
-    mono = Image.open(os.path.join(SRC, 'dim-001-monogramme.jpg')).convert('RGB')
     save(mono.crop((740, 375, 1260, 1025)).resize((1040, 1300), Image.LANCZOS), 'story/1')
     save(detail('dim-005-front', 0.36, 0.62, 0.3), 'story/3')
 

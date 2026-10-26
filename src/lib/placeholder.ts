@@ -319,7 +319,7 @@ products.forEach((p, i) => {
     scene(800, 1000, 'studio', [{ product: p, view: 'back', x: 0.5, y: 0.5, s: 0.86 }], path),
   );
   add(`${k}-3`, 800, 1000, '4:5', '1600 × 2000', `${p.name} — détail du print`, (path) => detail(p, path));
-  add(`${k}-4`, 800, 1000, '4:5', '1600 × 2000', `${p.name} — à plat, plié`, (path) =>
+  add(`${k}-4`, 800, 1000, '4:5', '1600 × 2000', `${p.name} — broderie en gros plan`, (path) =>
     scene(800, 1000, 'gravel', [{ product: p, view: hasBack(p) ? 'back' : 'front', x: 0.5, y: 0.5, s: 0.9, r: -12 + i * 5 }], path, 3 + i),
   );
 });

@@ -34,7 +34,7 @@ const LOGO =
           <ul class="tt__track" role="list">
             {videos.map((v, i) => (
               <li>
-                <button type="button" class="tt__card" data-tt-play={i} aria-label={t(`Lire la vidéo TikTok : ${v.caption || i + 1}`, `Play TikTok video: ${v.caption || i + 1}`)}>
+                <button type="button" class="tt__card" data-tt-play={i} data-open="tiktok" aria-label={t(`Lire la vidéo TikTok : ${v.caption || i + 1}`, `Play TikTok video: ${v.caption || i + 1}`)}>
                   <img src={v.cover} alt="" loading="lazy" width="540" height="960" />
                   <span class="tt__play" aria-hidden="true">
                     <svg width="18" height="20" viewBox="0 0 18 20" fill="currentColor"><path d="M2 1.5v17L17 10z" /></svg>
@@ -47,14 +47,14 @@ const LOGO =
           </ul>
         </div>
         <script type="application/json" data-tt-json set:html={JSON.stringify(videos.map((v) => ({ id: v.id, url: v.url })))} />
-        <dialog class="tt__dialog" data-tt-dialog aria-label={t('Vidéo TikTok', 'TikTok video')}>
+        <dialog class="modal tt__dialog" data-tt-dialog data-dialog="tiktok" aria-label={t('Vidéo TikTok', 'TikTok video')}>
           <div class="tt__frame" data-tt-frame />
           <div class="tt__bar">
             <button type="button" class="icon-btn" data-tt-prev aria-label={t('Vidéo précédente', 'Previous video')}>←</button>
             <a class="link label" data-tt-link href={profile} target="_blank" rel="noopener">{t('Voir sur TikTok ↗', 'Open on TikTok ↗')}</a>
             <button type="button" class="icon-btn" data-tt-next aria-label={t('Vidéo suivante', 'Next video')}>→</button>
           </div>
-          <button type="button" class="tt__close icon-btn" data-tt-close aria-label={t('Fermer', 'Close')}>×</button>
+          <button type="button" class="tt__close icon-btn" data-close aria-label={t('Fermer', 'Close')}>×</button>
         </dialog>
       </>
     ) : (
@@ -201,16 +201,9 @@ const LOGO =
     z-index: 1;
   }
   .tt__dialog {
-    padding: 0;
-    border: 2px solid var(--ink);
-    border-radius: 20px;
+    width: auto;
     background: var(--ink);
     color: var(--cotton);
-    box-shadow: 8px 8px 0 var(--brand);
-    overflow: visible;
-  }
-  .tt__dialog::backdrop {
-    background: rgb(0 0 0 / 0.75);
   }
   .tt__frame {
     width: min(calc((86dvh - 56px) * 9 / 16), calc(100vw - 2rem));

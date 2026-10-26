@@ -18,6 +18,7 @@ import { initProductExtras } from './product-extras';
 import { initTrack } from './track';
 import { initProductMedia } from './product-media';
 import { initTikTok } from './tiktok';
+import { initDialogs } from './dialogs';
 import { link, localPath, lang } from './i18n';
 import { href, type RouteKey } from '../i18n';
 
@@ -197,6 +198,7 @@ document.addEventListener('keydown', (e) => {
 
 /* ---------- Cycle de vie des pages ---------- */
 initCartUI();
+initDialogs();
 initQuickAdd();
 initSearch();
 initWish();

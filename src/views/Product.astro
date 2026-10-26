@@ -3,10 +3,14 @@ import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
 import ProductCard from '../components/ProductCard.astro';
 import SizeTable from '../components/SizeTable.astro';
+import Icon from '../components/Icon.astro';
+import Perks from '../components/Perks.astro';
+import ProductReviews from '../components/ProductReviews.astro';
+import SpinViewer from '../components/SpinViewer.astro';
 import { media } from '../lib/media';
 import { getProducts, getBrand, formatPrice, imageKeys, related, categoryLabel, badgeLabel, totalStock, LOW_STOCK, SIZES, type Product } from '../lib/shop';
 import { localeFromPath, translator, href, intlLocale } from '../i18n';
-import { productVideo, spinFrames, productReviews, modelHeight } from '../lib/extras';
+import { productVideo, spinFrames, productReviews, modelHeight, starText } from '../lib/extras';
 
 interface Props {
   slug: string;
@@ -37,10 +41,6 @@ const modelLine = t(
   `The model is ${modelHeight(p.model.height, 'en')} and wears a ${p.model.size}.`,
 );
 const num = new Intl.NumberFormat(intlLocale(locale), { maximumFractionDigits: 1, minimumFractionDigits: 1 });
-const dateFmt = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric' });
-const starsOf = (n: number) => Math.min(5, Math.floor(n + 0.25));
-const stars = (n: number) => '★★★★★'.slice(0, starsOf(n)) + '☆☆☆☆☆'.slice(0, 5 - starsOf(n));
-const FIT = [t('Taille petit', 'Runs small'), t('Taille bien', 'True to size'), t('Taille grand', 'Runs large')];
 
 const jsonld = {
   '@context': 'https://schema.org',
@@ -103,8 +103,8 @@ const jsonld = {
       <div class="gallery__dots" aria-hidden="true">
         {Array.from({ length: galleryCount }).map((_, i) => <span data-gallery-dot class:list={[i === 0 && 'is-active']} />)}
       </div>
-      <button type="button" class="gallery__spin" data-spin-open>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"></path><path d="M21 4v5h-5"></path></svg>
+      <button type="button" class="gallery__spin" data-open="spin">
+        <Icon name="rotate" size={18} />
         {frames.length ? t('Vue 360°', '360° view') : t('Vue 3D', '3D view')}
       </button>
     </div>
@@ -126,7 +126,7 @@ const jsonld = {
           {
             reviews.count > 0 && (
               <a href="#avis" class="info__rating" aria-label={t(`Note moyenne ${num.format(reviews.average)} sur 5, ${reviews.count} avis`, `Average rating ${num.format(reviews.average)} out of 5, ${reviews.count} reviews`)}>
-                <span class="stars" aria-hidden="true">{stars(reviews.average)}</span>
+                <span class="stars" aria-hidden="true">{starText(reviews.average)}</span>
                 <span>{num.format(reviews.average)}</span>
                 <span class="muted">({reviews.count})</span>
               </a>
@@ -156,7 +156,7 @@ const jsonld = {
           <legend class="info__legend">
             <span class="label">{t('Taille', 'Size')}</span>
             <span data-size-label>—</span>
-            <button type="button" class="info__guide link link--under label" data-size-guide-open>{t('Guide des tailles', 'Size guide')}</button>
+            <button type="button" class="info__guide link link--under label" data-open="size-guide">{t('Guide des tailles', 'Size guide')}</button>
           </legend>
           <div class="sizes">
             {
@@ -174,16 +174,16 @@ const jsonld = {
           <p class="info__error" data-size-error role="alert"></p>
         </fieldset>
 
-        <p class="model">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="5" r="2.5"></circle><path d="M8 22v-7l-2-1 1.5-5.5h9L18 14l-2 1v7"></path></svg>
-          <span>{modelLine} <span class="muted">{p.fit}</span></span>
-        </p>
+        <div class="fit">
+          <Icon name="person" size={20} />
+          <div class="fit__body">
+            <p>{modelLine} <span class="muted">{p.fit}</span></p>
+            <p class="fit__mine" data-mysize hidden>{t('Ta taille conseillée : ', 'Your recommended size: ')}<strong data-mysize-value></strong></p>
+            <button type="button" class="fit__cta link link--under label" data-open="size-guide" data-mysize-cta>{t('Trouve ta taille en 10 secondes →', 'Find your size in 10 seconds →')}</button>
+          </div>
+        </div>
 
         <p class="stock" data-stock aria-live="polite">{t('Choisis ta taille', 'Pick your size')}</p>
-
-        <p class="mysize" data-mysize hidden>
-          <span class="mysize__dot" aria-hidden="true"></span>{t('Ta taille conseillée : ', 'Your recommended size: ')}<strong data-mysize-value></strong>
-        </p>
 
         <div class="buyrow">
           <button type="button" class="btn btn--accent btn--lg add" data-add data-add-main disabled={soldOut}>
@@ -194,15 +194,10 @@ const jsonld = {
             <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5S3 15 3 8.8C3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 6.2-9 11.7-9 11.7z"></path></svg>
           </button>
           <button type="button" class="wish-btn buyrow__icon" data-share aria-label={t('Partager cette pièce', 'Share this piece')}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"></path></svg>
+            <Icon name="share" size={18} />
           </button>
         </div>
         <p class="share-msg label" data-share-msg role="status" aria-live="polite"></p>
-
-        <p class="eta" data-eta>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"></path><circle cx="7" cy="17.5" r="1.8"></circle><circle cx="17" cy="17.5" r="1.8"></circle></svg>
-          <span data-eta-text>{t('Livraison en 3 à 5 jours ouvrés', 'Delivery in 3 to 5 working days')}</span>
-        </p>
 
         {
           outSizes.length > 0 && (
@@ -224,11 +219,13 @@ const jsonld = {
           )
         }
 
-        <ul class="perks" role="list">
-          <li><span class="perks__dot" aria-hidden="true"></span>{t('Livraison offerte dès ', 'Free delivery from ')}{fmt(brand.shipping.freeThreshold)}</li>
-          <li><span class="perks__dot" aria-hidden="true"></span>{t('Expédié sous 48 h', 'Ships within 48 h')}</li>
-          <li><span class="perks__dot" aria-hidden="true"></span>{t(`Retours sous ${brand.shipping.returnsDays} jours`, `Returns within ${brand.shipping.returnsDays} days`)}</li>
-        </ul>
+        <div class="shipcard">
+          <p class="eta" data-eta>
+            <Icon name="truck" size={18} />
+            <span data-eta-text>{t('Livraison en 3 à 5 jours ouvrés', 'Delivery in 3 to 5 working days')}</span>
+          </p>
+          <Perks variant="compact" only={['ship', 'returns', 'pay']} />
+        </div>
 
         <div class="acc">
           <details open>
@@ -271,65 +268,7 @@ const jsonld = {
     </div>
   </article>
 
-  <!-- Avis clients : uniquement de vrais avis (src/data/reviews.json) -->
-  <section id="avis" class="section wrap reviews" aria-labelledby="reviews-title" data-reviews>
-    <div class="section-head">
-      <div>
-        <span class="label accent">{t('Avis clients', 'Customer reviews')}</span>
-        <h2 id="reviews-title" class="display h-xl">{reviews.count ? t('Ce que vous en dites', 'What you say') : t('Les avis', 'Reviews')}</h2>
-      </div>
-      <button type="button" class="btn btn--ghost" data-review-open>{t('Donner mon avis', 'Write a review')}</button>
-    </div>
-    {
-      reviews.count > 0 ? (
-        <div class="reviews__grid">
-          <aside class="reviews__sum">
-            <p class="reviews__avg display">{num.format(reviews.average)}<span>/5</span></p>
-            <p class="stars stars--lg" aria-hidden="true">{stars(reviews.average)}</p>
-            <p class="muted">{t(`${reviews.count} avis`, `${reviews.count} review${reviews.count > 1 ? 's' : ''}`)}</p>
-            <ul class="reviews__dist" role="list">
-              {reviews.dist.map((d) => (
-                <li>
-                  <span>{d.n}★</span>
-                  <span class="reviews__track"><i style={`width:${(d.count / reviews.count) * 100}%`} /></span>
-                  <span class="muted">{d.count}</span>
-                </li>
-              ))}
-            </ul>
-            {reviews.fit !== null && (
-              <div class="reviews__fit">
-                <p class="label">{t('La coupe', 'Fit')}</p>
-                <div class="reviews__fitbar" aria-hidden="true"><i style={`left:${((reviews.fit + 1) / 2) * 100}%`} /></div>
-                <p class="reviews__fitlbl label"><span>{FIT[0]}</span><span>{FIT[1]}</span><span>{FIT[2]}</span></p>
-              </div>
-            )}
-          </aside>
-          <ul class="reviews__list" role="list">
-            {reviews.list.map((r) => (
-              <li class="review">
-                <p class="stars" aria-label={t(`${r.rating} sur 5`, `${r.rating} out of 5`)}>{stars(r.rating)}</p>
-                {r.title && <h3 class="review__title">{r.title}</h3>}
-                <p>{r.text}</p>
-                <p class="review__meta label">
-                  <span>{r.author}</span>
-                  <span>{dateFmt.format(new Date(r.date))}</span>
-                  {r.size && <span>{t('Taille', 'Size')} {r.size}</span>}
-                  {typeof r.fit === 'number' && <span>{FIT[r.fit + 1]}</span>}
-                  {r.verified && <span class="review__ok">{t('Achat vérifié', 'Verified purchase')}</span>}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <div class="reviews__empty">
-          <span class="reviews__stars" aria-hidden="true">☆☆☆☆☆</span>
-          <p class="display h-lg">{t("Pas encore d'avis", 'No reviews yet')}</p>
-          <p class="muted">{t("Le drop vient de sortir. Tu as cette pièce ? Raconte-nous comment elle tombe — ton avis aidera les prochains.", "The drop just landed. Own this piece? Tell us how it fits — your review will help the next people.")}</p>
-        </div>
-      )
-    }
-  </section>
+  <ProductReviews id={p.id} name={p.name} sizes={sizes.map((x) => x.size)} />
 
   <section class="wrap recent" data-recent hidden aria-labelledby="recent-title">
     <div class="section-head">
@@ -364,10 +303,10 @@ const jsonld = {
   </div>
 
   <!-- Plein écran -->
-  <dialog class="lightbox" data-lightbox aria-label={t(`Galerie — ${p.name}`, `Gallery — ${p.name}`)}>
+  <dialog class="lightbox" data-lightbox data-dialog="lightbox" aria-label={t(`Galerie — ${p.name}`, `Gallery — ${p.name}`)}>
     <img data-lightbox-img src={imgs[0].src} alt={imgs[0].alt} />
-    <button type="button" class="lightbox__close icon-btn" data-lb-close aria-label={t('Fermer', 'Close')}>
-      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2 2 14"></path></svg>
+    <button type="button" class="lightbox__close icon-btn" data-close aria-label={t('Fermer', 'Close')}>
+      <Icon name="close" size={20} />
     </button>
     <button type="button" class="lightbox__nav lightbox__nav--prev" data-lb-prev aria-label={t('Image précédente', 'Previous image')}>
       <svg width="20" height="14" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 6H1m5-5L1 6l5 5"></path></svg>
@@ -378,109 +317,15 @@ const jsonld = {
     <p class="lightbox__count label" data-lightbox-count>1 / {keys.length}</p>
   </dialog>
 
-  <!-- Vue 3D / 360° -->
-  <dialog class="spin" data-spin aria-labelledby="spin-title">
-    <div class="spin__panel">
-      <header class="spin__head">
-        <h2 id="spin-title" class="label">{frames.length ? t('Vue 360°', '360° view') : t('Vue 3D', '3D view')} — {p.name}</h2>
-        <button type="button" class="icon-btn" data-spin-close aria-label={t('Fermer', 'Close')}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2 2 14"></path></svg>
-        </button>
-      </header>
-      <div class="spin__stage" data-spin-stage data-frames={JSON.stringify(frames)}>
-        {
-          frames.length ? (
-            <img class="spin__frame" data-spin-frame src={frames[0]} alt={p.name} draggable="false" />
-          ) : (
-            <div class="spin__card" data-spin-card>
-              <img class="spin__face" src={front.src} alt={front.alt} draggable="false" />
-              <img class="spin__face spin__face--back" src={back.src} alt={back.alt} draggable="false" />
-            </div>
-          )
-        }
-        <span class="spin__floor" aria-hidden="true"></span>
-      </div>
-      <div class="spin__controls">
-        <button type="button" class="chip" data-spin-to="0">{t('Devant', 'Front')}</button>
-        <input class="spin__range" type="range" min="0" max="359" value="0" data-spin-range aria-label={t('Rotation', 'Rotation')} />
-        <button type="button" class="chip" data-spin-to="180">{t('Dos', 'Back')}</button>
-      </div>
-      <p class="spin__hint label">{t('Fais glisser pour faire tourner la pièce', 'Drag to turn the piece')}</p>
-    </div>
-  </dialog>
-
-  <!-- Formulaire d'avis (envoi simulé : à relier à Judge.me, Trustpilot ou Google) -->
-  <dialog class="guide" data-review-dialog aria-labelledby="review-title">
-    <div class="guide__panel" data-lenis-prevent>
-      <header class="guide__head">
-        <h2 id="review-title" class="display guide__title">{t('Ton avis', 'Your review')}</h2>
-        <button type="button" class="icon-btn" data-review-close aria-label={t('Fermer', 'Close')}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2 2 14"></path></svg>
-        </button>
-      </header>
-      <form class="rform" data-review-form novalidate>
-        <p class="muted">{p.name}</p>
-        <fieldset class="rform__stars">
-          <legend class="label">{t('Ta note', 'Your rating')}</legend>
-          <div class="rstars">
-            {[5, 4, 3, 2, 1].map((n) => (
-              <>
-                <input type="radio" id={`r-${n}`} name="rating" value={n} />
-                <label for={`r-${n}`} title={`${n}/5`}><span class="visually-hidden">{n} / 5</span>★</label>
-              </>
-            ))}
-          </div>
-          <p class="field-error" data-rating-error></p>
-        </fieldset>
-        <div class="row row--2">
-          <div class="field">
-            <label for="r-name" class="label">{t('Prénom', 'First name')}</label>
-            <input class="input" id="r-name" name="author" autocomplete="given-name" required />
-            <p class="field-error"></p>
-          </div>
-          <div class="field">
-            <label for="r-email" class="label">{t('E-mail de commande', 'Order email')} <span class="muted">{t('(non publié)', '(not published)')}</span></label>
-            <input class="input" id="r-email" name="email" type="email" autocomplete="email" required />
-            <p class="field-error"></p>
-          </div>
-        </div>
-        <div class="row row--2">
-          <div class="field">
-            <label for="r-size" class="label">{t('Taille achetée', 'Size bought')}</label>
-            <select class="select" id="r-size" name="size" required>
-              <option value="">—</option>
-              {sizes.map((x) => <option>{x.size}</option>)}
-            </select>
-            <p class="field-error"></p>
-          </div>
-          <fieldset class="rform__fit">
-            <legend class="label">{t('La coupe', 'Fit')}</legend>
-            {FIT.map((f, i) => (
-              <label><input type="radio" name="fit" value={i - 1} checked={i === 1} /> <span>{f}</span></label>
-            ))}
-          </fieldset>
-        </div>
-        <div class="field">
-          <label for="r-text" class="label">{t('Ton avis', 'Your review')}</label>
-          <textarea class="textarea" id="r-text" name="text" required minlength="10"></textarea>
-          <p class="field-error"></p>
-        </div>
-        <button class="btn btn--accent btn--lg" type="submit">{t('Envoyer mon avis', 'Send my review')}</button>
-      </form>
-      <div class="rform__ok" data-review-ok hidden tabindex="-1">
-        <p class="display h-lg">{t('Merci !', 'Thank you!')}</p>
-        <p class="muted">{t('Ton avis sera publié après vérification de ta commande.', 'Your review will be published once we have checked your order.')}</p>
-      </div>
-    </div>
-  </dialog>
+  <SpinViewer name={p.name} frames={frames} front={front} back={back} />
 
   <!-- Guide des tailles -->
-  <dialog class="guide" data-size-guide aria-labelledby="guide-title">
-    <div class="guide__panel" data-lenis-prevent>
-      <header class="guide__head">
-        <h2 id="guide-title" class="display guide__title">{t('Guide des tailles', 'Size guide')}</h2>
-        <button type="button" class="icon-btn" data-guide-close aria-label={t('Fermer le guide des tailles', 'Close the size guide')}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2 2 14"></path></svg>
+  <dialog class="sheet" data-size-guide data-dialog="size-guide" aria-labelledby="guide-title">
+    <div class="sheet__panel" data-lenis-prevent>
+      <header class="sheet__head">
+        <h2 id="guide-title" class="display sheet__title">{t('Guide des tailles', 'Size guide')}</h2>
+        <button type="button" class="icon-btn" data-close aria-label={t('Fermer le guide des tailles', 'Close the size guide')}>
+          <Icon name="close" size={18} />
         </button>
       </header>
       <form class="finder" data-finder novalidate>
@@ -765,32 +610,43 @@ const jsonld = {
   .share-msg:empty {
     display: none;
   }
-  .mysize {
+  .fit {
     display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 0.9rem;
-    border: 1.5px dashed var(--brand);
-    border-radius: 12px;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 14px;
     font-size: var(--fs-sm);
   }
-  .mysize__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--brand);
+  .fit :global(.icon) {
+    flex: none;
+    color: var(--brand);
+  }
+  .fit__body {
+    display: grid;
+    gap: 0.35rem;
+    justify-items: start;
+  }
+  .fit__mine strong {
+    color: var(--brand);
+  }
+  .shipcard {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem 1.1rem;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--surface);
   }
   .eta {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.85rem 1rem;
-    border: 2px solid var(--ink);
-    border-radius: 14px;
-    background: var(--surface);
+    padding-bottom: 0.9rem;
+    border-bottom: 1.5px dashed var(--line-strong);
     font-size: var(--fs-sm);
   }
-  .eta svg {
+  .eta :global(.icon) {
     flex: none;
     color: var(--brand);
   }
@@ -933,22 +789,6 @@ const jsonld = {
   .recent__track :global(.recent__price) {
     font-family: var(--f-display);
     font-weight: 700;
-  }
-  .perks {
-    display: grid;
-    gap: 0.5rem;
-    font-size: var(--fs-sm);
-  }
-  .perks li {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .perks__dot {
-    width: 7px;
-    height: 7px;
-    border: 1.5px solid var(--accent);
-    border-radius: 50%;
   }
   .acc {
     border-top: 1px solid var(--line);
@@ -1107,44 +947,6 @@ const jsonld = {
   }
 
   /* Guide des tailles */
-  .guide {
-    margin: 0 0 0 auto;
-    height: 100dvh;
-    max-height: none;
-    width: min(560px, 100%);
-    max-width: none;
-    padding: 0;
-    border: 0;
-    background: var(--bg);
-    color: var(--fg);
-  }
-  .guide::backdrop {
-    background: rgb(0 0 0 / 0.62);
-  }
-  .guide[open] {
-    animation: slide-in 0.55s var(--ease-out);
-  }
-  @keyframes slide-in {
-    from {
-      transform: translateX(100%);
-    }
-  }
-  .guide__panel {
-    height: 100%;
-    overflow-y: auto;
-    padding: 0 var(--gutter) 2rem;
-  }
-  .guide__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-block: 1.25rem;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 1.25rem;
-  }
-  .guide__title {
-    font-size: 1.2rem;
-  }
   .guide__intro {
     font-size: var(--fs-sm);
     margin-bottom: 1.5rem;
@@ -1282,304 +1084,15 @@ const jsonld = {
     background: var(--ink);
     color: var(--cotton);
   }
-  .spin {
-    width: min(760px, calc(100% - 2rem));
-    max-width: none;
-    padding: 0;
-    border: 2px solid var(--ink);
-    border-radius: 20px;
-    background: var(--cotton);
-    color: var(--ink);
-    box-shadow: 8px 8px 0 var(--brand);
-  }
-  .spin::backdrop {
-    background: rgb(0 0 0 / 0.62);
-  }
-  .spin[open] {
-    animation: spin-in 0.45s var(--ease-out);
-  }
-  @keyframes spin-in {
-    from {
-      opacity: 0;
-      transform: translateY(16px) scale(0.98);
-    }
-  }
-  .spin__panel {
-    display: grid;
-    gap: 1rem;
-    padding: 1rem 1.25rem 1.5rem;
-  }
-  .spin__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-  }
-  .spin__stage {
-    position: relative;
-    height: min(62vh, 560px);
-    display: grid;
-    place-items: center;
-    perspective: 1400px;
-    cursor: grab;
-    touch-action: pan-y;
-    user-select: none;
-    border-radius: 14px;
-    background: radial-gradient(ellipse at 50% 40%, #fff 0%, var(--cotton) 60%, #e3dfd7 100%);
-    overflow: hidden;
-  }
-  .spin__stage:global(.is-dragging) {
-    cursor: grabbing;
-  }
-  .spin__card {
-    position: relative;
-    width: min(70%, 420px);
-    aspect-ratio: 4 / 5;
-    transform-style: preserve-3d;
-    will-change: transform;
-  }
-  .spin__face {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    filter: drop-shadow(0 22px 22px rgb(0 0 0 / 0.28));
-    pointer-events: none;
-  }
-  .spin__face--back {
-    transform: rotateY(180deg);
-  }
-  .spin__frame {
-    max-width: 90%;
-    max-height: 100%;
-    object-fit: contain;
-    pointer-events: none;
-  }
-  .spin__floor {
-    position: absolute;
-    left: 50%;
-    bottom: 8%;
-    width: 46%;
-    height: 22px;
-    transform: translateX(-50%);
-    border-radius: 50%;
-    background: radial-gradient(ellipse, rgb(0 0 0 / 0.22), transparent 70%);
-    pointer-events: none;
-  }
-  .spin__controls {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1rem;
-    align-items: center;
-  }
-  .spin__range {
-    width: 100%;
-    accent-color: var(--brand);
-  }
-  .spin__hint {
-    text-align: center;
-    color: var(--muted);
-  }
-
-  /* Porté par le modèle + note */
-  .model {
-    display: flex;
-    gap: 0.6rem;
-    align-items: flex-start;
-    font-size: var(--fs-sm);
-  }
-  .model svg {
-    flex: none;
-    margin-top: 2px;
-    color: var(--brand);
-  }
+  /* Note moyenne */
   .info__rating {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     font-size: var(--fs-sm);
   }
-  .stars {
-    color: var(--brand);
-    letter-spacing: 0.08em;
-  }
-  .stars--lg {
-    font-size: 1.4rem;
-  }
 
-  /* Avis */
-  .reviews__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
-    gap: var(--space-md);
-    align-items: start;
-  }
-  .reviews__sum {
-    display: grid;
-    gap: 0.5rem;
-    padding: 1.5rem;
-    border: 2px solid var(--ink);
-    border-radius: 16px;
-    background: #fff;
-    box-shadow: 6px 6px 0 var(--brand);
-  }
-  .reviews__avg {
-    font-size: 3rem;
-    line-height: 1;
-  }
-  .reviews__avg span {
-    font-size: 1rem;
-    color: var(--muted);
-  }
-  .reviews__dist {
-    display: grid;
-    gap: 0.3rem;
-    margin-top: 0.5rem;
-    font-size: var(--fs-xs);
-  }
-  .reviews__dist li {
-    display: grid;
-    grid-template-columns: 2.2em 1fr 2em;
-    gap: 0.5rem;
-    align-items: center;
-  }
-  .reviews__track {
-    height: 8px;
-    border: 1.5px solid var(--ink);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .reviews__track i {
-    display: block;
-    height: 100%;
-    background: var(--brand);
-  }
-  .reviews__fit {
-    display: grid;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-  .reviews__fitbar {
-    position: relative;
-    height: 8px;
-    border-radius: 999px;
-    background: var(--stitch), var(--bg-2);
-  }
-  .reviews__fitbar i {
-    position: absolute;
-    top: 50%;
-    width: 16px;
-    height: 16px;
-    border: 2px solid var(--ink);
-    border-radius: 50%;
-    background: var(--brand);
-    transform: translate(-50%, -50%);
-  }
-  .reviews__fitlbl {
-    display: flex;
-    justify-content: space-between;
-    color: var(--muted);
-    font-size: 0.625rem;
-  }
-  .reviews__list {
-    display: grid;
-    gap: 1rem;
-  }
-  .review {
-    display: grid;
-    gap: 0.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px dashed var(--line);
-  }
-  .review__title {
-    font-size: var(--fs-md);
-  }
-  .review__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1rem;
-    color: var(--muted);
-  }
-  .review__ok {
-    color: var(--ok);
-  }
-  .reviews__empty {
-    display: grid;
-    gap: 0.75rem;
-    justify-items: start;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
-    border: 2px dashed var(--line-strong);
-    border-radius: 16px;
-  }
-  .reviews__stars {
-    font-size: 2rem;
-    letter-spacing: 0.1em;
-    color: var(--brand);
-  }
-  .rform {
-    display: grid;
-    gap: 1rem;
-  }
-  .rform .row--2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  .rform fieldset {
-    border: 0;
-    padding: 0;
-    margin: 0;
-  }
-  .rform__fit {
-    display: grid;
-    gap: 0.3rem;
-    font-size: var(--fs-sm);
-  }
-  .rstars {
-    display: inline-flex;
-    flex-direction: row-reverse;
-    gap: 0.2rem;
-  }
-  .rstars input {
-    position: absolute;
-    opacity: 0;
-  }
-  .rstars label {
-    font-size: 2rem;
-    line-height: 1;
-    cursor: pointer;
-    color: var(--line-strong);
-    -webkit-text-stroke: 1px var(--ink);
-    color: transparent;
-    transition: transform 0.15s;
-  }
-  .rstars label:hover,
-  .rstars label:hover ~ label,
-  .rstars input:checked ~ label {
-    color: var(--brand);
-  }
-  .rstars label:active {
-    transform: scale(0.85);
-  }
-  .rstars input:focus-visible + label {
-    outline: 2px solid var(--brand);
-    outline-offset: 2px;
-  }
-  .rform__ok {
-    display: grid;
-    gap: 0.75rem;
-    padding-top: 1rem;
-  }
   @media (max-width: 860px) {
-    .reviews__grid {
-      grid-template-columns: 1fr;
-    }
-    .rform .row--2 {
-      grid-template-columns: 1fr;
-    }
     .gallery__spin {
       top: auto;
       bottom: 46px;

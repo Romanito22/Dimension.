@@ -1,5 +1,5 @@
 // Fiche produit : vue 3D / 360° qu'on fait tourner au doigt, et formulaire d'avis.
-import { lockScroll, unlockScroll, reducedMotion } from './scroll';
+import { reducedMotion } from './scroll';
 import { validateAll } from './forms';
 import { t } from './i18n';
 
@@ -125,30 +125,23 @@ function initSpin(signal: AbortSignal) {
   dialog.addEventListener(
     'click',
     (e) => {
-      const el = e.target as HTMLElement;
-      if (e.target === dialog || el.closest('[data-spin-close]')) dialog.close();
-      const to = el.closest<HTMLElement>('[data-spin-to]');
+      const to = (e.target as HTMLElement).closest<HTMLElement>('[data-spin-to]');
       if (to) turnTo(Number(to.dataset.spinTo));
     },
     { signal },
   );
-  dialog.addEventListener('close', () => unlockScroll(), { signal });
-  document.querySelectorAll('[data-spin-open]').forEach((b) =>
-    b.addEventListener(
-      'click',
-      () => {
-        preload();
-        angle = 0;
-        auto = true;
-        dialog.showModal();
-        lockScroll();
-        draw();
-        kick();
-      },
-      { signal },
-    ),
+  // Ouverture et fermeture : voir dialogs.ts
+  dialog.addEventListener(
+    'dialog:open',
+    () => {
+      preload();
+      angle = 0;
+      auto = true;
+      draw();
+      kick();
+    },
+    { signal },
   );
-  signal.addEventListener('abort', () => dialog.open && dialog.close());
 }
 
 function initReviewForm(signal: AbortSignal) {
@@ -157,24 +150,6 @@ function initReviewForm(signal: AbortSignal) {
   const form = dialog.querySelector<HTMLFormElement>('[data-review-form]')!;
   const ok = dialog.querySelector<HTMLElement>('[data-review-ok]')!;
   const ratingErr = dialog.querySelector<HTMLElement>('[data-rating-error]')!;
-  document.querySelectorAll('[data-review-open]').forEach((b) =>
-    b.addEventListener(
-      'click',
-      () => {
-        dialog.showModal();
-        lockScroll();
-      },
-      { signal },
-    ),
-  );
-  dialog.addEventListener('close', () => unlockScroll(), { signal });
-  dialog.addEventListener(
-    'click',
-    (e) => {
-      if (e.target === dialog || (e.target as HTMLElement).closest('[data-review-close]')) dialog.close();
-    },
-    { signal },
-  );
   form.addEventListener(
     'submit',
     (e) => {
@@ -190,7 +165,6 @@ function initReviewForm(signal: AbortSignal) {
     },
     { signal },
   );
-  signal.addEventListener('abort', () => dialog.open && dialog.close());
 }
 
 export function initProductMedia(signal: AbortSignal) {

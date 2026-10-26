@@ -1,6 +1,4 @@
 // Lecteur TikTok : l'iframe n'est créée qu'au clic, et retirée à la fermeture (la vidéo s'arrête).
-import { lockScroll, unlockScroll } from './scroll';
-
 export function initTikTok(signal: AbortSignal) {
   const root = document.querySelector<HTMLElement>('[data-tiktok]');
   const dialog = root?.querySelector<HTMLDialogElement>('[data-tt-dialog]');
@@ -17,23 +15,17 @@ export function initTikTok(signal: AbortSignal) {
     link.href = v.url;
   }
 
-  root.addEventListener(
-    'click',
-    (e) => {
-      const card = (e.target as HTMLElement).closest<HTMLElement>('[data-tt-play]');
-      if (!card) return;
-      load(Number(card.dataset.ttPlay));
-      dialog.showModal();
-      lockScroll();
-    },
+  // Ouverture / fermeture : voir dialogs.ts ; ici on charge la bonne vidéo.
+  dialog.addEventListener(
+    'dialog:open',
+    (e) => load(Number((e as CustomEvent<{ opener: HTMLElement | null }>).detail.opener?.dataset.ttPlay ?? 0)),
     { signal },
   );
   dialog.addEventListener(
     'click',
     (e) => {
       const el = e.target as HTMLElement;
-      if (e.target === dialog || el.closest('[data-tt-close]')) dialog.close();
-      else if (el.closest('[data-tt-prev]')) load(current - 1);
+      if (el.closest('[data-tt-prev]')) load(current - 1);
       else if (el.closest('[data-tt-next]')) load(current + 1);
     },
     { signal },
@@ -46,13 +38,5 @@ export function initTikTok(signal: AbortSignal) {
     },
     { signal },
   );
-  dialog.addEventListener(
-    'close',
-    () => {
-      frame.innerHTML = '';
-      unlockScroll();
-    },
-    { signal },
-  );
-  signal.addEventListener('abort', () => dialog.open && dialog.close());
+  dialog.addEventListener('close', () => (frame.innerHTML = ''), { signal });
 }

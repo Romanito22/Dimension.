@@ -3,8 +3,8 @@ import { catalog, norm, stockOf, type CatalogItem } from '../lib/catalog';
 import { $recent } from '../lib/saved';
 import { t as tr, price as formatPrice } from './i18n';
 import { lockScroll, unlockScroll } from './scroll';
+import { esc } from './html';
 
-const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
 function highlight(text: string, q: string) {
   if (!q) return esc(text);

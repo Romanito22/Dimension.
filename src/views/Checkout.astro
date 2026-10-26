@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 import { getBrand, formatPrice } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
 
@@ -23,8 +24,8 @@ const countries = t(
     </header>
 
     <!-- Panier vide -->
-    <div class="co__empty" data-checkout-empty hidden>
-      <span class="co__ring" aria-hidden="true"></span>
+    <div class="empty-state empty-state--center co__empty" data-checkout-empty hidden>
+      <span class="empty-state__mark" aria-hidden="true"><Icon name="bag" size={24} /></span>
       <p class="display h-lg">{t('Ton panier est vide', 'Your bag is empty')}</p>
       <p class="muted">{t('Ajoute une pièce du Drop 01 pour passer commande.', 'Add a piece from Drop 01 to check out.')}</p>
       <a href={href(locale, 'shop')} class="btn">{t('Voir la boutique', 'Visit the shop')} <span class="btn__dot" aria-hidden="true"></span></a>
@@ -442,7 +443,9 @@ const countries = t(
     font-size: var(--fs-xs);
     font-weight: 400;
   }
-  .co__empty,
+  .co__empty {
+    margin-block: var(--space-md);
+  }
   .confirm {
     display: grid;
     justify-items: center;
@@ -451,11 +454,9 @@ const countries = t(
     padding-block: var(--space-lg);
     outline: none;
   }
-  .co__empty[hidden],
   .confirm[hidden] {
     display: none;
   }
-  .co__ring,
   .confirm__ring {
     width: 64px;
     height: 64px;

@@ -1,7 +1,7 @@
 // Fiche produit : couleur, taille, stock, ajout au panier, galerie (zoom,
 // plein écran, swipe), guide des tailles, barre d'achat collante.
 import { addItem, openDrawer } from '../lib/cart';
-import { lockScroll, unlockScroll } from './scroll';
+import { openDialog } from './dialogs';
 import { t } from './i18n';
 
 interface ProductData {
@@ -168,17 +168,14 @@ export function initProduct(signal: AbortSignal) {
   function openLightbox(i: number) {
     if (!lb) return;
     show(i);
-    lb.showModal();
-    lockScroll();
+    openDialog(lb);
   }
-  lb?.addEventListener('close', () => unlockScroll(), { signal });
   lb?.addEventListener(
     'click',
     (e) => {
       const t = e.target as HTMLElement;
       if (t.closest('[data-lb-prev]')) show(current - 1);
       else if (t.closest('[data-lb-next]')) show(current + 1);
-      else if (t.closest('[data-lb-close]')) lb.close();
       else if (t === lbImg) lbImg.classList.toggle('is-zoomed');
     },
     { signal },
@@ -209,31 +206,6 @@ export function initProduct(signal: AbortSignal) {
     },
     { signal },
   );
-
-  /* ---- Guide des tailles ---- */
-  const guide = document.querySelector<HTMLDialogElement>('[data-size-guide]');
-  document.querySelectorAll('[data-size-guide-open]').forEach((b) =>
-    b.addEventListener(
-      'click',
-      () => {
-        guide?.showModal();
-        lockScroll();
-      },
-      { signal },
-    ),
-  );
-  guide?.addEventListener('close', () => unlockScroll(), { signal });
-  guide?.addEventListener(
-    'click',
-    (e) => {
-      if (e.target === guide || (e.target as HTMLElement).closest('[data-guide-close]')) guide.close();
-    },
-    { signal },
-  );
-  signal.addEventListener('abort', () => {
-    if (lb?.open) lb.close();
-    if (guide?.open) guide.close();
-  });
 
   updateStock();
 }

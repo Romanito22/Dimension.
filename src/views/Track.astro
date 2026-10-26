@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 import { getBrand } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
 
@@ -64,13 +65,14 @@ const methods = Object.fromEntries(brand.shipping.methods.map((m) => [m.id, m.la
       </div>
 
       <div class="trk__out" aria-live="polite">
-        <div class="trk__idle" data-track-idle>
-          <span class="trk__ring" aria-hidden="true"></span>
+        <div class="empty-state" data-track-idle>
+          <span class="empty-state__mark trk__ring" aria-hidden="true"><Icon name="truck" size={24} /></span>
           <p class="display h-lg">{t('Prépare-toi,', 'Get ready,')}<br />{t('ça arrive.', "it's coming.")}</p>
           <p class="muted">{t('Le suivi apparaît ici dès que tu as entré ta commande.', 'Tracking shows up here once you enter your order.')}</p>
         </div>
 
-        <div class="trk__none" data-track-none hidden>
+        <div class="empty-state" data-track-none hidden>
+          <span class="empty-state__mark" aria-hidden="true">?</span>
           <p class="display h-lg">{t('Commande introuvable', 'Order not found')}</p>
           <p class="muted">
             {t(
@@ -173,20 +175,7 @@ const methods = Object.fromEntries(brand.shipping.methods.map((m) => [m.id, m.la
   .trk__mine :global(b) {
     font-family: var(--f-mono);
   }
-  .trk__idle,
-  .trk__none {
-    display: grid;
-    gap: 1rem;
-    justify-items: start;
-    padding: clamp(1.5rem, 3vw, 3rem);
-    border: 2px dashed var(--line-strong);
-    border-radius: 16px;
-  }
   .trk__ring {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    border: 2px solid var(--brand);
     animation: trk-pulse 2s var(--ease-out) infinite;
   }
   @keyframes trk-pulse {

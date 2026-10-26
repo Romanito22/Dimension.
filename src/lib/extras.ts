@@ -54,3 +54,9 @@ export function modelHeight(cm: number, locale: 'fr' | 'en') {
   const inches = Math.round(cm / 2.54);
   return `${m} m (${Math.floor(inches / 12)}′${inches % 12}″)`;
 }
+
+/** « ★★★★☆ » pour une note sur 5 (arrondie au demi-point inférieur). */
+export function starText(n: number) {
+  const full = Math.min(5, Math.floor(n + 0.25));
+  return '★'.repeat(full) + '☆'.repeat(5 - full);
+}

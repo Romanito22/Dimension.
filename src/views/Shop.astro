@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
+import Perks from '../components/Perks.astro';
+import Icon from '../components/Icon.astro';
 import { getProducts, getBrand, byNewest, formatPrice, categoryLabel, CATEGORIES, SIZES } from '../lib/shop';
 import { localeFromPath, translator } from '../i18n';
 
@@ -82,20 +84,15 @@ const prices = [
       <div class="grid" data-grid data-density="3">
         {list.map((p, i) => <ProductCard product={p} index={i} vt />)}
       </div>
-      <div class="empty" data-empty hidden>
-        <span class="empty__ring" aria-hidden="true"></span>
+      <div class="empty-state empty-state--center" data-empty hidden>
+        <span class="empty-state__mark" aria-hidden="true"><Icon name="search" size={24} /></span>
         <p class="display h-lg">{t('Aucune pièce ne correspond', 'No piece matches')}</p>
         <p class="muted">{t("Essaie d'élargir tes filtres — ou inscris-toi pour être prévenu·e des restocks.", 'Try widening your filters — or sign up to hear about restocks.')}</p>
         <button type="button" class="btn" data-reset>{t('Effacer les filtres', 'Clear filters')}</button>
       </div>
     </div>
 
-    <ul class="wrap shop__reassure" role="list">
-      <li><span class="label">{t('Livraison', 'Delivery')}</span>{t('Offerte dès ', 'Free from ')}{fmt(brand.shipping.freeThreshold)}</li>
-      <li><span class="label">{t('Retours', 'Returns')}</span>{t(`${brand.shipping.returnsDays} jours pour changer d'avis`, `${brand.shipping.returnsDays} days to change your mind`)}</li>
-      <li><span class="label">{t('Paiement', 'Payment')}</span>{t('Carte, Apple Pay, PayPal', 'Card, Apple Pay, PayPal')}</li>
-      <li><span class="label">{t('Séries', 'Runs')}</span>{t('Courtes, par drops', 'Short, in drops')}</li>
-    </ul>
+    <div class="wrap shop__reassure"><Perks variant="row" /></div>
 
     <!-- Panneau de filtres -->
     <div class="filters-overlay" data-filters-close></div>
@@ -103,7 +100,7 @@ const prices = [
       <header class="filters__head">
         <h2 class="display filters__title">{t('Filtres', 'Filters')}</h2>
         <button type="button" class="icon-btn" data-filters-close aria-label={t('Fermer les filtres', 'Close filters')}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2 2 14"></path></svg>
+          <Icon name="close" size={18} />
         </button>
       </header>
       <div class="filters__body">
@@ -300,35 +297,8 @@ const prices = [
     }
   }
 
-  .empty {
-    display: grid;
-    justify-items: center;
-    text-align: center;
-    gap: 1rem;
-    padding-block: var(--space-lg);
-  }
-  .empty__ring {
-    width: 56px;
-    height: 56px;
-    border: 1.5px solid var(--accent);
-    border-radius: 50%;
-  }
-
   .shop__reassure {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
     padding-block: var(--space-md) var(--space-lg);
-    font-size: var(--fs-sm);
-  }
-  .shop__reassure li {
-    display: grid;
-    gap: 0.35rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--line-strong);
-  }
-  .shop__reassure .label {
-    color: var(--accent);
   }
 
   /* Panneau filtres */
@@ -484,9 +454,6 @@ const prices = [
     .grid,
     .grid[data-density] {
       --cols: 2;
-    }
-    .shop__reassure {
-      grid-template-columns: 1fr 1fr;
     }
     .shop__tools {
       width: 100%;

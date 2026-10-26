@@ -1,7 +1,7 @@
 // Tunnel de commande en une page : coordonnées → livraison → paiement.
 // Paiement simulé (mode démo) — voir README pour brancher Stripe Checkout.
 import { $cart, $subtotal, clearCart } from '../lib/cart';
-import { getBrand } from '../lib/shop';
+import { getBrand, shippingFor } from '../lib/shop';
 import { saveOrder } from '../lib/orders';
 import { t as tr, price as formatPrice, lang, link } from './i18n';
 import { renderLines } from './cart-ui';
@@ -35,9 +35,7 @@ export function initCheckout(signal: AbortSignal) {
   function totals() {
     const sub = $subtotal.get();
     const discount = Math.round(sub * discountRate * 100) / 100;
-    const m = method();
-    const free = sub - discount >= brand.shipping.freeThreshold && m.id !== 'express';
-    const ship = free ? 0 : m.price;
+    const ship = shippingFor(sub - discount, method().id);
     return { sub, discount, ship, total: Math.max(0, sub - discount + ship) };
   }
 
@@ -57,9 +55,8 @@ export function initCheckout(signal: AbortSignal) {
     root!.querySelectorAll<HTMLElement>('[data-discount-row]').forEach((el) => (el.hidden = t.discount === 0));
     // Met à jour les prix affichés des modes de livraison
     form.querySelectorAll<HTMLElement>('[data-ship-price]').forEach((el) => {
-      const m = brand.shipping.methods.find((x) => x.id === el.dataset.shipPrice)!;
-      const free = t.sub - t.discount >= brand.shipping.freeThreshold && m.id !== 'express';
-      el.textContent = free ? tr('Offerte', 'Free') : formatPrice(m.price);
+      const cost = shippingFor(t.sub - t.discount, el.dataset.shipPrice);
+      el.textContent = cost === 0 ? tr('Offerte', 'Free') : formatPrice(cost);
     });
   }
 

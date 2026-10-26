@@ -44,6 +44,16 @@ export function categoryLabel(slug: string, locale: Locale = 'fr') {
 const BADGES: Record<string, string> = { Nouveau: 'New', 'Best-seller': 'Best-seller', 'Édition limitée': 'Limited edition', Épuisé: 'Sold out' };
 export const badgeLabel = (badge: string, locale: Locale = 'fr') => (locale === 'en' ? (BADGES[badge] ?? badge) : badge);
 
+/** Seuil sous lequel on affiche « Plus que N » */
+export const HOT_STOCK = 15;
+
+/** « Épuisé », « Plus que 8 » ou « 42 en stock » — même libellé partout (cartes, favoris, bandeau). */
+export function stockText(stock: number, locale: Locale = 'fr') {
+  if (stock === 0) return locale === 'en' ? 'Sold out' : 'Épuisé';
+  if (stock <= HOT_STOCK) return locale === 'en' ? `Only ${stock} left` : `Plus que ${stock}`;
+  return locale === 'en' ? `${stock} in stock` : `${stock} en stock`;
+}
+
 export function totalStock(p: Product) {
   return p.sizes.reduce((s, x) => s + x.stock, 0);
 }
@@ -65,6 +75,7 @@ export function imageKeys(p: Pick<Product, 'id'>) {
   return [1, 2, 3, 4].map((i) => `${base}-${i}`);
 }
 
+/** Frais de port d'un mode de livraison : offerts au-dessus du seuil, sauf en express. */
 export function shippingFor(subtotal: number, methodId = 'relay') {
   const m = brand.shipping.methods.find((x) => x.id === methodId) ?? brand.shipping.methods[0];
   if (subtotal >= brand.shipping.freeThreshold && m.id !== 'express') return 0;

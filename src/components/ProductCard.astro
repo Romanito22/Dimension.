@@ -1,7 +1,7 @@
 ---
 import Img from './Img.astro';
 import { media } from '../lib/media';
-import { formatPrice, imageKeys, availableSizes, totalStock, badgeLabel, SIZES, LOW_STOCK, type Product } from '../lib/shop';
+import { formatPrice, imageKeys, availableSizes, totalStock, badgeLabel, stockText, SIZES, LOW_STOCK, HOT_STOCK, type Product } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
 const locale = localeFromPath(Astro.url.pathname);
 const t = translator(locale);
@@ -20,8 +20,8 @@ const stock = totalStock(p);
 const orderedSizes = SIZES.map((s) => p.sizes.find((x) => x.size === s)).filter(Boolean) as Product['sizes'];
 const url = href(locale, 'product', p.slug);
 const lowSizes = p.sizes.filter((s) => s.stock > 0 && s.stock <= LOW_STOCK).map((s) => s.size);
-const hot = stock > 0 && stock <= 15;
-const stockLabel = soldOut ? t('Épuisé', 'Sold out') : hot ? t(`Plus que ${stock}`, `Only ${stock} left`) : t(`${stock} en stock`, `${stock} in stock`);
+const hot = stock > 0 && stock <= HOT_STOCK;
+const stockLabel = stockText(stock, locale);
 // Données pour l'ajout rapide (lues par scripts/quickadd.ts)
 const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price, color: p.colors[0].name, image: media(k1).src, sizes: p.sizes });
 ---

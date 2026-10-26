@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 import { localeFromPath, translator, href } from '../i18n';
 const locale = localeFromPath(Astro.url.pathname);
 const t = translator(locale);
@@ -13,8 +14,8 @@ const t = translator(locale);
       <p class="lede muted"><span data-wish-total>{t('0 pièce enregistrée', '0 pieces saved')}</span>{t(" sur cet appareil. Choisis ta taille pour l'ajouter directement au panier.", ' on this device. Pick your size to add it straight to your bag.')}</p>
     </header>
     <div class="wl__grid" data-wish-grid></div>
-    <div class="wl__empty" data-wish-empty hidden>
-      <span class="wl__heart" aria-hidden="true">♡</span>
+    <div class="empty-state empty-state--center" data-wish-empty hidden>
+      <span class="empty-state__mark" aria-hidden="true"><Icon name="heart" size={24} /></span>
       <p class="display h-lg">{t("Rien pour l'instant", 'Nothing yet')}</p>
       <p class="muted">{t("Touche le cœur d'une pièce pour la retrouver ici.", 'Tap the heart on a piece to find it here.')}</p>
       <a href={href(locale, 'shop')} class="btn btn--accent">{t('Voir la boutique', 'Visit the shop')}</a>
@@ -107,17 +108,5 @@ const t = translator(locale);
   .wl__grid :global(.wcard__sizes button.is-added) {
     background: var(--brand);
     color: #fff;
-  }
-  .wl__empty {
-    display: grid;
-    justify-items: center;
-    text-align: center;
-    gap: 1rem;
-    padding-block: var(--space-lg);
-  }
-  .wl__heart {
-    font-size: 3.5rem;
-    color: var(--brand);
-    line-height: 1;
   }
 </style>

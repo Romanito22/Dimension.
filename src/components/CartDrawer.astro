@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import brand from '../data/brand.json';
 import { localeFromPath, translator, href } from '../i18n';
 const locale = localeFromPath(Astro.url.pathname);
@@ -11,7 +12,7 @@ const t = translator(locale);
     <header class="drawer__head">
       <h2 id="cart-title" class="display drawer__title">{t('Panier', 'Bag')} <sup data-cart-count>0</sup></h2>
       <button class="icon-btn" type="button" data-cart-close aria-label={t('Fermer le panier', 'Close bag')}>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2 2 14"></path></svg>
+        <Icon name="close" size={18} />
       </button>
     </header>
 

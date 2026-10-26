@@ -1,0 +1,130 @@
+---
+// Les promesses de la marque (livraison, retours, paiement, fabrication), écrites une
+// seule fois et affichées à l'accueil, dans la boutique et sur chaque fiche produit.
+import Icon from './Icon.astro';
+import { getBrand, formatPrice } from '../lib/shop';
+import { localeFromPath, translator } from '../i18n';
+
+interface Props {
+  /** cards : grandes cases (accueil) · row : bande (boutique) · compact : liste serrée (fiche) */
+  variant?: 'cards' | 'row' | 'compact';
+  only?: ('made' | 'ship' | 'returns' | 'pay')[];
+  class?: string;
+}
+const { variant = 'row', only, class: className } = Astro.props;
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const brand = getBrand(locale);
+
+const all = [
+  { key: 'made', icon: 'needle', title: t('Brodé & imprimé', 'Embroidered & printed'), text: t('en séries courtes, par drops', 'in short runs, by drops') },
+  { key: 'ship', icon: 'truck', title: t('Livraison offerte', 'Free delivery'), text: t(`dès ${formatPrice(brand.shipping.freeThreshold, locale)}, expédiée sous 48 h`, `from ${formatPrice(brand.shipping.freeThreshold, locale)}, ships within 48 h`) },
+  { key: 'returns', icon: 'returns', title: t(`${brand.shipping.returnsDays} jours`, `${brand.shipping.returnsDays} days`), text: t("pour changer d'avis, échange de taille offert", 'to change your mind, free size exchange') },
+  { key: 'pay', icon: 'lock', title: t('Paiement sécurisé', 'Secure payment'), text: t('carte, Apple Pay, PayPal', 'card, Apple Pay, PayPal') },
+] as const;
+const items = only ? all.filter((p) => only.includes(p.key)) : all;
+---
+
+<ul class:list={['perks', `perks--${variant}`, className]} role="list">
+  {
+    items.map((p) => (
+      <li>
+        <Icon name={p.icon} size={variant === 'compact' ? 18 : 22} />
+        <span>
+          <strong>{p.title}</strong> <span class="perks__text">{p.text}</span>
+        </span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .perks li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .perks :global(.icon) {
+    flex: none;
+    color: var(--brand);
+  }
+  .perks strong {
+    font-weight: 700;
+  }
+  .perks__text {
+    color: var(--fg-2);
+  }
+
+  /* Grandes cases cousues */
+  .perks--cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .perks--cards li {
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem clamp(1rem, 2vw, 1.75rem);
+  }
+  .perks--cards li + li {
+    border-left: 2px dashed var(--line-strong);
+  }
+  .perks--cards strong {
+    display: block;
+    font-family: var(--f-display);
+    font-size: clamp(1rem, 1.4vw, 1.35rem);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: var(--brand);
+  }
+  .perks--cards .perks__text {
+    font-size: var(--fs-sm);
+  }
+
+  /* Bande */
+  .perks--row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    font-size: var(--fs-sm);
+  }
+  .perks--row li {
+    padding-top: 1rem;
+    border-top: 2px dashed var(--line-strong);
+  }
+  .perks--row strong {
+    display: block;
+  }
+
+  /* Liste serrée */
+  .perks--compact {
+    display: grid;
+    gap: 0.55rem;
+    font-size: var(--fs-sm);
+  }
+  .perks--compact li {
+    align-items: center;
+  }
+
+  @media (max-width: 1100px) {
+    .perks--cards,
+    .perks--row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .perks--cards li:nth-child(3) {
+      border-left: 0;
+    }
+    .perks--cards li:nth-child(n + 3) {
+      border-top: 2px dashed var(--line-strong);
+    }
+  }
+  @media (max-width: 520px) {
+    .perks--row {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

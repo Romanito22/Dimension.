@@ -4,9 +4,9 @@ import { deliveryWindow } from '../lib/delivery';
 import { $recent, $mySize, pushRecent } from '../lib/saved';
 import { catalog } from '../lib/catalog';
 import { t, price, lang } from './i18n';
+import { esc } from './html';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
 /** Recommandation simple à partir de la taille, du poids et de la coupe voulue. */
 export function recommendSize(height: number, weight: number, fit: number) {
@@ -77,10 +77,16 @@ export function initProductExtras(signal: AbortSignal) {
 
   /* Taille conseillée mémorisée */
   const mysize = root.querySelector<HTMLElement>('[data-mysize]');
+  const showMySize = (value: string) => {
+    if (!mysize) return;
+    mysize.hidden = false;
+    mysize.querySelector('[data-mysize-value]')!.textContent = value;
+    const cta = root.querySelector<HTMLElement>('[data-mysize-cta]');
+    if (cta) cta.textContent = t('Refaire le calcul →', 'Recalculate →');
+  };
   const remembered = $mySize.get();
   if (remembered && mysize) {
-    mysize.hidden = false;
-    mysize.querySelector('[data-mysize-value]')!.textContent = remembered;
+    showMySize(remembered);
     selectSize(root, remembered);
   }
 
@@ -123,10 +129,7 @@ export function initProductExtras(signal: AbortSignal) {
       () => {
         if (!recommended) return;
         selectSize(root!, recommended);
-        if (mysize) {
-          mysize.hidden = false;
-          mysize.querySelector('[data-mysize-value]')!.textContent = recommended;
-        }
+        showMySize(recommended);
         document.querySelector<HTMLDialogElement>('[data-size-guide]')?.close();
       },
       { signal },

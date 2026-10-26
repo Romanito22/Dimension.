@@ -4,8 +4,9 @@ import ProductCard from '../components/ProductCard.astro';
 import Img from '../components/Img.astro';
 import Newsletter from '../components/Newsletter.astro';
 import TikTok from '../components/TikTok.astro';
+import Perks from '../components/Perks.astro';
 import { media } from '../lib/media';
-import { getProducts, getBrand, byNewest, formatPrice, imageKeys, categoryLabel, totalStock } from '../lib/shop';
+import { getProducts, getBrand, byNewest, formatPrice, imageKeys, categoryLabel, totalStock, stockText, HOT_STOCK } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
 
 const locale = localeFromPath(Astro.url.pathname);
@@ -48,7 +49,7 @@ const firstStock = totalStock(dvItems[0]);
 const dropStock = products.reduce((n, p) => n + totalStock(p), 0);
 const ticker = products.map((p) => {
   const st = totalStock(p);
-  return { id: p.id, name: p.name, url: productUrl(p.slug), hot: st < 16, label: st === 0 ? t('Épuisé', 'Sold out') : t(`${st} en stock`, `${st} in stock`) };
+  return { id: p.id, name: p.name, url: productUrl(p.slug), hot: st <= HOT_STOCK, label: stockText(st, locale) };
 });
 
 const manifesto = t(
@@ -169,12 +170,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
         }
       </div>
     </div>
-    <ul class="wrap drop__facts" role="list">
-      <li><span class="display">{t('Brodé', 'Embroidered')}</span><span>{t('monogramme au point plein', 'satin-stitch monogram')}</span></li>
-      <li><span class="display">240 g/m²</span><span>{t('jersey de coton épais', 'heavyweight cotton jersey')}</span></li>
-      <li><span class="display">{t('Offerte', 'Free')}</span><span>{t('livraison dès ', 'delivery from ')}{fmt(brand.shipping.freeThreshold)}</span></li>
-      <li><span class="display">{t('14 j', '14 days')}</span><span>{t("pour changer d'avis", 'to change your mind')}</span></li>
-    </ul>
+    <div class="wrap drop__facts"><Perks variant="cards" /></div>
   </section>
 
   <!-- PIÈCE SIGNATURE : devant / dos au scroll -->
@@ -941,42 +937,11 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     border-radius: 999px;
   }
   .drop__facts {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin-top: var(--space-lg);
-    border: 2px solid var(--ink);
-    border-radius: 16px;
-    overflow: hidden;
-    background: var(--bg);
-  }
-  .drop__facts li {
-    display: grid;
-    gap: 0.35rem;
-    padding: 1.25rem clamp(1rem, 2vw, 1.75rem);
-  }
-  .drop__facts li + li {
-    border-left: 2px dashed var(--line-strong);
-  }
-  .drop__facts .display {
-    font-size: clamp(1.1rem, 1.6vw, 1.6rem);
-    color: var(--brand);
-  }
-  .drop__facts li > span:last-child {
-    font-size: var(--fs-sm);
-    color: var(--fg-2);
   }
   @media (max-width: 1100px) {
     .drop__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .drop__facts {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .drop__facts li:nth-child(3) {
-      border-left: 0;
-    }
-    .drop__facts li:nth-child(n + 3) {
-      border-top: 2px dashed var(--line-strong);
     }
   }
   /* Mobile : rail horizontal natif, avec aimantation sur chaque carte */

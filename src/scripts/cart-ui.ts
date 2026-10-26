@@ -4,9 +4,8 @@ import { t, price as formatPrice, link } from './i18n';
 import { lockScroll, unlockScroll } from './scroll';
 import { catalog } from '../lib/catalog';
 import { addItem } from '../lib/cart';
+import { esc } from './html';
 
-const esc = (s: string) =>
-  s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
 /** Nom et couleur dans la langue de la page (le panier garde ceux du moment de l'ajout). */
 function display(i: CartItem) {
@@ -16,8 +15,8 @@ function display(i: CartItem) {
 
 export function renderLines(items: CartItem[], compact = false) {
   if (!items.length) {
-    return `<div class="cart-empty">
-      <span class="cart-empty__mark" aria-hidden="true"></span>
+    return `<div class="empty-state empty-state--center">
+      <span class="empty-state__mark" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></svg></span>
       <p class="display h-lg">${t('Ton panier est vide', 'Your bag is empty')}</p>
       <p class="muted">${t("Le Drop 01 n'attend que toi — et les séries sont courtes.", 'Drop 01 is waiting for you — and the runs are short.')}</p>
       <a href="${link('shop')}" class="btn" data-cart-close>${t('Voir la boutique', 'Visit the shop')} <span class="btn__dot" aria-hidden="true"></span></a>

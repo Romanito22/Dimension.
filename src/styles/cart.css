@@ -98,19 +98,3 @@
   padding: 0 5px;
   z-index: 1;
 }
-.cart-empty {
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  gap: 1.25rem;
-  padding: 3.5rem 1rem;
-}
-.cart-empty__mark {
-  width: 56px;
-  height: 56px;
-  border: 1.5px solid var(--accent);
-  border-radius: 50%;
-}
-.cart-empty p {
-  max-width: 26ch;
-}

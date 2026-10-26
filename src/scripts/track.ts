@@ -6,11 +6,11 @@ import { catalog } from '../lib/catalog';
 import { validateAll } from './forms';
 import { t, price, lang } from './i18n';
 import { intlLocale } from '../i18n';
+import { esc } from './html';
 
 // Jours ouvrés entre l'expédition et la livraison, par mode (min, max)
 const DAYS: Record<string, [number, number]> = { relay: [3, 5], home: [2, 3], express: [1, 1] };
 
-const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 const at = (d: Date, h: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), h);
 
 /** Étapes estimées d'une commande : confirmée → préparée → expédiée → en livraison → livrée. */

@@ -1,0 +1,301 @@
+---
+// Stories du drop : des bulles à toucher, puis un plein écran qui défile tout seul
+// (comme sur TikTok ou Instagram). Les bulles déjà vues passent en gris.
+import { media, mediaAt, galleryKeys } from '../lib/media';
+import { getProducts, getBrand, formatPrice } from '../lib/shop';
+import { localeFromPath, translator, href } from '../i18n';
+import Icon from './Icon.astro';
+
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const brand = getBrand(locale);
+const products = getProducts(locale);
+const short: Record<string, string> = { love: 'Love', crew: 'Crew', splash: 'Splash', doodle: 'Doodle', camo: 'Camo' };
+
+// Légende assortie à l'image : le dos et la broderie reprennent la ligne de la fiche qui en parle,
+// le gros plan du print a sa propre phrase (il peut venir du devant comme du dos).
+const VIEW_WORDS: Record<string, string[]> = {
+  '4': ['brod', 'embroid'],
+  '2': ['dos', 'back'],
+  '3': [],
+};
+function captions(p: (typeof products)[number], keys: string[]) {
+  const used = new Set<string>();
+  const out: Record<string, string> = {};
+  for (const view of ['4', '2', '3']) {
+    const key = keys.find((k) => k.endsWith(`-${view}`));
+    if (!key) continue;
+    const line = p.details.find((d) => !used.has(d) && VIEW_WORDS[view].some((w) => d.toLowerCase().includes(w)));
+    if (line) used.add(line);
+    out[key] = line ?? t('De près, c’est encore mieux.', 'Even better up close.');
+  }
+  return (k: string) => out[k] ?? p.short;
+}
+
+const slide = (key: string, caption: string, cta?: { label: string; url: string }) => ({ img: mediaAt(key, 800), caption, cta });
+
+const groups = [
+  {
+    id: `drop-${brand.drop.name}`,
+    title: brand.drop.name,
+    cover: mediaAt('lookbook/3', 200),
+    slides: [
+      slide('lookbook/3', t('Love over everything. Le Drop 01 est là.', 'Love over everything. Drop 01 is here.')),
+      slide('lookbook/2', t('Cinq pièces, brodées, imprimées, tricotées.', 'Five pieces, embroidered, printed, knitted.')),
+      slide('lookbook/7', t('En petites séries : quand une taille part, elle part.', 'In small runs: when a size is gone, it’s gone.'), {
+        label: t('Voir tout le drop', 'See the whole drop'),
+        url: href(locale, 'shop'),
+      }),
+    ],
+  },
+  ...products.map((p) => ({
+    id: p.id,
+    title: short[p.art] ?? p.name,
+    cover: mediaAt(`cutout/${p.id.toLowerCase()}-front`, 200),
+    slides: galleryKeys(p).map((k, i, all) =>
+      slide(k, captions(p, galleryKeys(p))(k), {
+        label: i === all.length - 1 ? t(`Je la veux · ${formatPrice(p.price, locale)}`, `I want it · ${formatPrice(p.price, locale)}`) : t('Voir la pièce', 'See the piece'),
+        url: href(locale, 'product', p.slug),
+      }),
+    ),
+  })),
+];
+---
+
+<section class="stories" data-stories aria-label={t('Stories du drop', 'Drop stories')}>
+  <script type="application/json" data-stories-json set:html={JSON.stringify(groups)} />
+  <ul class="stories__row wrap" role="list">
+    {
+      groups.map((g, i) => (
+        <li>
+          <button type="button" class="story-bubble" data-story={i} data-story-id={g.id} aria-label={t(`Voir la story ${g.title}`, `Watch the ${g.title} story`)}>
+            <span class="story-bubble__ring">
+              <img src={g.cover} alt="" width="72" height="72" loading="lazy" />
+            </span>
+            <span class="story-bubble__title">{g.title}</span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<dialog class="story" data-dialog="stories" data-story-dialog aria-label={t('Stories', 'Stories')}>
+  <div class="story__stage" data-story-stage>
+    <img class="story__bg" data-story-bg alt="" />
+    <img class="story__img" data-story-img alt="" />
+    <div class="story__bars" data-story-bars aria-hidden="true"></div>
+    <header class="story__head">
+      <span class="story__who"><span class="story__avatar" aria-hidden="true">d°</span><strong data-story-title></strong></span>
+      <button type="button" class="story__close" data-close aria-label={t('Fermer les stories', 'Close stories')}><Icon name="close" size={22} /></button>
+    </header>
+    <button type="button" class="story__nav story__nav--prev" data-story-prev aria-label={t('Précédent', 'Previous')}></button>
+    <button type="button" class="story__nav story__nav--next" data-story-next aria-label={t('Suivant', 'Next')}></button>
+    <footer class="story__foot">
+      <p class="story__caption" data-story-caption aria-live="polite"></p>
+      <a class="btn btn--accent story__cta" href={href(locale, 'shop')} data-story-cta hidden>{t('Voir la boutique', 'See the shop')}</a>
+    </footer>
+  </div>
+</dialog>
+
+<style is:global>
+  .stories {
+    padding-block: 1.25rem 0.25rem;
+  }
+  .stories__row {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-block: 0.25rem 0.5rem;
+  }
+  .stories__row::-webkit-scrollbar {
+    display: none;
+  }
+  .story-bubble {
+    display: grid;
+    justify-items: center;
+    gap: 0.45rem;
+    width: 78px;
+  }
+  .story-bubble__ring {
+    width: 72px;
+    height: 72px;
+    padding: 3px;
+    border-radius: 50%;
+    background: conic-gradient(var(--brand), #ff7aa8, var(--brand));
+    transition: transform 0.2s var(--ease-out);
+  }
+  .story-bubble:hover .story-bubble__ring {
+    transform: scale(1.06);
+  }
+  .story-bubble.is-seen .story-bubble__ring {
+    background: var(--line-strong);
+  }
+  .story-bubble__ring img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid var(--bg);
+    object-fit: cover;
+    background: var(--cotton);
+  }
+  .story-bubble__title {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  dialog.story {
+    width: min(460px, 100vw);
+    height: min(820px, 100dvh);
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    border-radius: 18px;
+    background: #111;
+    color: #fff;
+    overflow: hidden;
+  }
+  dialog.story::backdrop {
+    background: rgb(0 0 0 / 0.86);
+  }
+  dialog.story[open] {
+    animation: story-in 0.3s var(--ease-out);
+  }
+  @keyframes story-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  }
+  @media (max-width: 600px) {
+    dialog.story {
+      width: 100vw;
+      height: 100dvh;
+      border-radius: 0;
+    }
+  }
+  .story__stage {
+    position: relative;
+    height: 100%;
+    touch-action: pan-y;
+    user-select: none;
+  }
+  .story__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(28px) brightness(0.55);
+    transform: scale(1.15);
+  }
+  .story__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .story__bars {
+    position: absolute;
+    inset: 0.6rem 0.6rem auto;
+    display: flex;
+    gap: 4px;
+    z-index: 2;
+  }
+  .story__bars span {
+    flex: 1;
+    height: 3px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 0.35);
+    overflow: hidden;
+  }
+  .story__bars i {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .story__bars .is-done i {
+    transform: none;
+  }
+  .story__bars .is-now i {
+    animation: story-fill var(--story-dur, 5s) linear forwards;
+  }
+  .story__stage.is-paused .story__bars .is-now i {
+    animation-play-state: paused;
+  }
+  @keyframes story-fill {
+    to {
+      transform: none;
+    }
+  }
+  .story__head {
+    position: absolute;
+    inset: 1.4rem 0.75rem auto;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .story__who {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: var(--fs-sm);
+  }
+  .story__avatar {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--brand);
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 0.8rem;
+  }
+  .story__close {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+  .story__nav {
+    position: absolute;
+    top: 15%;
+    bottom: 22%;
+    z-index: 1;
+    width: 40%;
+  }
+  .story__nav--prev {
+    left: 0;
+  }
+  .story__nav--next {
+    right: 0;
+    width: 60%;
+  }
+  .story__foot {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+    padding: 3rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+    background: linear-gradient(transparent, rgb(0 0 0 / 0.7));
+  }
+  .story__caption {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+</style>

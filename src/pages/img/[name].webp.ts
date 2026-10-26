@@ -1,4 +1,4 @@
-// Versions réduites des vraies photos (480, 800, 1200 px de large), générées au build :
+// Versions réduites des vraies photos (200, 480, 800, 1200 px de large), générées au build :
 // chaque écran télécharge la taille dont il a besoin (attribut srcset des images).
 import type { APIRoute } from 'astro';
 import fs from 'node:fs';

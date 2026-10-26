@@ -12,9 +12,11 @@ import { initSearch } from './search';
 import { initWish } from './wish';
 import { initProductExtras } from './product-extras';
 import { initTrack } from './track';
-import { initResume, initWelcome, initDropReminder } from './personal';
+import { initResume, initWelcome, initDropReminder, previousVisit } from './personal';
 import { initLook } from './look';
 import { initHelp } from './help';
+import { initQuiz } from './quiz';
+import { initInstall } from './install';
 import { initDialogs } from './dialogs';
 import { $mySize } from '../lib/saved';
 import { link, localPath, lang } from './i18n';
@@ -203,9 +205,12 @@ $mySize.subscribe(applyMySize);
 document.addEventListener('astro:after-swap', applyMySize);
 
 /* ---------- Cycle de vie des pages ---------- */
+previousVisit(); // fige la date de la visite précédente pour toute la session
 initCartUI();
 initDialogs();
 initHelp();
+initQuiz();
+initInstall();
 initWelcome();
 initQuickAdd();
 initSearch();
@@ -251,6 +256,7 @@ document.addEventListener('astro:page-load', () => {
   when('[data-checkout]', () => import('./checkout').then((m) => live() && m.initCheckout(signal)));
   when('[data-account]', () => import('./account').then((m) => live() && m.initAccount(signal)));
   when('[data-product]', () => import('./product-media').then((m) => live() && m.initProductMedia(signal)));
+  when('[data-stories]', () => import('./stories').then((m) => live() && m.initStories(signal)));
   when('[data-tiktok]', () => import('./tiktok').then((m) => live() && m.initTikTok(signal)));
 
   document.querySelectorAll<HTMLAnchorElement>('[data-to-top]').forEach((a) =>

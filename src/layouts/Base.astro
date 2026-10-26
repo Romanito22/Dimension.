@@ -14,6 +14,7 @@ import CartDrawer from '../components/CartDrawer.astro';
 import Search from '../components/Search.astro';
 import TabBar from '../components/TabBar.astro';
 import Help from '../components/Help.astro';
+import Quiz from '../components/Quiz.astro';
 import { media, galleryKeys } from '../lib/media';
 import { getProducts, getBrand, categoryLabel, badgeLabel } from '../lib/shop';
 import { localeFromPath, translator, href, type RouteKey } from '../i18n';
@@ -64,6 +65,7 @@ const catalog = getProducts(locale).map((p) => {
     hover: media(k2).thumb,
     url: href(locale, 'product', p.slug),
     badge: badgeLabel(p.badge, locale),
+    date: p.date,
     sizes: p.sizes,
   };
 });
@@ -159,6 +161,7 @@ const orgLd = {
     <CartDrawer />
     <Search />
     <Help />
+    <Quiz />
     <TabBar />
     <script type="application/json" id="catalog" set:html={JSON.stringify(catalog)} />
     <div class="toast" data-toast role="status" aria-live="polite" transition:persist="toast">

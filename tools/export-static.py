@@ -34,6 +34,8 @@ for f in root.rglob('*.html'):
     s = s.replace('url(/_astro/', 'url(' + prefix + '_astro/')
     # JSON_PATHS : chemins dans les données JSON (attributs data-qa, scène du hero)
     s = re.sub(r'(&quot;|")/((?:ph|produit|images|img)/[^"&]+)(&quot;|")', lambda m: m.group(1) + map_path(m.group(2), prefix) + m.group(3), s)
+    # Liens « url » des données JSON (stories, quiz) : n'importe quelle page du site
+    s = re.sub(r'("url":")/(?!/)([^"]*)"', lambda m: m.group(1) + map_path(m.group(2), prefix) + '"', s)
     f.write_text(s)
 
 for f in (root/'_astro').glob('*.css'):

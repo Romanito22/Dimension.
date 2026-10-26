@@ -192,12 +192,21 @@ Mesures Lighthouse (mobile, 4G simulée) avant → après optimisation :
 | Fiche produit | 92 → ~97 | 3,2 s → ~2,3 s |
 
 Ce qui a été fait :
-- **Images responsives** : chaque vraie photo existe en 480, 800 et 1200 px (`src/pages/img/[name].webp.ts`, générées au build depuis `public/images`), avec `srcset` ; les vignettes (panier, recherche, favoris) utilisent la plus petite.
+- **Images responsives** : chaque vraie photo existe en 200, 480, 800 et 1200 px (`src/pages/img/[name].webp.ts`, générées au build depuis `public/images`), avec `srcset` ; les vignettes (panier, recherche, favoris) utilisent la version 480, les bulles des stories la 200.
 - **Scène WebGL de l'accueil** : s'allume au premier geste (souris, toucher, scroll, clavier) — l'image fixe s'affiche d'abord ; textures 800 px sur mobile, cadence réduite au repos, figée sur les appareils modestes ou en mode économie de données, arrêt hors écran.
 - **Chargement prioritaire** : visuel de l'accueil et premières cartes de la boutique en `fetchpriority="high"`, polices du premier écran préchargées, CSS intégré à la page (`inlineStylesheets: 'always'`).
 - **JavaScript découpé par page** : scène, table, paiement, espace client, vue 3D et TikTok ne sont téléchargés que sur leurs pages.
 - **Sections lointaines** rendues à l'approche de l'écran (`.cv`, `content-visibility: auto`), animations limitées à `transform` / `opacity`.
 - **Transitions plus vives** : rideau entre les pages ~0,45 s, intro 0,65 s passable d'un clic ou d'un toucher.
+
+## Donner envie de rester… et de revenir
+
+| | |
+|---|---|
+| **Stories du drop** | Bulles sous la scène d'accueil (le drop + une par pièce) : plein écran qui défile tout seul, toucher à droite / à gauche, appui long pour mettre en pause, glisser vers le bas pour fermer. Les bulles vues passent en gris. Légendes tirées des fiches (`src/components/Stories.astro`). |
+| **Quiz « Quelle pièce dimension. es-tu ? »** | 4 questions, une pièce, ajout au panier direct, partage du résultat. Ouvert depuis l'accueil et la boutique (n'importe quel bouton `data-open="quiz"`). Questions et points dans `src/components/Quiz.astro`. |
+| **Depuis ta dernière visite** | Pour les habitués, sur l'accueil : réassort d'une taille demandée, nouveautés sorties depuis la dernière visite, favoris presque épuisés. Uniquement des faits tirés du catalogue. |
+| **App installable + hors ligne** | Service worker (`public/sw.js`) : pages et images déjà vues disponibles sans réseau, visites suivantes plus rapides, écran « Pas de réseau » sinon. Proposition d'installation sur l'écran d'accueil aux habitués (une fois) et dans « Mon espace ». Change `VERSION` dans `sw.js` pour repartir d'un cache vide. |
 
 ## Ton de la marque
 

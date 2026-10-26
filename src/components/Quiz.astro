@@ -1,0 +1,194 @@
+---
+// Quiz « Quelle pièce dimension. es-tu ? » : quatre questions, une pièce, ajout au panier direct.
+// Fenêtre commune à tout le site, ouverte par n'importe quel [data-open="quiz"].
+import Icon from './Icon.astro';
+import { getProducts } from '../lib/shop';
+import { media } from '../lib/media';
+import { localeFromPath, translator, href } from '../i18n';
+
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const products = getProducts(locale);
+
+// Chaque réponse donne des points aux pièces (par motif : love, crew, splash, doodle, camo)
+const questions = [
+  {
+    q: t('Ton samedi idéal ?', 'Your ideal Saturday?'),
+    a: [
+      [t('Dehors avec la bande, jusqu’à pas d’heure', 'Out with the crew, until late'), { crew: 2, splash: 1 }],
+      [t('Un carnet, un café, une terrasse', 'A sketchbook, a coffee, a terrace'), { doodle: 2, love: 1 }],
+      [t('Un concert, puis on ne rentre pas', 'A gig, then we don’t go home'), { splash: 2, crew: 1 }],
+      [t('Un plaid, un film, quelqu’un que j’aime', 'A blanket, a film, someone I love'), { camo: 2, love: 2 }],
+    ],
+  },
+  {
+    q: t('Ta couleur, sans réfléchir ?', 'Your colour, no overthinking?'),
+    a: [
+      [t('Blanc, net', 'White, clean'), { love: 2, doodle: 1 }],
+      [t('Noir, toujours', 'Black, always'), { splash: 2 }],
+      [t('Sable, tout doux', 'Sand, soft'), { crew: 2 }],
+      [t('Camouflage, évidemment', 'Camo, obviously'), { camo: 2 }],
+    ],
+  },
+  {
+    q: t('Ton message, tu le portes…', 'Your message, you wear it…'),
+    a: [
+      [t('Sur le cœur, discret', 'Over the heart, quietly'), { love: 1, doodle: 2 }],
+      [t('Dans le dos, en grand', 'On the back, big'), { love: 2, crew: 1, splash: 1 }],
+      [t('Partout, tout le temps', 'Everywhere, all the time'), { camo: 2, splash: 1 }],
+    ],
+  },
+  {
+    q: t('« Love over everything », pour toi c’est…', '« Love over everything », for you it’s…'),
+    a: [
+      [t('Mes potes', 'My friends'), { crew: 2 }],
+      [t('Ma famille, mes proches', 'My family, my people'), { love: 2 }],
+      [t('Ce que je crée', 'What I make'), { doodle: 2 }],
+      [t('Rester moi-même, quoi qu’il arrive', 'Staying myself, no matter what'), { splash: 1, camo: 1 }],
+    ],
+  },
+];
+const lines: Record<string, string> = {
+  love: t('Toi, tu dis je t’aime sans détour. Le Love, c’est ton cœur sur le dos — littéralement.', 'You say I love you straight up. The Love tee is your heart on your back — literally.'),
+  crew: t('Toi, tu ne sors jamais seul·e. Le Crew, c’est le t-shirt de ta bande.', 'You never go out alone. The Crew is your crew’s tee.'),
+  splash: t('Calme en apparence, bruyant à l’intérieur. Le Splash est fait pour toi.', 'Calm on the outside, loud on the inside. The Splash is made for you.'),
+  doodle: t('Tu remplis les marges de tes cahiers depuis toujours. Le Doodle, c’est ton carnet porté.', 'You’ve been filling notebook margins forever. The Doodle is your sketchbook, worn.'),
+  camo: t('Plaid, film, longues soirées : le Camo, c’est ton cocon qui ne passe pas inaperçu.', 'Blankets, films, long evenings: the Camo is a cocoon that still turns heads.'),
+};
+const results = Object.fromEntries(
+  products.map((p) => [
+    p.art,
+    {
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      price: p.price,
+      color: p.colors[0].name,
+      image: media(`cutout/${p.id.toLowerCase()}-front`).thumb,
+      cart: media(`products/${p.id.toLowerCase()}-1`).thumb,
+      sizes: p.sizes,
+      url: href(locale, 'product', p.slug),
+      line: lines[p.art] ?? '',
+    },
+  ]),
+);
+---
+
+<dialog class="modal quiz" data-dialog="quiz" data-quiz aria-labelledby="quiz-title" transition:persist="quiz">
+  <script type="application/json" data-quiz-json set:html={JSON.stringify({ questions, results })} />
+  <div class="quiz__inner">
+    <header class="quiz__head">
+      <p class="label accent" data-quiz-step></p>
+      <button type="button" class="icon-btn" data-close aria-label={t('Fermer le quiz', 'Close the quiz')}><Icon name="close" size={18} /></button>
+    </header>
+    <h2 id="quiz-title" class="display quiz__title" data-quiz-title>{t('Quelle pièce dimension. es-tu ?', 'Which dimension. piece are you?')}</h2>
+    <div class="quiz__body" data-quiz-body aria-live="polite"></div>
+  </div>
+</dialog>
+
+<style is:global>
+  dialog.quiz {
+    width: min(560px, calc(100% - 1.5rem));
+  }
+  .quiz__inner {
+    display: grid;
+    gap: 1.1rem;
+    padding: clamp(1.25rem, 4vw, 2rem);
+  }
+  .quiz__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .quiz__title {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .quiz__answers {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .quiz__answer {
+    padding: 1rem 1.1rem;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: #fff;
+    text-align: left;
+    font-weight: 600;
+    transition:
+      transform 0.15s var(--ease-out),
+      box-shadow 0.15s var(--ease-out),
+      background 0.15s;
+  }
+  .quiz__answer:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--brand);
+  }
+  .quiz__answer:active {
+    background: var(--accent-soft);
+  }
+  .quiz__dots {
+    display: flex;
+    gap: 6px;
+  }
+  .quiz__dots span {
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--line-strong);
+  }
+  .quiz__dots .is-on {
+    background: var(--brand);
+  }
+  .quiz__result {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 1.1rem;
+    align-items: center;
+  }
+  .quiz__result img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(6px 8px 6px rgb(0 0 0 / 0.25));
+  }
+  .quiz__result-name {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 1.3rem;
+  }
+  .quiz__sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .quiz__sizes button {
+    min-width: 2.75rem;
+    padding: 0.55rem 0.6rem;
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    background: #fff;
+    font-family: var(--f-mono);
+    font-weight: 700;
+    font-size: var(--fs-sm);
+  }
+  .quiz__sizes button:disabled {
+    opacity: 0.35;
+    text-decoration: line-through;
+  }
+  .quiz__sizes button:not(:disabled):hover {
+    background: var(--ink);
+    color: var(--cotton);
+  }
+  .quiz__acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    align-items: center;
+  }
+  @media (max-width: 480px) {
+    .quiz__result {
+      grid-template-columns: 96px 1fr;
+    }
+  }
+</style>

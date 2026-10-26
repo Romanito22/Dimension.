@@ -39,6 +39,8 @@ export const $mySize = persisted<string>('dimension-size-v1', '');
 export const $email = persisted<string>('dimension-email-v1', '');
 /** Alertes de réassort demandées (pièce + taille), affichées dans « Mon espace ». */
 export const $alerts = persisted<{ id: string; size: string; date: string }[]>('dimension-alerts-v1', []);
+/** Date de la dernière visite (pour « Depuis ta dernière visite » à l'accueil) */
+export const $lastVisit = persisted<string>('dimension-last-visit-v1', '');
 /** Message de bienvenue déjà vu ou fermé */
 export const $welcomed = persisted<boolean>('dimension-welcome-v1', false);
 

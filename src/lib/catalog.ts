@@ -11,6 +11,8 @@ export interface CatalogItem {
   hover: string;
   url: string;
   badge: string;
+  /** Date de sortie (AAAA-MM-JJ) */
+  date: string;
   sizes: { size: string; stock: number }[];
 }
 

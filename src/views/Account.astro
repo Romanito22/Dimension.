@@ -87,6 +87,14 @@ const t = translator(locale);
           <button type="button" class="link link--under label acard__danger" data-acct-forget>{t('Effacer mes données de cet appareil', 'Erase my data from this device')}</button>
         </div>
       </article>
+
+      <!-- Installer dimension. sur l'écran d'accueil (affiché seulement quand c'est possible) -->
+      <article class="acard acard--install" data-install-card="always" hidden>
+        <header class="acard__head"><Icon name="bag" /><h2 class="label">{t('dimension. sur ton téléphone', 'dimension. on your phone')}</h2></header>
+        <p>{t('Ajoute le site à ton écran d’accueil : il s’ouvre comme une app, et les pages déjà vues restent dispo même sans réseau.', 'Add the site to your home screen: it opens like an app, and pages you’ve seen stay available even offline.')}</p>
+        <button type="button" class="btn btn--accent" data-install hidden>{t('Installer', 'Install')} <span class="btn__dot" aria-hidden="true"></span></button>
+        <p class="acard__note muted" data-install-ios hidden>{t('Sur iPhone : touche Partager, puis « Sur l’écran d’accueil ».', 'On iPhone: tap Share, then « Add to Home Screen ».')}</p>
+      </article>
     </div>
   </section>
 </Base>

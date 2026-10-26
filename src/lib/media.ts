@@ -23,7 +23,7 @@ export interface Media {
 }
 
 /** Largeurs générées au build pour chaque vraie photo (voir src/pages/img/[name].webp.ts). */
-export const WIDTHS = [480, 800, 1200];
+export const WIDTHS = [200, 480, 800, 1200];
 
 /** Dimensions d'une image lues dans son en-tête (WebP, PNG, JPEG), sans dépendance. */
 export function imageSize(file: string): { w: number; h: number } | null {
@@ -98,7 +98,8 @@ export function media(key: string, alt?: string, locale: Locale = 'fr'): Media {
     if (fs.existsSync(path.join(PUBLIC, rel))) {
       const { size, widths } = variantWidths(rel);
       const srcset = size && widths.length ? [...widths.map((w) => `${variantUrl(key, w)} ${w}w`), `/${rel} ${size.w}w`].join(', ') : undefined;
-      const thumb = widths.length ? variantUrl(key, widths[0]) : `/${rel}`;
+      const small = widths.find((w) => w >= 480);
+      const thumb = small ? variantUrl(key, small) : `/${rel}`;
       return { src: `/${rel}`, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: false, srcset, thumb };
     }
   }

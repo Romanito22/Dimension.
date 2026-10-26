@@ -37,7 +37,8 @@ const prices = [
       </h1>
       <Sticker class="shop__sticker" ring={t('Séries courtes · quand c\'est parti c\'est parti', 'Short runs · when it\'s gone it\'s gone')} core={brand.drop.name.replace(' ', '<br>')} size={150} rot={10} />
       <p class="lede muted" data-reveal style="--i:2">
-        {t("Brodées, imprimées, tricotées, en petites quantités. Choisis avec le cœur : c'est un peu la règle ici.", "Embroidered, printed, knitted, in small quantities. Choose with your heart: that's kind of the rule here.")}
+        {t("Brodées, imprimées, tricotées, en petites quantités. Choisis avec le cœur : c'est un peu la règle ici.", "Embroidered, printed, knitted, in small quantities. Choose with your heart: that's kind of the rule here.")}{' '}
+        <button type="button" class="link link--under shop__quiz" data-open="quiz">{t('Tu hésites ? Fais le quiz →', 'Can’t decide? Take the quiz →')}</button>
       </p>
     </header>
 
@@ -166,6 +167,10 @@ const prices = [
 </Base>
 
 <style>
+  .shop__quiz {
+    color: var(--fg);
+    font-weight: 600;
+  }
   .shop__head {
     position: relative;
     padding-block: var(--space-lg) var(--space-md);

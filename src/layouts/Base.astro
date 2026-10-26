@@ -115,6 +115,14 @@ const orgLd = {
     </script>
     <script is:inline>
       try {
+        if (sessionStorage.getItem('dim-wipe')) {
+          sessionStorage.removeItem('dim-wipe');
+          document.documentElement.classList.add('wipe-cover');
+        }
+      } catch (e) {}
+    </script>
+    <script is:inline>
+      try {
         if (!sessionStorage.getItem('dim-intro') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
           document.documentElement.classList.add('is-loading');
         }

@@ -146,4 +146,38 @@ if (wipe && !reducedMotion) {
     wipe.classList.replace('is-in', 'is-out');
     setTimeout(() => wipe.classList.remove('is-out'), 450);
   });
+
+  // Chargement complet (changement de langue, ou site sans routeur) : le rideau tombe
+  // avant de quitter la page, et se relève à l'arrivée (voir le script en tête de Base).
+  const routed = !!document.querySelector('meta[name="astro-view-transitions-enabled"]');
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (routed && !a.hasAttribute('data-astro-reload')) return;
+    if (a.target || a.hasAttribute('download') || a.origin !== location.origin) return;
+    const url = new URL(a.href);
+    if (url.pathname === location.pathname && url.hash) return;
+    e.preventDefault();
+    try {
+      sessionStorage.setItem('dim-wipe', '1');
+    } catch {
+      /* ignore */
+    }
+    wipe.classList.remove('is-out');
+    void wipe.offsetWidth;
+    wipe.classList.add('is-in');
+    setTimeout(() => (location.href = a.href), 300);
+  });
+  if (document.documentElement.classList.contains('wipe-cover')) {
+    wipe.classList.add('is-in');
+    document.documentElement.classList.remove('wipe-cover');
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        wipe.classList.replace('is-in', 'is-out');
+        setTimeout(() => wipe.classList.remove('is-out'), 450);
+      }),
+    );
+  }
+  // Retour arrière depuis le cache du navigateur : jamais de rideau resté baissé
+  window.addEventListener('pageshow', (e) => e.persisted && wipe.classList.remove('is-in'));
 }

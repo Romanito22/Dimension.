@@ -896,6 +896,10 @@ dialog.modal::backdrop {
   width: clamp(90px, 14vw, 180px);
   filter: drop-shadow(5px 5px 0 var(--ink));
 }
+html.wipe-cover .wipe {
+  visibility: visible;
+  transform: none;
+}
 .wipe.is-in {
   visibility: visible;
   transform: none;

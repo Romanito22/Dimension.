@@ -87,6 +87,10 @@ const orgLd = {
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#C2124F" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="dimension." />
+    <link rel="sitemap" href="/sitemap.xml" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="dimension." />
@@ -154,6 +158,13 @@ const orgLd = {
         <a href={href(locale, 'checkout')} class="btn btn--accent toast__btn">{t('Commander', 'Checkout')}</a>
       </div>
       <button type="button" class="toast__x" data-toast-close aria-label={t('Fermer la notification', 'Close notification')}>×</button>
+    </div>
+    <div class="wipe" data-wipe aria-hidden="true" transition:persist="wipe">
+      <svg class="wipe__mono" viewBox={MONO_VIEWBOX}>
+        <path d={MONO_BOWL} fill-rule="evenodd" fill="#fff" stroke="#111" stroke-width="1.4"></path>
+        <path d={MONO_STEM} fill="#fff" stroke="#111" stroke-width="1.4"></path>
+        <circle cx={MONO_RING.cx} cy={MONO_RING.cy} r={MONO_RING.r} fill="none" stroke="#fff" stroke-width="2.2"></circle>
+      </svg>
     </div>
     <div class="cursor" aria-hidden="true" transition:persist="cursor">
       <span class="cursor__ring"></span>

@@ -6,9 +6,8 @@ const locale = localeFromPath(Astro.url.pathname);
 const t = translator(locale);
 ---
 
-<div class="drawer" id="cart-drawer" data-drawer transition:persist="cart-drawer" aria-hidden="true">
-  <div class="drawer__overlay" data-cart-close></div>
-  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1" data-lenis-prevent>
+<dialog class="sheet drawer" id="cart-drawer" data-drawer data-dialog="cart" aria-labelledby="cart-title" transition:persist="cart-drawer">
+  <div class="drawer__panel" data-lenis-prevent>
     <header class="drawer__head">
       <h2 id="cart-title" class="display drawer__title">{t('Panier', 'Bag')} <sup data-cart-count>0</sup></h2>
       <button class="icon-btn" type="button" data-cart-close aria-label={t('Fermer le panier', 'Close bag')}>
@@ -44,52 +43,25 @@ const t = translator(locale);
       </a>
       <button type="button" class="drawer__continue link label" data-cart-close>{t('Continuer mes achats', 'Continue shopping')}</button>
     </footer>
-  </aside>
-</div>
+  </div>
+</dialog>
 
 <style>
   .drawer {
-    position: fixed;
-    inset: 0;
-    z-index: var(--z-drawer);
-    pointer-events: none;
+    width: min(460px, 100%);
     overflow: hidden;
   }
-  .drawer.is-open {
-    pointer-events: auto;
-  }
-  .drawer__overlay {
-    position: absolute;
-    inset: 0;
-    background: rgb(0 0 0 / 0.62);
-    opacity: 0;
-    transition: opacity 0.5s var(--ease-out);
-  }
-  .drawer.is-open .drawer__overlay {
-    opacity: 1;
-  }
   .drawer__panel {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(460px, 100%);
-    background: var(--bg);
+    height: 100%;
     display: flex;
     flex-direction: column;
-    transform: translateX(100%);
-    transition: transform 0.6s var(--ease-out);
-    outline: none;
-  }
-  .drawer.is-open .drawer__panel {
-    transform: none;
   }
   .drawer__head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem var(--gutter);
-    border-bottom: 1px solid var(--line);
+    border-bottom: 2px solid var(--ink);
   }
   .drawer__title {
     font-size: 1.2rem;

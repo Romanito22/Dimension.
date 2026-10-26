@@ -1,0 +1,24 @@
+---
+// Autocollant rond : texte qui tourne en cercle + mot central. Purement décoratif.
+interface Props {
+  ring: string;
+  core?: string;
+  size?: number;
+  rot?: number;
+  variant?: 'brand' | 'cotton' | 'ink';
+  class?: string;
+  style?: string;
+}
+const { ring, core = '', size = 132, rot = -8, variant = 'brand', class: className, style = '' } = Astro.props;
+const id = `st-${Math.random().toString(36).slice(2, 8)}`;
+// Texte répété pour faire le tour complet du cercle
+const text = `${ring} ✶ `.repeat(Math.max(1, Math.round(40 / (ring.length + 3))));
+---
+
+<span class:list={['sticker', variant !== 'brand' && `sticker--${variant}`, className]} style={`--sticker-size:${size}px;--sticker-rot:${rot}deg;${style}`} aria-hidden="true">
+  <svg class="sticker__ring" viewBox="0 0 120 120">
+    <defs><path id={id} d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1 -92 0" /></defs>
+    <text><textPath href={`#${id}`} textLength="286">{text}</textPath></text>
+  </svg>
+  {core && <span class="sticker__core" set:html={core} />}
+</span>

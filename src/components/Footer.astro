@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import Sticker from './Sticker.astro';
 import { getBrand, formatPrice } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
 
@@ -45,6 +46,7 @@ const cols = [
   <div class="wrap">
     <div class="footer__top">
       <p class="footer__claim display">
+        <Sticker class="footer__sticker" ring="Love over everything · dimension." core="d°" size={120} rot={-14} />
         Love<br />over<br /><span class="footer__candy">everything<span class="dot" aria-hidden="true"></span></span>
       </p>
       <div class="footer__cols">
@@ -109,7 +111,13 @@ const cols = [
     gap: var(--space-md);
     padding-bottom: var(--space-lg);
   }
+  .footer__claim :global(.footer__sticker) {
+    position: absolute;
+    left: clamp(9rem, 20vw, 17rem);
+    top: -1.5rem;
+  }
   .footer__claim {
+    position: relative;
     font-size: clamp(1.5rem, 2.8vw, 2.7rem);
   }
   .footer__candy {

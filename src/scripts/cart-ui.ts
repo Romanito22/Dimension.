@@ -1,7 +1,7 @@
 import { $cart, $count, $subtotal, $drawerOpen, setQty, removeItem, openDrawer, closeDrawer, type CartItem } from '../lib/cart';
 import brand from '../data/brand.json';
 import { t, price as formatPrice, link } from './i18n';
-import { lockScroll, unlockScroll } from './scroll';
+import { openDialog } from './dialogs';
 import { catalog } from '../lib/catalog';
 import { addItem } from '../lib/cart';
 import { esc } from './html';
@@ -121,23 +121,12 @@ function render() {
   });
 }
 
-let lastFocus: HTMLElement | null = null;
+// Le panier est une fenêtre du site (dialogs.ts) ; la boutique pilote son ouverture via $drawerOpen.
 function setDrawer(open: boolean) {
-  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  const drawer = document.querySelector<HTMLDialogElement>('dialog[data-drawer]');
   if (!drawer) return;
-  const wasOpen = drawer.classList.contains('is-open');
-  if (open === wasOpen) return;
-  drawer.classList.toggle('is-open', open);
-  drawer.setAttribute('aria-hidden', String(!open));
-  drawer.inert = !open;
-  if (open) {
-    lastFocus = document.activeElement as HTMLElement;
-    lockScroll();
-    requestAnimationFrame(() => drawer.querySelector<HTMLElement>('.drawer__panel')?.focus());
-  } else {
-    unlockScroll();
-    lastFocus?.focus?.();
-  }
+  if (open) openDialog(drawer);
+  else if (drawer.open) drawer.close();
 }
 
 export function initCartUI() {
@@ -156,8 +145,14 @@ export function initCartUI() {
     prev = n;
   });
 
-  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
-  if (drawer) drawer.inert = true;
+  // Fermé par Échap, le fond ou un lien : on remet l'état à jour.
+  document.addEventListener(
+    'close',
+    (e) => {
+      if ((e.target as HTMLElement).matches?.('dialog[data-drawer]') && $drawerOpen.get()) closeDrawer();
+    },
+    true,
+  );
 
   document.addEventListener('click', (e) => {
     const t = e.target as HTMLElement;
@@ -192,28 +187,6 @@ export function initCartUI() {
       addItem(rest, qty);
       lastRemoved = null;
       document.querySelector<HTMLElement>('[data-undo]')!.hidden = true;
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && $drawerOpen.get()) closeDrawer();
-    // Piège de focus simple dans le tiroir
-    if (e.key === 'Tab' && $drawerOpen.get()) {
-      const panel = document.querySelector<HTMLElement>('.drawer__panel');
-      if (!panel) return;
-      const f = [...panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input, [tabindex="0"]')].filter(
-        (el) => el.offsetParent !== null,
-      );
-      if (!f.length) return;
-      const first = f[0];
-      const last = f[f.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
     }
   });
 

@@ -24,7 +24,7 @@ const visuals = ['story/1', 'lookbook/3', 'story/3', 'lookbook/6'];
 >
   <section class="intro wrap">
     <p class="label accent" data-reveal>{s.kicker}</p>
-    <h1 class="display intro__title" data-split>
+    <h1 class="display intro__title patch" data-split>
       <span class="split-line"><span>{t('Une dimension', 'One more')}</span></span>
       <span class="split-line" style="--l:1"><span>{t('en plus', 'dimension')}<span class="dot" aria-hidden="true"></span></span></span>
     </h1>
@@ -53,17 +53,6 @@ const visuals = ['story/1', 'lookbook/3', 'story/3', 'lookbook/6'];
         </article>
       ))
     }
-  </section>
-
-  <section class="manifesto" aria-label={t('Manifeste', 'Manifesto')}>
-    <div class="wrap">
-      <p class="display manifesto__text" data-reveal>
-        {t('On ne fait pas des vêtements pour remplir des placards. On les fait pour qu\'ils ', "We don't make clothes to fill wardrobes. We make them to ")}<span class="manifesto__candy">{t('racontent quelque chose', 'say something')}</span>{t(' — et qu\'on les garde.', ' — and to be kept.')}
-      </p>
-      <p class="manifesto__sign">
-        <span class="script">dimension</span><span class="manifesto__point">.</span> — {brand.tagline}
-      </p>
-    </div>
   </section>
 
   <section class="section wrap values" aria-labelledby="values-title">
@@ -135,30 +124,6 @@ const visuals = ['story/1', 'lookbook/3', 'story/3', 'lookbook/6'];
     font-size: clamp(3rem, 7vw, 6rem);
     color: transparent;
     -webkit-text-stroke: 1.5px var(--accent);
-  }
-  .manifesto {
-    background: var(--accent);
-    color: var(--on-accent);
-    padding-block: var(--space-xl);
-  }
-  .manifesto__text {
-    font-size: clamp(1.3rem, 2.9vw, 3rem);
-    line-height: 1;
-    max-width: 22ch;
-  }
-  .manifesto__candy {
-    color: var(--accent-2);
-  }
-  .manifesto__sign {
-    margin-top: var(--space-md);
-    font-size: var(--fs-md);
-  }
-  .manifesto__sign .script {
-    font-size: 1.8em;
-  }
-  .manifesto__point {
-    color: var(--accent-2);
-    font-size: 1.8em;
   }
   .values__grid {
     display: grid;

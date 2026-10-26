@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /panier
+Disallow: /commande
+Disallow: /favoris
+Disallow: /suivi
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/wishlist
+Disallow: /en/track
+
+Sitemap: https://dimensionbrand.fr/sitemap.xml

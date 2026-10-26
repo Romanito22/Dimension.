@@ -6,6 +6,7 @@ import SizeTable from '../components/SizeTable.astro';
 import Icon from '../components/Icon.astro';
 import Perks from '../components/Perks.astro';
 import ProductReviews from '../components/ProductReviews.astro';
+import Sticker from '../components/Sticker.astro';
 import SpinViewer from '../components/SpinViewer.astro';
 import { media } from '../lib/media';
 import { getProducts, getBrand, formatPrice, imageKeys, related, categoryLabel, badgeLabel, totalStock, LOW_STOCK, SIZES, type Product } from '../lib/shop';
@@ -103,6 +104,7 @@ const jsonld = {
       <div class="gallery__dots" aria-hidden="true">
         {Array.from({ length: galleryCount }).map((_, i) => <span data-gallery-dot class:list={[i === 0 && 'is-active']} />)}
       </div>
+      <Sticker class="gallery__sticker" ring={`dimension. · ${brand.drop.name} · ${p.id}`} core={fmt(p.price)} size={128} rot={-10} />
       <button type="button" class="gallery__spin" data-open="spin">
         <Icon name="rotate" size={18} />
         {frames.length ? t('Vue 360°', '360° view') : t('Vue 3D', '3D view')}
@@ -120,7 +122,7 @@ const jsonld = {
 
         <header class="info__head">
           {p.badge && <span class:list={['badge', p.badge === 'Nouveau' ? 'badge--accent' : 'badge--candy']}>{badgeLabel(p.badge, locale)}</span>}
-          <h1 class="display info__title">{p.name}</h1>
+          <h1 class="display info__title patch">{p.name}</h1>
           <p class="info__short muted">{p.short}</p>
           <p class="info__price">{fmt(p.price)} <span class="muted">{t('TTC', 'incl. VAT')}</span></p>
           {
@@ -1064,6 +1066,18 @@ const jsonld = {
   }
   .gallery__spin:hover svg {
     transform: rotate(-200deg);
+  }
+  .gallery :global(.gallery__sticker) {
+    right: 18px;
+    top: 18px;
+  }
+  @media (max-width: 860px) {
+    .gallery :global(.gallery__sticker) {
+      --sticker-size: 92px !important;
+      top: auto;
+      bottom: 46px;
+      right: 12px;
+    }
   }
   .gallery__item--video {
     grid-column: 1 / -1;

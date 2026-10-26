@@ -35,6 +35,8 @@ export function persisted<T>(key: string, fallback: T) {
 export const $wishlist = persisted<string[]>('dimension-wish-v1', []);
 export const $recent = persisted<string[]>('dimension-recent-v1', []);
 export const $mySize = persisted<string>('dimension-size-v1', '');
+/** E-mail saisi une fois (newsletter, commande, alerte, avis, suivi) : pré-rempli partout ensuite. */
+export const $email = persisted<string>('dimension-email-v1', '');
 
 export function toggleWish(id: string) {
   const list = $wishlist.get();

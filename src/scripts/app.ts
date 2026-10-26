@@ -1,6 +1,6 @@
 // Point d'entrée client : chargé une seule fois, réinitialise les pages
 // à chaque navigation (astro:page-load) grâce au ClientRouter.
-import { lenis, reducedMotion, lockScroll, unlockScroll, onScrollFrame, docTop } from './scroll';
+import { lenis, reducedMotion, onScrollFrame, docTop } from './scroll';
 import { initCartUI } from './cart-ui';
 import { initShop } from './shop';
 import { initProduct } from './product';
@@ -37,20 +37,17 @@ function onScroll() {
 }
 window.addEventListener('scroll', onScroll, { passive: true });
 
-/* ---------- Menu mobile ---------- */
-const menu = document.querySelector<HTMLElement>('[data-menu]');
-const burger = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-function setMenu(open: boolean) {
-  if (!menu || !burger) return;
-  if (open === !menu.hidden) return;
-  menu.hidden = !open;
-  burger.setAttribute('aria-expanded', String(open));
-  burger.setAttribute('aria-label', (open ? burger.dataset.labelClose : burger.dataset.labelOpen) ?? '');
-  open ? lockScroll() : unlockScroll();
-}
-burger?.addEventListener('click', () => setMenu(!!menu?.hidden));
-document.addEventListener('keydown', (e) => e.key === 'Escape' && setMenu(false));
-document.addEventListener('astro:before-swap', () => setMenu(false));
+/* ---------- Menu mobile (fenêtre du site, voir dialogs.ts) ---------- */
+const menu = document.querySelector<HTMLDialogElement>('dialog[data-menu]');
+const burger = document.querySelector<HTMLButtonElement>('.burger');
+const syncBurger = (open: boolean) => {
+  burger?.setAttribute('aria-expanded', String(open));
+  burger?.setAttribute('aria-label', (open ? burger.dataset.labelClose : burger.dataset.labelOpen) ?? '');
+};
+menu?.addEventListener('dialog:open', () => syncBurger(true));
+menu?.addEventListener('close', () => syncBurger(false));
+// Passage en grand écran : le menu mobile n'a plus lieu d'être
+window.matchMedia('(min-width: 861px)').addEventListener('change', (e) => e.matches && menu?.open && menu.close());
 
 /* ---------- Curseur ---------- */
 const cursor = document.querySelector<HTMLElement>('.cursor');

@@ -118,19 +118,27 @@ body {
 }
 /* Titre « patch brodé » : comme le monogramme — framboise, contour noir, relief */
 .patch {
+  --extrude: var(--ink);
   color: var(--brand);
   -webkit-text-stroke: 0.045em var(--ink);
   paint-order: stroke fill;
-  text-shadow: 0.06em 0.07em 0 var(--ink);
+  /* Relief : la lettre est « extrudée » en épaisseur, comme un patch cousu épais */
+  text-shadow:
+    0.015em 0.015em 0 var(--extrude),
+    0.03em 0.03em 0 var(--extrude),
+    0.045em 0.045em 0 var(--extrude),
+    0.06em 0.06em 0 var(--extrude),
+    0.075em 0.075em 0 var(--extrude),
+    0.09em 0.09em 0 var(--extrude);
   letter-spacing: -0.01em;
 }
 .theme-brand .patch {
   color: #fff;
 }
 .theme-dark .patch {
+  --extrude: var(--cotton);
   color: var(--brand);
   -webkit-text-stroke-color: var(--cotton);
-  text-shadow: 0.06em 0.07em 0 var(--cotton);
 }
 .patch--light {
   color: var(--cotton);
@@ -629,15 +637,11 @@ body {
     transform: translateY(24px);
   }
 }
-::view-transition-old(main) {
-  animation: vt-out 0.28s var(--ease-in-out) both;
-}
-::view-transition-new(main) {
-  animation: vt-in 0.55s var(--ease-out) 0.08s both;
-}
+/* Le rideau framboise (.wipe) fait la transition : les captures du navigateur passent sans animation */
+::view-transition-old(*),
+::view-transition-new(*),
 ::view-transition-group(*) {
-  animation-duration: 0.6s;
-  animation-timing-function: var(--ease-out);
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -712,6 +716,19 @@ dialog.sheet {
 }
 dialog.sheet[open] {
   animation: sheet-in 0.5s var(--ease-out);
+}
+dialog.sheet--left {
+  margin: 0 auto 0 0;
+  border-left: 0;
+  border-right: 2px solid var(--ink);
+}
+dialog.sheet--left[open] {
+  animation-name: sheet-in-left;
+}
+@keyframes sheet-in-left {
+  from {
+    transform: translateX(-100%);
+  }
 }
 @keyframes sheet-in {
   from {
@@ -795,4 +812,111 @@ dialog.modal::backdrop {
 }
 .stars--lg {
   font-size: 1.4rem;
+}
+
+/* ---------- Autocollants ---------- */
+.sticker {
+  --sticker-bg: var(--brand);
+  --sticker-fg: #fff;
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: var(--sticker-size, 132px);
+  aspect-ratio: 1;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--sticker-bg);
+  color: var(--sticker-fg);
+  box-shadow: 4px 4px 0 var(--ink);
+  rotate: var(--sticker-rot, -8deg);
+  pointer-events: none;
+  /* le cercle de texte qui tourne ne doit jamais élargir la page */
+  overflow: hidden;
+}
+.sticker--cotton {
+  --sticker-bg: var(--cotton);
+  --sticker-fg: var(--ink);
+}
+.sticker--ink {
+  --sticker-bg: var(--ink);
+  --sticker-fg: var(--cotton);
+}
+.sticker__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: sticker-spin 16s linear infinite;
+}
+.sticker__ring text {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  fill: currentColor;
+}
+.sticker__core {
+  position: relative;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: calc(var(--sticker-size, 132px) * 0.22);
+  line-height: 0.9;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+@keyframes sticker-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticker__ring {
+    animation: none;
+  }
+}
+
+/* ---------- Transition entre les pages : rideau framboise ---------- */
+.wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: grid;
+  place-items: center;
+  background: var(--brand);
+  color: #fff;
+  border-block: 3px solid var(--ink);
+  transform: translateY(105%);
+  pointer-events: none;
+  visibility: hidden;
+}
+.wipe__mono {
+  width: clamp(90px, 14vw, 180px);
+  filter: drop-shadow(5px 5px 0 var(--ink));
+}
+.wipe.is-in {
+  visibility: visible;
+  transform: none;
+  transition: transform 0.32s cubic-bezier(0.7, 0, 0.3, 1);
+}
+.wipe.is-out {
+  visibility: visible;
+  transform: translateY(-105%);
+  transition: transform 0.42s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+/* Les titres en relief débordent de leurs lettres : on laisse la place au relief
+   dans les masques des animations d'apparition (mot par mot, ligne par ligne). */
+.patch .split-line,
+[data-chars].patch .w {
+  padding: 0 0.12em 0.14em 0;
+  margin: 0 -0.12em -0.14em 0;
+}
+.patch .accent {
+  color: var(--cotton);
+}
+.theme-dark .patch .accent {
+  color: var(--cotton);
 }

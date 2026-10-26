@@ -101,7 +101,11 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
       box-shadow 0.25s var(--ease-out);
   }
   .card:hover .card__media {
-    box-shadow: 6px 6px 0 var(--brand);
+    translate: -4px -4px;
+    box-shadow: 10px 10px 0 var(--brand);
+  }
+  .card__media {
+    transition-property: transform, box-shadow, translate;
   }
   .card__imglink {
     position: absolute;

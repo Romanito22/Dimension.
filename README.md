@@ -48,6 +48,21 @@ Node.js ≥ 22.12 requis. Pour mettre en ligne : importer le dépôt sur **Verce
 | **Vidéos TikTok** | Sur l'accueil, cartes verticales qui ouvrent le lecteur TikTok au clic (rien n'est chargé chez TikTok avant). |
 | **Version anglaise** | Tout le site existe en anglais sous `/en/` (bouton FR/EN dans l'en-tête, le menu et le pied de page). |
 
+## Identité visuelle
+
+- **Titres en relief** : classe `patch` (lettres framboise cernées d'encre, épaisseur « extrudée »). Ajoute `patch` à n'importe quel titre.
+- **Autocollants** : composant `Sticker` (texte qui tourne en cercle + mot central), utilisé sur l'accueil, la boutique, la fiche produit et le pied de page. Ex. : `<Sticker ring="Drop 01 · en ligne" core="Live" size={120} rot={-10} />`.
+- **Rubans croisés** sous l'ouverture : stock en direct (framboise) + signature (crème).
+- **Rideau framboise** entre les pages, avec le monogramme (désactivé si l'utilisateur a demandé à réduire les animations).
+- **Menu mobile** en plein écran framboise.
+
+## Fenêtres, e-mail, référencement
+
+- Toutes les fenêtres (panier, filtres, menu mobile, guide des tailles, avis, vue 3D, vidéo, photo plein écran) utilisent le même mécanisme : `<dialog data-dialog="nom">` ouvert par un bouton `data-open="nom"` (voir `src/scripts/dialogs.ts`).
+- **Un seul e-mail à taper** : saisi une fois (newsletter, commande, alerte, avis, suivi), il est mémorisé sur l'appareil et pré-rempli partout.
+- **Référencement** : `/sitemap.xml` (toutes les pages FR + EN avec leurs équivalents), `robots.txt` (pages privées exclues).
+- **Site installable** : manifeste et icônes (`public/manifest.webmanifest`, `public/icons/`) — sur téléphone, « Ajouter à l'écran d'accueil » ouvre le site comme une appli.
+
 ## Version anglaise
 
 - Les adresses françaises ne changent pas ; l'anglais est servi sous `/en/` : `/en/shop`, `/en/product/<slug>`, `/en/about`, `/en/track`… (table dans `src/i18n/index.ts`).

@@ -136,8 +136,6 @@ export function initShop(signal: AbortSignal) {
         apply();
         return;
       }
-      if (t.closest('[data-filters-open]')) setPanel(true);
-      if (t.closest('[data-filters-close]')) setPanel(false);
       const dens = t.closest<HTMLButtonElement>('[data-density]');
       if (dens) setDensity(dens.dataset.density!);
     },
@@ -163,12 +161,6 @@ export function initShop(signal: AbortSignal) {
     { signal },
   );
 
-  function setPanel(open: boolean) {
-    root!.classList.toggle('filters-open', open);
-    root!.querySelector('[data-filters-open]')?.setAttribute('aria-expanded', String(open));
-    if (open) panel.querySelector<HTMLElement>('input, button')?.focus();
-  }
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && setPanel(false), { signal });
 
   function setDensity(d: string) {
     grid.dataset.density = d;

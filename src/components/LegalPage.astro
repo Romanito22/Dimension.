@@ -15,7 +15,7 @@ const t = translator(localeFromPath(Astro.url.pathname));
   <article class="wrap legal">
     <header class="legal__head">
       <p class="label accent">{t('Informations légales', 'Legal information')}</p>
-      <h1 class="display h-xl">{title}</h1>
+      <h1 class="display h-xl patch">{title}</h1>
       <p class="label muted">{t('Mise à jour : ', 'Last updated: ')}{updated}</p>
     </header>
     <div class="prose legal__body">

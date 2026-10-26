@@ -123,3 +123,27 @@ export function splitChars() {
     walk(el);
   });
 }
+
+/* ---------- Rideau framboise entre les pages ---------- */
+const wipe = document.querySelector<HTMLElement>('[data-wipe]');
+if (wipe && !reducedMotion) {
+  let covering = false;
+  document.addEventListener('astro:before-preparation', (e) => {
+    const ev = e as Event & { to: URL; from: URL; loader: () => Promise<void> };
+    if (ev.to.pathname === ev.from.pathname) return; // ancre dans la même page
+    const load = ev.loader;
+    ev.loader = async () => {
+      covering = true;
+      wipe.classList.remove('is-out');
+      void wipe.offsetWidth;
+      wipe.classList.add('is-in');
+      await Promise.all([load(), new Promise((r) => setTimeout(r, 300))]);
+    };
+  });
+  document.addEventListener('astro:after-swap', () => {
+    if (!covering) return;
+    covering = false;
+    wipe.classList.replace('is-in', 'is-out');
+    setTimeout(() => wipe.classList.remove('is-out'), 450);
+  });
+}

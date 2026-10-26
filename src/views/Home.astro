@@ -5,6 +5,7 @@ import Img from '../components/Img.astro';
 import Newsletter from '../components/Newsletter.astro';
 import TikTok from '../components/TikTok.astro';
 import Perks from '../components/Perks.astro';
+import Sticker from '../components/Sticker.astro';
 import { media } from '../lib/media';
 import { getProducts, getBrand, byNewest, formatPrice, imageKeys, categoryLabel, totalStock, stockText, HOT_STOCK } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
@@ -83,6 +84,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     <div class="dv__word display" aria-hidden="true"><span data-dv-word>{first.word}</span></div>
     <img class="dv__fallback" data-dv-fallback src={first.hero} alt={`${first.name}`} width="1000" height="1250" fetchpriority="high" />
     <canvas class="dv__canvas" data-dv-canvas aria-hidden="true"></canvas>
+    <Sticker class="dv__sticker" ring={t(`${brand.drop.name} · en ligne · séries courtes`, `${brand.drop.name} · live now · short runs`)} core={t('En<br>ligne', 'Live<br>now')} size={140} />
 
     <div class="wrap dv__top">
       <p class="label dv__live"><span class="dv__dot" aria-hidden="true"></span>{brand.drop.name} — {t('en ligne', 'live')}</p>
@@ -125,23 +127,41 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     </div>
   </section>
 
-  <!-- BANDEAU DE STOCK -->
-  <div class="tick theme-dark" aria-label={t('Stock du drop en direct', 'Live drop stock')}>
-    <div class="tick__track">
-      {
-        [0, 1].map((n) => (
-          <ul class="tick__list" role="list" aria-hidden={n === 1 ? 'true' : undefined}>
-            {ticker.map((tk) => (
-              <li>
-                <span class="tick__id">{tk.id}</span>
-                <a href={tk.url} tabindex={n === 1 ? -1 : undefined}>{tk.name}</a>
-                <span class:list={['tick__st', tk.hot && 'is-hot']}>{tk.label}</span>
-                <span class="tick__sep" aria-hidden="true" />
-              </li>
-            ))}
-          </ul>
-        ))
-      }
+  <!-- RUBANS CROISÉS : stock en direct + signature -->
+  <div class="tapes" aria-label={t('Stock du drop en direct', 'Live drop stock')}>
+    <div class="tape tape--stock">
+      <div class="tape__track">
+        {
+          [0, 1].map((n) => (
+            <ul class="tape__list" role="list" aria-hidden={n === 1 ? 'true' : undefined}>
+              {ticker.map((tk) => (
+                <li>
+                  <span class="tape__id">{tk.id}</span>
+                  <a href={tk.url} tabindex={n === 1 ? -1 : undefined}>{tk.name}</a>
+                  <span class:list={['tape__st', tk.hot && 'is-hot']}>{tk.label}</span>
+                  <span class="tape__star" aria-hidden="true">✶</span>
+                </li>
+              ))}
+            </ul>
+          ))
+        }
+      </div>
+    </div>
+    <div class="tape tape--sign" aria-hidden="true">
+      <div class="tape__track tape__track--rev">
+        {
+          [0, 1].map(() => (
+            <div class="tape__set">
+              <span class="tape__script">dimension.</span>
+              <span class="tape__caps">Love over everything</span>
+              <span class="tape__star">✶</span>
+              <span class="tape__script">dimension.</span>
+              <span class="tape__caps">{brand.drop.name}</span>
+              <span class="tape__star">✶</span>
+            </div>
+          ))
+        }
+      </div>
     </div>
   </div>
 
@@ -157,6 +177,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     <div class="drop__rail">
       <div class="drop__grid">
         <div class="drop__intro theme-brand">
+          <Sticker class="drop__sticker" variant="cotton" ring={t('Love over everything · séries courtes', 'Love over everything · short runs')} core="♥" size={110} rot={14} />
           <p class="display drop__big">{products.length} {t('pièces.', 'pieces.')}<br /><span class="drop__ink">{t('Séries courtes.', 'Short runs.')}</span></p>
           <p>{t("Brodées, imprimées, tricotées. Quand c'est parti, c'est parti.", "Embroidered, printed, knitted. When it's gone, it's gone.")}</p>
           <p class="label drop__left">{t(`${dropStock} pièces restantes`, `${dropStock} pieces left`)}</p>
@@ -292,26 +313,6 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     </div>
   </section>
 
-  <!-- BANDEAU SCRIPT -->
-  <div class="ribbon-wrap" aria-hidden="true"><div class="ribbon">
-    <div class="ribbon__track">
-      {
-        [0, 1].map(() => (
-          <div class="ribbon__set">
-            <span class="ribbon__word">dimension</span>
-            <span class="ribbon__ring" />
-            <span class="ribbon__caps display">Love over everything</span>
-            <span class="ribbon__ring" />
-            <span class="ribbon__word">dimension</span>
-            <span class="ribbon__ring" />
-            <span class="ribbon__caps display">{brand.drop.name}</span>
-            <span class="ribbon__ring" />
-          </div>
-        ))
-      }
-    </div>
-  </div></div>
-
   <!-- LOOKBOOK TEASER -->
   <section class="look" aria-labelledby="look-title">
     <a href={href(locale, 'lookbook')} class="look__hero media" data-cursor="Lookbook">
@@ -319,7 +320,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       <div class="look__overlay">
         <div class="wrap">
           <span class="label">{brand.drop.name} — Lookbook</span>
-          <h2 id="look-title" class="display h-2xl" data-split>
+          <h2 id="look-title" class="display h-2xl patch patch--light" data-split>
             <span class="split-line"><span>{t('Sous le', 'Under the')}</span></span>
             <span class="split-line" style="--l:1"><span>{t('soleil', 'sun')}<span class="dot" aria-hidden="true"></span></span></span>
           </h2>
@@ -363,14 +364,26 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     pointer-events: none;
     overflow: hidden;
   }
+  /* Le mot de la pièce, énorme, plein, en relief derrière le t-shirt */
   .dv__word span {
-    font-size: clamp(6rem, 24vw, 30rem);
+    font-size: clamp(6.5rem, 27vw, 34rem);
     line-height: 0.8;
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.22);
+    color: var(--brand);
+    -webkit-text-stroke: 0.025em var(--ink);
+    paint-order: stroke fill;
+    text-shadow:
+      0.01em 0.01em 0 var(--ink),
+      0.02em 0.02em 0 var(--ink),
+      0.03em 0.03em 0 var(--ink),
+      0.04em 0.04em 0 var(--ink);
     white-space: nowrap;
-    letter-spacing: -0.01em;
-    transform: translateY(-2%);
+    letter-spacing: -0.04em;
+    transform: translateY(-4%) rotate(-4deg);
+  }
+  .dv :global(.dv__sticker) {
+    left: max(var(--gutter), 7vw);
+    top: 24%;
+    --sticker-rot: -12deg;
   }
   .dv__canvas,
   .dv__fallback {
@@ -527,10 +540,16 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   }
   .dv__name {
     font-family: var(--f-display);
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.03em;
     line-height: 1;
+    color: var(--cotton);
+    -webkit-text-stroke: 0.035em var(--ink);
+    paint-order: stroke fill;
+    text-shadow:
+      0.03em 0.03em 0 var(--brand),
+      0.06em 0.06em 0 var(--brand);
     font-size: clamp(1.9rem, 3.6vw, 4rem);
     max-width: 11ch;
     min-height: 2.05em;
@@ -666,6 +685,12 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       /* laisse la place à la barre d'onglets flottante */
       padding-bottom: calc(var(--tabbar-h, 0px) + 1.75rem + env(safe-area-inset-bottom));
     }
+    .dv :global(.dv__sticker) {
+      --sticker-size: 96px !important;
+      left: auto;
+      right: var(--gutter);
+      top: calc(var(--header-total) + 4.2rem);
+    }
     .dv__name {
       font-size: clamp(1.6rem, 7.4vw, 2.4rem);
       min-height: 0;
@@ -699,57 +724,124 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     }
   }
 
-  /* ================= BANDEAU DE STOCK ================= */
-  .tick {
-    border-block: 1px solid var(--line);
+  /* ================= RUBANS CROISÉS ================= */
+  .tapes {
+    position: relative;
+    height: clamp(150px, 16vw, 230px);
     overflow: hidden;
-    background: var(--bg-2);
+    background: var(--ink);
+    display: grid;
+    align-content: center;
   }
-  .tick__track {
+  .tape {
+    position: absolute;
+    left: -5%;
+    right: -5%;
+    top: 50%;
+    border-block: 2px solid var(--ink);
+    overflow: hidden;
+  }
+  @media (max-width: 700px) {
+    .tapes {
+      height: 190px;
+    }
+    .tape--stock {
+      transform: translateY(-95%) rotate(-4deg) !important;
+    }
+    .tape--sign {
+      transform: translateY(5%) rotate(3deg) !important;
+    }
+  }
+  .tape--stock {
+    z-index: 2;
+    background: var(--brand);
+    color: #fff;
+    transform: translateY(-62%) rotate(-3deg);
+    box-shadow: 0 10px 0 rgb(0 0 0 / 0.35);
+  }
+  .tape--sign {
+    z-index: 1;
+    background: var(--cotton);
+    color: var(--ink);
+    transform: translateY(-38%) rotate(2.6deg);
+  }
+  .tape__track {
     display: flex;
     width: max-content;
-    animation: tick 40s linear infinite;
+    animation: tape 38s linear infinite;
   }
-  .tick:hover .tick__track {
+  .tape__track--rev {
+    animation-direction: reverse;
+    animation-duration: 46s;
+  }
+  .tapes:hover .tape__track {
     animation-play-state: paused;
   }
-  @keyframes tick {
+  @keyframes tape {
     to {
       transform: translateX(-50%);
     }
   }
-  .tick__list {
+  .tape__list,
+  .tape__set {
     display: flex;
+    align-items: center;
   }
-  .tick__list li {
+  .tape__list li {
     display: flex;
     align-items: center;
     gap: 0.9rem;
-    padding: 0.9rem 0;
+    padding: 0.85rem 0;
     font-family: var(--f-mono);
-    font-size: var(--fs-2xs);
+    font-weight: 600;
+    font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     white-space: nowrap;
   }
-  .tick__id {
-    color: var(--muted);
+  .tape__id {
+    font-weight: 400;
   }
-  .tick__list a:hover {
-    color: var(--accent-2);
+  .tape__list a:hover {
+    text-decoration: underline;
   }
-  .tick__st {
-    color: var(--ok);
+  .tape__st {
+    padding: 0.2rem 0.55rem;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
   }
-  .tick__st.is-hot {
-    color: var(--accent-2);
+  .tape__st.is-hot {
+    background: var(--ink);
+    border-color: var(--ink);
   }
-  .tick__sep {
-    width: 6px;
-    height: 6px;
-    border: 1px solid var(--muted);
-    border-radius: 50%;
-    margin-inline: 1.5rem;
+  .tape__star {
+    margin-inline: 1.4rem;
+    font-size: 1.1em;
+  }
+  .tape__set {
+    padding-block: 0.35rem;
+    white-space: nowrap;
+  }
+  .tape__script {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: clamp(1.8rem, 4.2vw, 3.8rem);
+    letter-spacing: -0.05em;
+    line-height: 1.1;
+    padding-inline: 0.35em;
+    color: var(--brand);
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
+  .tape__caps {
+    font-family: var(--f-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(1rem, 1.9vw, 1.7rem);
+    padding-inline: 0.5em;
+  }
+  .tape--sign .tape__star {
+    color: var(--brand);
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
   }
 
   /* ================= TABLE DE TRAVAIL ================= */
@@ -912,7 +1004,12 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     max-width: 1720px;
     margin-inline: auto;
   }
+  .drop__intro :global(.drop__sticker) {
+    right: -18px;
+    top: -22px;
+  }
   .drop__intro {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1260,53 +1357,6 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       right: 8px;
       bottom: 8px;
       padding: 0.6rem 0.7rem;
-    }
-  }
-
-  /* RIBBON */
-  .ribbon-wrap {
-    overflow: hidden;
-    padding-block: 1.5rem;
-  }
-  .ribbon {
-    background: var(--ink);
-    color: var(--cotton);
-    border-block: 2px solid var(--ink);
-    overflow: hidden;
-    padding-block: clamp(1rem, 2vw, 1.75rem);
-    transform: rotate(-1.4deg) scale(1.03);
-  }
-  .ribbon__track {
-    display: flex;
-    width: max-content;
-    animation: ribbon 32s linear infinite;
-  }
-  .ribbon__set {
-    display: flex;
-    align-items: center;
-  }
-  .ribbon__word {
-    font-family: var(--f-display);
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    font-size: clamp(1.8rem, 4.4vw, 4rem);
-    line-height: 1;
-    padding-inline: 0.4em;
-  }
-  .ribbon__caps {
-    font-size: clamp(1rem, 2vw, 1.8rem);
-    padding-inline: 0.6em;
-    color: var(--brand);
-  }
-  .ribbon__ring {
-    width: clamp(12px, 1.2vw, 18px);
-    aspect-ratio: 1;
-    border: 2px solid currentColor;
-    border-radius: 50%;
-  }
-  @keyframes ribbon {
-    to {
-      transform: translateX(-50%);
     }
   }
 

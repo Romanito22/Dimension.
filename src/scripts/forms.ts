@@ -1,6 +1,7 @@
 // Newsletter & contact — validation côté client. L'envoi est simulé :
 // voir README pour brancher Brevo / Klaviyo / Formspree.
 import { t } from './i18n';
+import { $email } from '../lib/saved';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -49,8 +50,24 @@ function initCountdowns(signal: AbortSignal) {
   });
 }
 
+/** Un seul e-mail à taper : mémorisé sur l'appareil et pré-rempli dans tous les formulaires. */
+function initRememberedEmail(signal: AbortSignal) {
+  document.querySelectorAll<HTMLInputElement>('input[type="email"]').forEach((input) => {
+    if (!input.value && $email.get()) input.value = $email.get();
+    input.addEventListener(
+      'change',
+      () => {
+        const v = input.value.trim();
+        if (EMAIL.test(v)) $email.set(v);
+      },
+      { signal },
+    );
+  });
+}
+
 export function initForms(signal: AbortSignal) {
   initCountdowns(signal);
+  initRememberedEmail(signal);
   document.querySelectorAll<HTMLFormElement>('[data-newsletter]').forEach((form) => {
     const msg = form.querySelector<HTMLElement>('[data-nl-msg]');
     form.addEventListener(

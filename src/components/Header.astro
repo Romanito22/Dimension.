@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import Icon from './Icon.astro';
 import { getBrand } from '../lib/shop';
 import { localeFromPath, translator, href, type RouteKey } from '../i18n';
 
@@ -79,7 +80,7 @@ const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande
         <button
           class="burger"
           type="button"
-          data-menu-toggle
+          data-open="menu"
           aria-expanded="false"
           aria-controls="mobile-menu"
           aria-label={t('Ouvrir le menu', 'Open menu')}
@@ -92,7 +93,13 @@ const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande
     </div>
   </div>
 
-  <div class="menu" id="mobile-menu" data-menu hidden>
+  <dialog class="sheet menu theme-brand" id="mobile-menu" data-menu data-dialog="menu" aria-label={t('Menu', 'Menu')}>
+    <div class="menu__head wrap">
+      <a href={href(locale, 'home')} class="menu__logo" aria-label={t('dimension. — accueil', 'dimension. — home')}><Logo /></a>
+      <button type="button" class="icon-btn menu__close" data-close aria-label={t('Fermer le menu', 'Close menu')}>
+        <Icon name="close" size={22} />
+      </button>
+    </div>
     <nav class="wrap menu__inner" aria-label={t('Menu mobile', 'Mobile menu')}>
       <ul role="list" class="menu__list">
         {
@@ -122,7 +129,7 @@ const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande
         </ul>
       </div>
     </nav>
-  </div>
+  </dialog>
 </header>
 
 <style>
@@ -135,9 +142,6 @@ const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande
   }
   .site-header.is-hidden {
     transform: translateY(calc(-100% + 0px));
-  }
-  .site-header.is-hidden:has(.menu:not([hidden])) {
-    transform: none;
   }
 
   /* Bandeau défilant */
@@ -194,7 +198,7 @@ const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande
       color 0.4s,
       border-color 0.4s;
   }
-  :global(body[data-header='overlay']) .site-header:not(.is-scrolled):not(:has(.menu:not([hidden]))) .bar {
+  :global(body[data-header='overlay']) .site-header:not(.is-scrolled) .bar {
     background: transparent;
     border-color: transparent;
     color: #fff;
@@ -237,9 +241,6 @@ const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande
   }
   .bar__lang:hover {
     border-color: currentColor;
-    color: var(--brand);
-  }
-  .menu__lang {
     color: var(--brand);
   }
   .bar__search {
@@ -366,60 +367,82 @@ const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande
     transform: rotate(-45deg);
   }
 
-  /* Menu mobile */
+  /* Menu mobile : panneau plein écran framboise */
   .menu {
-    position: fixed;
-    inset: calc(32px + var(--header-h)) 0 0;
-    background: var(--bg);
-    color: var(--fg);
+    width: 100%;
+    background: var(--brand);
+    color: #fff;
+    border: 0;
     overflow-y: auto;
-    animation: menu-in 0.5s var(--ease-out);
   }
-  @keyframes menu-in {
-    from {
-      clip-path: inset(0 0 100% 0);
-    }
-    to {
-      clip-path: inset(0 0 0 0);
-    }
+  .menu__head {
+    height: calc(32px + var(--header-h));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    font-size: 1.3rem;
+  }
+  .menu__close {
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: var(--cotton);
+    color: var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
   }
   .menu__inner {
-    min-height: 100%;
+    min-height: calc(100% - 32px - var(--header-h));
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding-block: 2rem;
+    padding-block: 1.5rem 2rem;
   }
   .menu__list li {
-    border-bottom: 1px solid var(--line);
-    animation: item-in 0.6s var(--ease-out) both;
-    animation-delay: calc(var(--i) * 60ms + 100ms);
+    border-bottom: 2px dashed rgb(255 255 255 / 0.45);
+    animation: item-in 0.55s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 55ms + 80ms);
   }
   @keyframes item-in {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateX(-24px) rotate(-2deg);
     }
   }
   .menu__link {
     display: flex;
     align-items: baseline;
     gap: 1rem;
-    font-size: clamp(1.4rem, 6.6vw, 2.4rem);
-    padding-block: 1rem;
+    font-size: clamp(1.6rem, 8.5vw, 3rem);
+    padding-block: 0.9rem;
+    color: #fff;
+    -webkit-text-stroke: 1.5px var(--ink);
+    text-shadow: 3px 3px 0 var(--ink);
   }
   .menu__link[aria-current='page'] {
-    color: var(--accent);
+    color: var(--cotton);
+    -webkit-text-stroke: 0;
+    text-shadow: 3px 3px 0 var(--ink);
   }
   .menu__index {
-    color: var(--muted);
+    color: var(--ink);
+    -webkit-text-stroke: 0;
+    text-shadow: none;
   }
   .menu__foot {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: end;
     gap: 1rem;
     padding-top: 2rem;
+  }
+  .menu__foot .muted {
+    color: rgb(255 255 255 / 0.8);
+  }
+  .menu__lang {
+    color: var(--ink);
   }
   .menu__socials {
     display: flex;
@@ -452,11 +475,6 @@ const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande
     }
     .bar__cart span:first-child {
       display: none;
-    }
-  }
-  @media (min-width: 861px) {
-    .menu {
-      display: none !important;
     }
   }
 </style>

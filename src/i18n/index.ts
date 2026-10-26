@@ -20,7 +20,7 @@ export const ROUTES = {
 } as const;
 export type RouteKey = keyof typeof ROUTES;
 
-export const localeFromPath = (path: string): Locale => (path === '/en' || path.startsWith('/en/') ? 'en' : 'fr');
+export const localeFromPath = (path: string): Locale => (/^\/en(\/|\.html$|$)/.test(path) ? 'en' : 'fr');
 
 export function href(locale: Locale, key: RouteKey, slug = '') {
   return ROUTES[key][locale] + slug;

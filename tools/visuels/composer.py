@@ -3,7 +3,6 @@
 # Dépendances : pip install pillow numpy
 # Usage : python tools/visuels/composer.py
 import os
-import shutil
 import numpy as np
 from PIL import Image, ImageFilter
 
@@ -85,6 +84,7 @@ def detail(name, cx, cy, fw, w=1040, h=1300):
 
 # Fenêtres de gros plan (centre x, centre y, largeur) dans chaque vêtement détouré
 DETAILS = {
+    'dim-001': ('dim-001-shop-back', 0.5, 0.36, 0.56),
     'dim-002': ('dim-002-back', 0.5, 0.6, 0.5),
     'dim-003': ('dim-003-back', 0.46, 0.47, 0.56),
     'dim-004': ('dim-004-front', 0.5, 0.48, 0.42),
@@ -100,14 +100,18 @@ def main():
             place(canvas, cut(name), 800, 1000, 1500, max_w=1480, shadow=0)
             save(canvas, f'cutout/{i}-{view}', quality=86)
 
-    # 2. Fiches produit : face, dos, gros plan, (vue pliée pour le Love)
+    # 2. Boutique et fiches produit : face, dos, gros plan du print.
+    #    Le Love utilise son mockup sur cintre (cintre retiré) ; ses photos sur gravier
+    #    servent au reste du site (accueil, devant / dos, table, lookbook…).
+    SHOP = {'dim-001': ('dim-001-shop-front', 'dim-001-shop-back')}
     for n, i in enumerate(IDS):
-        save(product_shot(f'{i}-front', seed=n), f'products/{i}-1')
-        if BACK[i] != f'{i}-front':
-            save(product_shot(BACK[i], seed=n + 10), f'products/{i}-2')
-    mono = Image.open(os.path.join(SRC, 'dim-001-monogramme.jpg')).convert('RGB')
-    save(mono.crop((740, 375, 1260, 1025)).resize((1040, 1300), Image.LANCZOS), 'products/dim-001-3')
-    save(product_shot('dim-001-fold', seed=30), 'products/dim-001-4')
+        front, back = SHOP.get(i, (f'{i}-front', BACK[i]))
+        save(product_shot(front, seed=n), f'products/{i}-1')
+        if back != front:
+            save(product_shot(back, seed=n + 10), f'products/{i}-2')
+    stale = os.path.join(PUB, 'products/dim-001-4.webp')
+    if os.path.exists(stale):
+        os.remove(stale)
     for i, (name, cx, cy, fw) in DETAILS.items():
         save(detail(name, cx, cy, fw), f'products/{i}-3')
 
@@ -127,7 +131,9 @@ def main():
     scene('categories/maille', 1500, 2000, STUDIO, [(F['dim-005'], 0.5, 0.5, 0.5, 0)], 8)
     scene('categories/love', 1500, 2000, BRAND, [(F['dim-001'], 0.5, 0.5, 0.56, 6)], 9)
     scene('story/2', 2560, 1440, BRAND, [(F['dim-004'], 0.22, 0.5, 0.6, -10), (B['dim-001'], 0.5, 0.48, 0.6, 4), (B['dim-003'], 0.78, 0.52, 0.6, -4)], 10)
-    shutil.copyfile(os.path.join(PUB, 'products/dim-001-3.webp'), os.path.join(PUB, 'story/1.webp'))
+    # Gros plan du monogramme brodé (vraie photo, recadrée dans le tissu)
+    mono = Image.open(os.path.join(SRC, 'dim-001-monogramme.jpg')).convert('RGB')
+    save(mono.crop((740, 375, 1260, 1025)).resize((1040, 1300), Image.LANCZOS), 'story/1')
     save(detail('dim-005-front', 0.36, 0.62, 0.3), 'story/3')
 
     looks = [

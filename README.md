@@ -199,6 +199,18 @@ Ce qui a été fait :
 - **Sections lointaines** rendues à l'approche de l'écran (`.cv`, `content-visibility: auto`), animations limitées à `transform` / `opacity`.
 - **Transitions plus vives** : rideau entre les pages ~0,45 s, intro 0,65 s passable d'un clic ou d'un toucher.
 
+## Mettre le site en ligne
+
+**GitHub Pages (gratuit, déjà prêt)** : le workflow `.github/workflows/pages.yml` construit le site et le publie à chaque mise à jour de la branche `claude/compassionate-darwin-ya2ef4`.
+
+1. Sur GitHub : **Settings → Pages → Build and deployment → Source : GitHub Actions** (à faire une seule fois).
+2. Onglet **Actions** → « Site en ligne (GitHub Pages) » → **Run workflow** (ou pousse un commit).
+3. Le site est en ligne sur **https://romanito22.github.io/Dimension./**
+
+Cette version utilise des chemins relatifs (`STATIC_EXPORT=1` + `tools/export-static.py`) : elle fonctionne dans un sous-dossier et même ouverte depuis un simple dossier.
+
+**Avec ton nom de domaine** (dimensionbrand.fr) : importe le dépôt sur Netlify ou Vercel (Astro est détecté automatiquement, commande `npm run build`, dossier `dist`) puis branche le domaine dans leurs réglages.
+
 ## Brancher les vrais services
 
 Tout fonctionne en local, mais trois éléments sont **simulés** :

@@ -2,6 +2,7 @@
 // plein écran, swipe), guide des tailles, barre d'achat collante.
 import { addItem, openDrawer } from '../lib/cart';
 import { lockScroll, unlockScroll } from './scroll';
+import { t } from './i18n';
 
 interface ProductData {
   id: string;
@@ -34,19 +35,19 @@ export function initProduct(signal: AbortSignal) {
     const s = data.sizes.find((x) => x.size === size);
     stockEl.classList.remove('is-low', 'is-ok');
     if (!s) {
-      stockEl.textContent = 'Choisis ta taille';
+      stockEl.textContent = t('Choisis ta taille', 'Pick your size');
       return;
     }
     errEl.textContent = '';
     sizeset.classList.remove('is-error');
     if (s.stock <= data.low) {
-      stockEl.textContent = `Plus que ${s.stock} en ${size} — dépêche-toi`;
+      stockEl.textContent = t(`Plus que ${s.stock} en ${size} — dépêche-toi`, `Only ${s.stock} left in ${size} — be quick`);
       stockEl.classList.add('is-low');
     } else {
-      stockEl.textContent = `En stock — expédié sous 48 h`;
+      stockEl.textContent = t('En stock — expédié sous 48 h', 'In stock — ships within 48 h');
       stockEl.classList.add('is-ok');
     }
-    addBtns.forEach((b) => (b.querySelector('[data-add-label]')!.textContent = 'Ajouter au panier'));
+    addBtns.forEach((b) => (b.querySelector('[data-add-label]')!.textContent = t('Ajouter au panier', 'Add to bag')));
   }
 
   root.addEventListener(
@@ -65,7 +66,7 @@ export function initProduct(signal: AbortSignal) {
       () => {
         const size = getSize();
         if (!size) {
-          errEl.textContent = 'Sélectionne une taille pour continuer.';
+          errEl.textContent = t('Sélectionne une taille pour continuer.', 'Select a size to continue.');
           sizeset.classList.remove('is-error');
           void sizeset.offsetWidth;
           sizeset.classList.add('is-error');
@@ -85,10 +86,10 @@ export function initProduct(signal: AbortSignal) {
           image: new URL(data.image, location.href).href,
         });
         btn.classList.add('is-added');
-        btn.querySelector('[data-add-label]')!.textContent = 'Ajouté ✓';
+        btn.querySelector('[data-add-label]')!.textContent = t('Ajouté ✓', 'Added ✓');
         setTimeout(() => {
           btn.classList.remove('is-added');
-          btn.querySelector('[data-add-label]')!.textContent = 'Ajouter au panier';
+          btn.querySelector('[data-add-label]')!.textContent = t('Ajouter au panier', 'Add to bag');
         }, 1600);
         setTimeout(openDrawer, 250);
       },

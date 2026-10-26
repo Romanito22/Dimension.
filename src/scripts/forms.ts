@@ -1,13 +1,15 @@
 // Newsletter & contact — validation côté client. L'envoi est simulé :
 // voir README pour brancher Brevo / Klaviyo / Formspree.
+import { t } from './i18n';
+
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export function validateField(input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) {
   const v = input.value.trim();
   let msg = '';
-  if (input.required && !v) msg = 'Ce champ est requis.';
-  else if (input.type === 'email' && v && !EMAIL.test(v)) msg = 'Adresse e-mail invalide.';
-  else if (input.dataset.pattern && v && !new RegExp(input.dataset.pattern).test(v.replace(/\s/g, ''))) msg = input.dataset.message || 'Format invalide.';
+  if (input.required && !v) msg = t('Ce champ est requis.', 'This field is required.');
+  else if (input.type === 'email' && v && !EMAIL.test(v)) msg = t('Adresse e-mail invalide.', 'Invalid email address.');
+  else if (input.dataset.pattern && v && !new RegExp(input.dataset.pattern).test(v.replace(/\s/g, ''))) msg = input.dataset.message || t('Format invalide.', 'Invalid format.');
   input.setAttribute('aria-invalid', msg ? 'true' : 'false');
   const err = input.closest('.field')?.querySelector<HTMLElement>('.field-error');
   if (err) err.textContent = msg;
@@ -58,13 +60,13 @@ export function initForms(signal: AbortSignal) {
         const input = form.querySelector<HTMLInputElement>('input[type="email"]')!;
         if (!EMAIL.test(input.value.trim())) {
           input.setAttribute('aria-invalid', 'true');
-          if (msg) msg.textContent = 'Oups, cette adresse e-mail ne semble pas valide.';
+          if (msg) msg.textContent = t('Oups, cette adresse e-mail ne semble pas valide.', "Oops, that email address doesn't look valid.");
           input.focus();
           return;
         }
         input.setAttribute('aria-invalid', 'false');
         form.querySelector('.nl__field')?.setAttribute('hidden', '');
-        if (msg) msg.textContent = 'Tu es sur la liste. Ton code −10 % : BIENVENUE10';
+        if (msg) msg.textContent = t('Tu es sur la liste. Ton code −10 % : BIENVENUE10', "You're on the list. Your 10% code: BIENVENUE10");
       },
       { signal },
     );

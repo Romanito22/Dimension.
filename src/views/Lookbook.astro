@@ -1,0 +1,144 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import { SPECS } from '../lib/placeholder';
+import { getProducts, getBrand, formatPrice } from '../lib/shop';
+import { localeFromPath, translator, href } from '../i18n';
+
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const products = getProducts(locale);
+const brand = getBrand(locale);
+
+// Chaque image du lookbook renvoie vers les pièces portées.
+const looks = [
+  { k: 'lookbook/1', p: [0], layout: 'full' },
+  { k: 'lookbook/2', p: [1], layout: 'left' },
+  { k: 'lookbook/3', p: [2], layout: 'right' },
+  { k: 'lookbook/4', p: [4], layout: 'center' },
+  { k: 'lookbook/5', p: [3, 1], layout: 'full' },
+  { k: 'lookbook/6', p: [0], layout: 'left' },
+  { k: 'lookbook/7', p: [4], layout: 'right' },
+  { k: 'lookbook/8', p: [3], layout: 'center' },
+  { k: 'lookbook/9', p: [2, 0, 4], layout: 'full' },
+].map((l) => ({ ...l, wide: SPECS[l.k].ratio === '16:9', items: l.p.map((i) => products[i]) }));
+---
+
+<Base
+  title="Lookbook"
+  description={t(`Lookbook ${brand.drop.name} — ${brand.drop.title}. Les pièces dimension. au soleil.`, `${brand.drop.name} lookbook — ${brand.drop.title}. dimension. pieces in the sun.`)}
+  page="lookbook"
+  route="lookbook"
+>
+  <header class="lb-head wrap">
+    <p class="label accent" data-reveal>{brand.drop.name} — {brand.drop.season}</p>
+    <h1 class="display lb-head__title" data-split>
+      <span class="split-line"><span>Love over</span></span>
+      <span class="split-line" style="--l:1"><span class="lb-head__candy">everything</span></span>
+    </h1>
+    <p class="lede muted" data-reveal style="--i:2">
+      {t("Du coton blanc, du gravier brûlant et un soleil de fin d'été. Le Drop 01 shooté là où il vit : dehors.", 'White cotton, scorching gravel and a late-summer sun. Drop 01 shot where it lives: outside.')}
+    </p>
+  </header>
+
+  <div class="looks wrap">
+    {
+      looks.map((l, i) => (
+        <figure class:list={['look', `look--${l.layout}`, l.wide && 'look--wide']}>
+          <div class="look__media media" data-reveal="clip">
+            <Img k={l.k} sizes={l.layout === 'full' ? '100vw' : '(max-width: 860px) 100vw, 50vw'} />
+          </div>
+          <figcaption class="look__cap" data-reveal style="--i:1">
+            <span class="label muted">Look {String(i + 1).padStart(2, '0')}</span>
+            <ul role="list">
+              {l.items.map((p) => (
+                <li>
+                  <a href={href(locale, 'product', p.slug)} class="link link--under">
+                    {p.name}
+                  </a>{' '}
+                  <span class="muted">{formatPrice(p.price, locale)}</span>
+                </li>
+              ))}
+            </ul>
+          </figcaption>
+        </figure>
+      ))
+    }
+  </div>
+
+  <section class="lb-end wrap">
+    <p class="display h-xl" data-reveal>{t('Tout le drop,', 'The whole drop,')}<br />{t('en séries courtes.', 'in short runs.')}</p>
+    <a href={href(locale, 'shop')} class="btn btn--accent btn--lg" data-reveal style="--i:1">{t('Shop le Drop 01', 'Shop Drop 01')} <span class="btn__dot" aria-hidden="true"></span></a>
+  </section>
+</Base>
+
+<style>
+  .lb-head {
+    padding-block: var(--space-lg);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .lb-head__title {
+    font-size: clamp(1.8rem, 6vw, 6.8rem);
+  }
+  .lb-head__candy {
+    color: var(--accent);
+  }
+  .looks {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-lg) clamp(12px, 1.4vw, 24px);
+  }
+  .look {
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .look--full {
+    grid-column: 1 / -1;
+  }
+  .look--left {
+    grid-column: 1 / span 6;
+  }
+  .look--right {
+    grid-column: 7 / span 5;
+    margin-top: 30%;
+  }
+  .look--center {
+    grid-column: 4 / span 6;
+  }
+  .look__media {
+    aspect-ratio: 4 / 5;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+  }
+  .look--wide .look__media {
+    aspect-ratio: 16 / 9;
+  }
+  .look__cap {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: var(--fs-sm);
+  }
+  .look__cap ul {
+    display: grid;
+    gap: 0.25rem;
+    text-align: right;
+  }
+  .lb-end {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 2rem;
+    padding-block: var(--space-xl);
+  }
+  @media (max-width: 860px) {
+    .look--left,
+    .look--right,
+    .look--center {
+      grid-column: 1 / -1;
+      margin-top: 0;
+    }
+  }
+</style>

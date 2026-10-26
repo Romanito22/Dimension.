@@ -1,32 +1,35 @@
 ---
-import brand from '../data/brand.json';
-
+import { getBrand } from '../lib/shop';
+import { localeFromPath, translator } from '../i18n';
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const brand = getBrand(locale);
 const next = brand.nextDrop;
 ---
 
 <section class="nl theme-dark" aria-labelledby="nl-title">
   <div class="wrap nl__inner">
     <div class="nl__copy">
-      <p class="label accent"><span class="nl__dot" aria-hidden="true"></span>Accès anticipé</p>
-      <h2 id="nl-title" class="display nl__title" data-chars>{next.name} arrive</h2>
-      <div class="nl__count" data-countdown={next.date} aria-label={`Lancement du ${next.name}`}>
-        <div><span class="display patch" data-cd="d">00</span><span class="label">jours</span></div>
-        <div><span class="display patch" data-cd="h">00</span><span class="label">heures</span></div>
+      <p class="label accent"><span class="nl__dot" aria-hidden="true"></span>{t('Accès anticipé', 'Early access')}</p>
+      <h2 id="nl-title" class="display nl__title" data-chars>{t(`${next.name} arrive`, `${next.name} is coming`)}</h2>
+      <div class="nl__count" data-countdown={next.date} aria-label={t(`Lancement du ${next.name}`, `${next.name} launch`)}>
+        <div><span class="display patch" data-cd="d">00</span><span class="label">{t('jours', 'days')}</span></div>
+        <div><span class="display patch" data-cd="h">00</span><span class="label">{t('heures', 'hours')}</span></div>
         <div><span class="display patch" data-cd="m">00</span><span class="label">min</span></div>
         <div><span class="display patch" data-cd="s">00</span><span class="label">sec</span></div>
       </div>
     </div>
     <form class="nl__form" data-newsletter novalidate>
       <p class="lede">
-        {next.teaser} Et <strong>−{Math.round(brand.promo.rate * 100)} %</strong> sur ta première commande.
+        {next.teaser} {t('Et', 'Plus')} <strong>−{Math.round(brand.promo.rate * 100)} %</strong> {t('sur ta première commande.', 'off your first order.')}
       </p>
       <div class="nl__field">
-        <label for="nl-email" class="visually-hidden">Adresse e-mail</label>
-        <input id="nl-email" name="email" type="email" required autocomplete="email" placeholder="ton@email.com" />
-        <button class="btn btn--accent" type="submit">Je veux l'accès</button>
+        <label for="nl-email" class="visually-hidden">{t('Adresse e-mail', 'Email address')}</label>
+        <input id="nl-email" name="email" type="email" required autocomplete="email" placeholder={t('ton@email.com', 'you@email.com')} />
+        <button class="btn btn--accent" type="submit">{t("Je veux l'accès", 'Get early access')}</button>
       </div>
       <p class="nl__msg" data-nl-msg role="status" aria-live="polite"></p>
-      <p class="nl__legal">Un e-mail par drop, pas de spam. Désinscription en un clic.</p>
+      <p class="nl__legal">{t('Un e-mail par drop, pas de spam. Désinscription en un clic.', 'One email per drop, no spam. Unsubscribe in one click.')}</p>
     </form>
   </div>
 </section>

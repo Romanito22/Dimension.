@@ -1,34 +1,41 @@
 ---
 import Logo from './Logo.astro';
-import brand from '../data/brand.json';
+import { getBrand, formatPrice } from '../lib/shop';
+import { localeFromPath, translator, href } from '../i18n';
+
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const brand = getBrand(locale);
+const h = (k: Parameters<typeof href>[1], rest = '') => href(locale, k) + rest;
+const other = locale === 'fr' ? 'en' : 'fr';
 
 const year = new Date().getFullYear();
 const cols = [
   {
-    title: 'Boutique',
+    title: t('Boutique', 'Shop'),
     links: [
-      { href: '/boutique', label: 'Tout le Drop 01' },
-      { href: '/boutique?categorie=t-shirts', label: 'T-shirts' },
-      { href: '/boutique?categorie=maille', label: 'Maille' },
-      { href: '/lookbook', label: 'Lookbook' },
+      { href: h('shop'), label: t('Tout le Drop 01', 'All of Drop 01') },
+      { href: h('shop', '?categorie=t-shirts'), label: 'T-shirts' },
+      { href: h('shop', '?categorie=maille'), label: t('Maille', 'Knitwear') },
+      { href: h('lookbook'), label: 'Lookbook' },
     ],
   },
   {
-    title: 'Aide',
+    title: t('Aide', 'Help'),
     links: [
-      { href: '/contact#faq', label: 'FAQ' },
-      { href: '/contact#guide-des-tailles', label: 'Guide des tailles' },
-      { href: '/contact#faq', label: 'Livraison & retours' },
-      { href: '/contact', label: 'Nous écrire' },
+      { href: h('contact', '#faq'), label: 'FAQ' },
+      { href: h('contact', '#guide-des-tailles'), label: t('Guide des tailles', 'Size guide') },
+      { href: h('track'), label: t('Suivi de commande', 'Track an order') },
+      { href: h('contact'), label: t('Nous écrire', 'Contact us') },
     ],
   },
   {
     title: 'dimension.',
     links: [
-      { href: '/la-marque', label: 'La marque' },
-      { href: '/cgv', label: 'CGV' },
-      { href: '/mentions-legales', label: 'Mentions légales' },
-      { href: '/mentions-legales#confidentialite', label: 'Confidentialité' },
+      { href: h('brand'), label: t('La marque', 'About') },
+      { href: h('terms'), label: t('CGV', 'Terms of sale') },
+      { href: h('legal'), label: t('Mentions légales', 'Legal notice') },
+      { href: h('legal', '#confidentialite'), label: t('Confidentialité', 'Privacy') },
     ],
   },
 ];
@@ -58,7 +65,7 @@ const cols = [
           ))
         }
         <div>
-          <p class="label footer__title">Suivre</p>
+          <p class="label footer__title">{t('Suivre', 'Follow')}</p>
           <ul role="list">
             {
               brand.socials.map((s) => (
@@ -81,8 +88,9 @@ const cols = [
 
     <div class="footer__bottom label">
       <span>© {year} {brand.legalName}</span>
-      <span>Paiement sécurisé · Livraison offerte dès {brand.shipping.freeThreshold} €</span>
-      <a href="#top" class="link" data-to-top>Haut de page ↑</a>
+      <span>{t('Paiement sécurisé · Livraison offerte dès ', 'Secure payment · Free delivery from ')}{formatPrice(brand.shipping.freeThreshold, locale)}</span>
+      <a class="link" href={href(other, 'home')} data-lang-switch data-astro-reload hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Français'}</a>
+      <a href="#top" class="link" data-to-top>{t('Haut de page ↑', 'Back to top ↑')}</a>
     </div>
   </div>
 </footer>

@@ -1,5 +1,6 @@
 ---
 import { media } from '../lib/media';
+import { localeFromPath } from '../i18n';
 
 interface Props {
   k: string;
@@ -10,7 +11,7 @@ interface Props {
   vt?: string;
 }
 const { k, alt, class: className, eager = false, sizes = '100vw', vt } = Astro.props;
-const m = media(k, alt);
+const m = media(k, alt, localeFromPath(Astro.url.pathname));
 ---
 
 {

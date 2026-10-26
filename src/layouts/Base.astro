@@ -11,8 +11,8 @@ import CartDrawer from '../components/CartDrawer.astro';
 import Search from '../components/Search.astro';
 import TabBar from '../components/TabBar.astro';
 import { media } from '../lib/media';
-import { products, imageKeys, categoryLabel } from '../lib/shop';
-import brand from '../data/brand.json';
+import { getProducts, getBrand, imageKeys, categoryLabel, badgeLabel } from '../lib/shop';
+import { localeFromPath, translator, href, type RouteKey } from '../i18n';
 import { MONO_VIEWBOX, MONO_BOWL, MONO_STEM, MONO_RING } from '../lib/logo';
 
 interface Props {
@@ -23,7 +23,14 @@ interface Props {
   page?: string;
   jsonld?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
+  /** Page équivalente dans l'autre langue (sélecteur de langue et balises hreflang). */
+  route?: RouteKey;
+  slug?: string;
 }
+
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const brand = getBrand(locale);
 
 const {
   title,
@@ -33,10 +40,13 @@ const {
   page = 'default',
   jsonld,
   noindex = false,
+  route,
+  slug = '',
 } = Astro.props;
+const alternates = route ? { fr: new URL(href('fr', route, slug), Astro.site), en: new URL(href('en', route, slug), Astro.site) } : null;
 
 // Catalogue embarqué pour la recherche, les favoris et les suggestions du panier
-const catalog = products.map((p) => {
+const catalog = getProducts(locale).map((p) => {
   const [k1, k2] = imageKeys(p);
   return {
     id: p.id,
@@ -44,12 +54,12 @@ const catalog = products.map((p) => {
     name: p.name,
     short: p.short,
     price: p.price,
-    category: categoryLabel(p.category),
+    category: categoryLabel(p.category, locale),
     color: p.colors[0].name,
     image: media(k1).src,
     hover: media(k2).src,
-    url: `/produit/${p.slug}`,
-    badge: p.badge,
+    url: href(locale, 'product', p.slug),
+    badge: badgeLabel(p.badge, locale),
     sizes: p.sizes,
   };
 });
@@ -67,7 +77,7 @@ const orgLd = {
 ---
 
 <!doctype html>
-<html lang="fr" class="no-js">
+<html lang={locale} class="no-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -84,7 +94,16 @@ const orgLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale" content={t('fr_FR', 'en_GB')} />
+    {
+      alternates && (
+        <>
+          <link rel="alternate" hreflang="fr" href={alternates.fr} />
+          <link rel="alternate" hreflang="en" href={alternates.en} />
+          <link rel="alternate" hreflang="x-default" href={alternates.fr} />
+        </>
+      )
+    }
     <meta name="twitter:card" content="summary_large_image" />
 
     <script is:inline data-astro-rerun>
@@ -113,8 +132,8 @@ const orgLd = {
       <p class="loader__tag label">Love over everything</p>
       <p class="loader__count display" data-loader-count>000</p>
     </div>
-    <a class="skip-link" href="#main">Aller au contenu</a>
-    <Header />
+    <a class="skip-link" href="#main">{t('Aller au contenu', 'Skip to content')}</a>
+    <Header route={route} slug={slug} />
     <main id="main" data-page={page} class:list={['main', header === 'solid' && 'main--offset']} transition:name="main">
       <slot />
     </main>
@@ -126,15 +145,15 @@ const orgLd = {
     <div class="toast" data-toast role="status" aria-live="polite" transition:persist="toast">
       <img data-toast-img src="data:," alt="" width="56" height="70" />
       <div class="toast__body">
-        <p class="label toast__ok">Ajouté au panier</p>
+        <p class="label toast__ok">{t('Ajouté au panier', 'Added to bag')}</p>
         <p class="toast__name" data-toast-name></p>
         <p class="toast__meta" data-toast-meta></p>
       </div>
       <div class="toast__ctas">
-        <button type="button" class="btn btn--ghost toast__btn" data-cart-open>Panier</button>
-        <a href="/commande" class="btn btn--accent toast__btn">Commander</a>
+        <button type="button" class="btn btn--ghost toast__btn" data-cart-open>{t('Panier', 'Bag')}</button>
+        <a href={href(locale, 'checkout')} class="btn btn--accent toast__btn">{t('Commander', 'Checkout')}</a>
       </div>
-      <button type="button" class="toast__x" data-toast-close aria-label="Fermer la notification">×</button>
+      <button type="button" class="toast__x" data-toast-close aria-label={t('Fermer la notification', 'Close notification')}>×</button>
     </div>
     <div class="cursor" aria-hidden="true" transition:persist="cursor">
       <span class="cursor__ring"></span>

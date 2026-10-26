@@ -1,0 +1,52 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import brand from '../data/brand.json';
+import { localeFromPath } from '../i18n';
+const locale = localeFromPath(Astro.url.pathname);
+---
+
+{
+  locale === 'en' ? (
+    <LegalPage title="Legal notice" updated="October 2026" route="legal">
+      <p><mark>Highlighted information must be completed before going live.</mark></p>
+      <h2>Publisher</h2>
+      <p>
+        {brand.legalName} — <mark>legal form (sole trader, SAS…)</mark>, <mark>registered address</mark>, SIRET <mark>000 000 000 00000</mark>.<br />
+        Publication manager: <mark>First Last name</mark>. Contact: <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>.
+      </p>
+      <h2>Hosting</h2>
+      <p><mark>Host name (e.g. Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA)</mark>.</p>
+      <h2>Intellectual property</h2>
+      <p>All content on this site (logo, monogram, graphics, photographs, texts) is the exclusive property of {brand.legalName}. Any reproduction without written permission is prohibited.</p>
+      <h2 id="confidentialite">Personal data & privacy</h2>
+      <p>
+        Data collected (orders, newsletter, contact) is only used to handle your request and is never sold. Under the GDPR, you have the right to access, correct and delete your data: write to us at {brand.email}.
+      </p>
+      <p>
+        This site uses your browser's local storage to remember your bag, wishlist and orders (for tracking). No advertising cookie is set without your consent. TikTok videos only load when you press play.
+      </p>
+    </LegalPage>
+  ) : (
+<LegalPage title="Mentions légales" updated="octobre 2026" route="legal">
+  <p><mark>Les informations surlignées sont à compléter avant la mise en ligne.</mark></p>
+  <h2>Éditeur du site</h2>
+  <p>
+    {brand.legalName} — <mark>forme juridique (micro-entreprise, SAS…)</mark>, <mark>adresse du siège</mark>, SIRET <mark>000 000 000 00000</mark>.<br />
+    Responsable de la publication : <mark>Nom Prénom</mark>. Contact : <a class="link link--under" href={`mailto:${brand.email}`}>{brand.email}</a>.
+  </p>
+  <h2>Hébergement</h2>
+  <p><mark>Nom de l'hébergeur (ex. Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA)</mark>.</p>
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    L'ensemble des contenus de ce site (logo, monogramme, graphismes, photographies, textes) est la propriété exclusive de {brand.legalName}. Toute reproduction sans autorisation écrite est interdite.
+  </p>
+  <h2 id="confidentialite">Données personnelles & confidentialité</h2>
+  <p>
+    Les données collectées (commande, newsletter, contact) sont utilisées uniquement pour traiter ta demande et ne sont jamais revendues. Conformément au RGPD, tu disposes d'un droit d'accès, de rectification et de suppression : écris-nous à {brand.email}.
+  </p>
+  <p>
+    Ce site utilise le stockage local de ton navigateur pour mémoriser ton panier, tes favoris et tes commandes (pour le suivi). Aucun cookie publicitaire n'est déposé sans ton consentement. Les vidéos TikTok ne se chargent que lorsque tu appuies sur lecture.
+  </p>
+</LegalPage>
+  )
+}

@@ -1,6 +1,6 @@
 import { $cart, $count, $subtotal, $drawerOpen, setQty, removeItem, openDrawer, closeDrawer, type CartItem } from '../lib/cart';
-import { formatPrice } from '../lib/shop';
 import brand from '../data/brand.json';
+import { t, price as formatPrice, link } from './i18n';
 import { lockScroll, unlockScroll } from './scroll';
 import { catalog } from '../lib/catalog';
 import { addItem } from '../lib/cart';
@@ -8,49 +8,56 @@ import { addItem } from '../lib/cart';
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
+/** Nom et couleur dans la langue de la page (le panier garde ceux du moment de l'ajout). */
+function display(i: CartItem) {
+  const p = catalog().find((x) => x.id === i.id);
+  return { name: p?.name ?? i.name, color: p?.color ?? i.color, url: p?.url ?? link('product', i.slug) };
+}
+
 export function renderLines(items: CartItem[], compact = false) {
   if (!items.length) {
     return `<div class="cart-empty">
       <span class="cart-empty__mark" aria-hidden="true"></span>
-      <p class="display h-lg">Ton panier est vide</p>
-      <p class="muted">Le Drop 01 n'attend que toi — et les séries sont courtes.</p>
-      <a href="/boutique" class="btn" data-cart-close>Voir la boutique <span class="btn__dot" aria-hidden="true"></span></a>
+      <p class="display h-lg">${t('Ton panier est vide', 'Your bag is empty')}</p>
+      <p class="muted">${t("Le Drop 01 n'attend que toi — et les séries sont courtes.", 'Drop 01 is waiting for you — and the runs are short.')}</p>
+      <a href="${link('shop')}" class="btn" data-cart-close>${t('Voir la boutique', 'Visit the shop')} <span class="btn__dot" aria-hidden="true"></span></a>
     </div>`;
   }
   return `<ul class="lines${compact ? ' lines--compact' : ''}" role="list">${items
-    .map(
-      (i) => `<li class="line">
+    .map((i) => {
+      const d = display(i);
+      return `<li class="line">
       <div class="line__thumb" style="position:relative">
-        <a href="/produit/${esc(i.slug)}" class="line__img media ratio-45" tabindex="-1" data-cart-close><img src="${esc(i.image)}" alt="" width="160" height="200" loading="lazy"></a>
+        <a href="${esc(d.url)}" class="line__img media ratio-45" tabindex="-1" data-cart-close><img src="${esc(i.image)}" alt="" width="160" height="200" loading="lazy"></a>
         ${compact ? `<span class="line__qtybadge">${i.qty}</span>` : ''}
       </div>
       <div class="line__info">
-        <div class="line__top"><a href="/produit/${esc(i.slug)}" data-cart-close>${esc(i.name)}</a><span>${formatPrice(i.price * i.qty)}</span></div>
-        <p class="line__opts muted">${esc(i.color)} · Taille ${esc(i.size)}${compact ? '' : ` · ${formatPrice(i.price)}`}</p>
+        <div class="line__top"><a href="${esc(d.url)}" data-cart-close>${esc(d.name)}</a><span>${formatPrice(i.price * i.qty)}</span></div>
+        <p class="line__opts muted">${esc(d.color)} · ${t('Taille', 'Size')} ${esc(i.size)}${compact ? '' : ` · ${formatPrice(i.price)}`}</p>
         ${
           compact
             ? ''
             : `<div class="line__bottom">
-          <div class="qty" role="group" aria-label="Quantité pour ${esc(i.name)}">
-            <button type="button" data-qty="${esc(i.key)}" data-delta="-1" aria-label="Retirer un">−</button>
+          <div class="qty" role="group" aria-label="${t('Quantité pour', 'Quantity for')} ${esc(d.name)}">
+            <button type="button" data-qty="${esc(i.key)}" data-delta="-1" aria-label="${t('Retirer un', 'Remove one')}">−</button>
             <output aria-live="polite">${i.qty}</output>
-            <button type="button" data-qty="${esc(i.key)}" data-delta="1" aria-label="Ajouter un" ${i.qty >= i.max ? 'disabled' : ''}>+</button>
+            <button type="button" data-qty="${esc(i.key)}" data-delta="1" aria-label="${t('Ajouter un', 'Add one')}" ${i.qty >= i.max ? 'disabled' : ''}>+</button>
           </div>
-          <button type="button" class="label line__remove" data-remove="${esc(i.key)}">Retirer</button>
+          <button type="button" class="label line__remove" data-remove="${esc(i.key)}">${t('Retirer', 'Remove')}</button>
         </div>`
         }
       </div>
-    </li>`,
-    )
+    </li>`;
+    })
     .join('')}</ul>`;
 }
 
 function shippingMessage(subtotal: number) {
-  const t = brand.shipping.freeThreshold;
-  if (subtotal >= t) return { text: '<strong>Livraison offerte</strong> débloquée. Bien joué.', pct: 100 };
+  const th = brand.shipping.freeThreshold;
+  if (subtotal >= th) return { text: t('<strong>Livraison offerte</strong> débloquée. Bien joué.', '<strong>Free delivery</strong> unlocked. Nice one.'), pct: 100 };
   return {
-    text: `Plus que <strong>${formatPrice(t - subtotal)}</strong> pour la livraison offerte.`,
-    pct: Math.round((subtotal / t) * 100),
+    text: t(`Plus que <strong>${formatPrice(th - subtotal)}</strong> pour la livraison offerte.`, `Just <strong>${formatPrice(th - subtotal)}</strong> more for free delivery.`),
+    pct: Math.round((subtotal / th) * 100),
   };
 }
 
@@ -68,7 +75,7 @@ function renderUpsell(items: CartItem[]) {
       return `<div class="up" data-qa="${qa}">
         <img src="${esc(p.image)}" alt="" width="128" height="160" loading="lazy">
         <div><div class="up__top"><a href="${esc(p.url)}" data-cart-close>${esc(p.name)}</a><span>${formatPrice(p.price)}</span></div>
-        <div class="up__sizes" role="group" aria-label="Ajouter ${esc(p.name)}">${p.sizes
+        <div class="up__sizes" role="group" aria-label="${t('Ajouter', 'Add')} ${esc(p.name)}">${p.sizes
           .map((s) => `<button type="button" data-qa-size="${s.size}" ${s.stock === 0 ? 'disabled' : ''}>${s.size}</button>`)
           .join('')}</div></div>
       </div>`;
@@ -82,7 +89,7 @@ function showUndo(item: CartItem) {
   lastRemoved = item;
   const bar = document.querySelector<HTMLElement>('[data-undo]');
   if (!bar) return;
-  bar.querySelector('[data-undo-name]')!.textContent = `${item.name} (${item.size})`;
+  bar.querySelector('[data-undo-name]')!.textContent = `${display(item).name} (${item.size})`;
   bar.hidden = false;
   clearTimeout(undoTimer);
   undoTimer = window.setTimeout(() => (bar.hidden = true), 6000);

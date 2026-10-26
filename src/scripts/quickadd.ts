@@ -1,7 +1,7 @@
 // Achat instantané : ajout au panier en un clic depuis une carte ou le hero,
 // la pastille « vole » jusqu'au panier, puis une notification propose de commander.
 import { addItem } from '../lib/cart';
-import { formatPrice } from '../lib/shop';
+import { price as formatPrice } from './i18n';
 import { reducedMotion } from './scroll';
 
 export interface QuickProduct {

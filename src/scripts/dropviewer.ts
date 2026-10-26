@@ -4,7 +4,7 @@
 // Repli automatique sur une simple image si WebGL n'est pas disponible.
 import { reducedMotion } from './scroll';
 import { quickAdd, type QuickProduct } from './quickadd';
-import { formatPrice } from '../lib/shop';
+import { t, price } from './i18n';
 
 interface DvProduct extends QuickProduct {
   word: string;
@@ -158,18 +158,18 @@ export function initDropViewer(signal: AbortSignal, introDone: Promise<void>) {
     elIndex.textContent = String(i + 1).padStart(2, '0');
     elCat.textContent = p.category;
     elShort.textContent = p.short;
-    elPrice.textContent = formatPrice(p.price);
+    elPrice.textContent = price(p.price);
     elLink.href = p.url;
     elStock.innerHTML =
       total === 0
-        ? 'Épuisé'
+        ? t('Épuisé', 'Sold out')
         : total <= 15
-          ? `<span class="dv__hot">Plus que ${total} pièces</span>`
-          : `${total} pièces en stock`;
+          ? `<span class="dv__hot">${t(`Plus que ${total} pièces`, `Only ${total} left`)}</span>`
+          : t(`${total} pièces en stock`, `${total} pieces in stock`);
     elSizes.innerHTML = p.sizes
       .map(
         (s) =>
-          `<button type="button" class="dv__size${s.stock > 0 && s.stock <= 3 ? ' is-low' : ''}" data-dv-size="${s.size}" ${s.stock === 0 ? 'disabled' : ''} aria-label="Ajouter ${p.name}, taille ${s.size}${s.stock === 0 ? ' (épuisé)' : ''}">${s.size}</button>`,
+          `<button type="button" class="dv__size${s.stock > 0 && s.stock <= 3 ? ' is-low' : ''}" data-dv-size="${s.size}" ${s.stock === 0 ? 'disabled' : ''} aria-label="${t(`Ajouter ${p.name}, taille ${s.size}${s.stock === 0 ? ' (épuisé)' : ''}`, `Add ${p.name}, size ${s.size}${s.stock === 0 ? ' (sold out)' : ''}`)}">${s.size}</button>`,
       )
       .join('');
     rail.forEach((b, j) => {

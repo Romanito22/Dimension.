@@ -1,29 +1,32 @@
 ---
 // Barre d'onglets mobile, comme dans une appli : toujours à portée de pouce.
 // Masquée sur la fiche produit (le bouton d'achat collant prend sa place) et au paiement.
+import { localeFromPath, translator, href } from '../i18n';
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
 ---
 
-<nav class="tabbar" aria-label="Navigation rapide" transition:persist="tabbar">
-  <a href="/" class="tabbar__item" data-tab="/">
+<nav class="tabbar" aria-label={t('Navigation rapide', 'Quick navigation')} transition:persist="tabbar">
+  <a href={href(locale, 'home')} class="tabbar__item" data-tab="home">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"></path></svg>
-    <span>Accueil</span>
+    <span>{t('Accueil', 'Home')}</span>
   </a>
-  <a href="/boutique" class="tabbar__item" data-tab="/boutique">
+  <a href={href(locale, 'shop')} class="tabbar__item" data-tab="shop">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3 3 6.5l2 4 2-1V21h10V9.5l2 1 2-4L15.5 3c-.5 1.8-1.8 3-3.5 3s-3-1.2-3.5-3z"></path></svg>
-    <span>Boutique</span>
+    <span>{t('Boutique', 'Shop')}</span>
   </a>
   <button type="button" class="tabbar__item" data-search-open>
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg>
-    <span>Chercher</span>
+    <span>{t('Chercher', 'Search')}</span>
   </button>
-  <a href="/favoris" class="tabbar__item" data-tab="/favoris">
+  <a href={href(locale, 'wishlist')} class="tabbar__item" data-tab="wishlist">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5S3 15 3 8.8C3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 6.2-9 11.7-9 11.7z"></path></svg>
-    <span>Favoris</span>
+    <span>{t('Favoris', 'Wishlist')}</span>
     <b class="tabbar__badge" data-wish-count hidden>0</b>
   </a>
   <button type="button" class="tabbar__item" data-cart-open aria-haspopup="dialog" aria-controls="cart-drawer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"></path><path d="M9 10V6.5a3 3 0 0 1 6 0V10"></path></svg>
-    <span>Panier</span>
+    <span>{t('Panier', 'Bag')}</span>
     <b class="tabbar__badge tabbar__badge--cart" data-cart-count>0</b>
   </button>
 </nav>

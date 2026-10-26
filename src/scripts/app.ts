@@ -15,6 +15,8 @@ import { initTable } from './table';
 import { initSearch } from './search';
 import { initWish } from './wish';
 import { initProductExtras } from './product-extras';
+import { link, localPath, lang } from './i18n';
+import { href, type RouteKey } from '../i18n';
 
 /* ---------- En-tête ---------- */
 const header = document.querySelector<HTMLElement>('header[data-header]');
@@ -39,7 +41,7 @@ function setMenu(open: boolean) {
   if (open === !menu.hidden) return;
   menu.hidden = !open;
   burger.setAttribute('aria-expanded', String(open));
-  burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  burger.setAttribute('aria-label', (open ? burger.dataset.labelClose : burger.dataset.labelOpen) ?? '');
   open ? lockScroll() : unlockScroll();
 }
 burger?.addEventListener('click', () => setMenu(!!menu?.hidden));
@@ -157,8 +159,14 @@ function initParallax(signal: AbortSignal) {
   );
 }
 
-/* ---------- Navigation active ---------- */
+/* ---------- Navigation active + lien vers l'autre langue ---------- */
 function markActive() {
+  // L'en-tête est conservé entre les pages : on recale le lien de langue sur la page courante.
+  const other = document.documentElement.lang === 'en' ? 'fr' : 'en';
+  const alt = document.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${other}"]`);
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((a) => {
+    a.href = localPath(alt ? new URL(alt.href).pathname : other === 'en' ? '/en/' : '/');
+  });
   const path = location.pathname.replace(/\/$/, '') || '/';
   document.querySelectorAll<HTMLAnchorElement>('[data-nav]').forEach((a) => {
     const href = new URL(a.href).pathname.replace(/\/$/, '') || '/';
@@ -166,14 +174,15 @@ function markActive() {
     if (active) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
+  const isProduct = /^\/(en\/product|produit)\//.test(path);
   document.querySelectorAll<HTMLElement>('[data-tab]').forEach((a) => {
-    const tab = a.dataset.tab!;
-    const on = tab === '/' ? path === '/' : path === tab || (tab === '/boutique' && path.startsWith('/produit'));
+    const key = a.dataset.tab as RouteKey;
+    const target = href(lang(), key).replace(/\/$/, '') || '/';
+    const on = path === target || (key === 'shop' && isProduct);
     if (on) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  const isProduct = path.startsWith('/produit');
-  if (isProduct) document.querySelector('[data-nav][href="/boutique"]')?.setAttribute('aria-current', 'page');
+  if (isProduct) document.querySelector(`[data-nav][href="${link('shop')}"]`)?.setAttribute('aria-current', 'page');
 }
 
 /* ---------- Grille de mise en page (touche G) ---------- */

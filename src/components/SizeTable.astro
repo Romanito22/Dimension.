@@ -1,11 +1,17 @@
 ---
-import sizes from '../data/sizes.json';
+import rawSizes from '../data/sizes.json';
+import { localeFromPath, translator, localize } from '../i18n';
+const locale = localeFromPath(Astro.url.pathname);
+const tr = translator(locale);
+const sizes = localize(rawSizes, locale);
 
 interface Props {
   only?: string;
 }
 const { only } = Astro.props;
-const tables = Object.entries(sizes.tables).filter(([k]) => !only || k === only);
+const tables = Object.entries(sizes.tables)
+  .filter(([k]) => !only || k === only)
+  .map(([k, table]) => [k, localize(table, locale)] as const);
 ---
 
 <div class="sizes">
@@ -47,11 +53,11 @@ const tables = Object.entries(sizes.tables).filter(([k]) => !only || k === only)
         <path d="M200 58V280" stroke-dasharray="4 4"></path><circle cx="200" cy="58" r="3"></circle><circle cx="200" cy="280" r="3"></circle>
       </g>
       <g font-family="Arial, sans-serif" font-size="12" fill="currentColor">
-        <text x="200" y="142" text-anchor="middle">A — largeur poitrine</text>
-        <text x="208" y="232">B — longueur dos</text>
+        <text x="200" y="142" text-anchor="middle">{tr('A — largeur poitrine', 'A — chest width')}</text>
+        <text x="208" y="232">{tr('B — longueur dos', 'B — back length')}</text>
       </g>
     </svg>
-    <figcaption class="muted">A : d'une aisselle à l'autre, vêtement à plat. B : du haut de l'épaule à l'ourlet.</figcaption>
+    <figcaption class="muted">{tr("A : d'une aisselle à l'autre, vêtement à plat. B : du haut de l'épaule à l'ourlet.", 'A: armpit to armpit, garment laid flat. B: from the top of the shoulder to the hem.')}</figcaption>
   </figure>
 </div>
 

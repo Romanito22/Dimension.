@@ -84,5 +84,66 @@
     "name": "Drop 02",
     "date": "2026-11-21T19:00:00+01:00",
     "teaser": "Nouvelles pièces, mêmes séries courtes. Les inscrits passent en premier."
+  },
+  "en": {
+    "description": "dimension. — embroidered and printed streetwear in short runs. T-shirts, knitwear and graphic pieces made to last. Love over everything.",
+    "drop": {
+      "season": "Autumn — Winter 2026"
+    },
+    "shipping": {
+      "methods": [
+        {
+          "id": "relay",
+          "label": "Pickup point",
+          "delay": "3 to 5 working days",
+          "price": 3.9
+        },
+        {
+          "id": "home",
+          "label": "Home — Colissimo",
+          "delay": "2 to 3 working days",
+          "price": 5.9
+        },
+        {
+          "id": "express",
+          "label": "Express — Chronopost",
+          "delay": "24 working hours",
+          "price": 11.9
+        }
+      ]
+    },
+    "marquee": [
+      "Love over everything",
+      "Free delivery from €80",
+      "Embroidered & printed in short runs",
+      "Returns within 14 days",
+      "Drop 01 — available now"
+    ],
+    "story": {
+      "kicker": "The brand",
+      "title": "We make clothes the way we love: all in.",
+      "intro": "dimension. was born from a simple urge — to wear what feels like us. Relaxed cuts, heavy cottons, hand-made graphics, embroidered or printed in short runs. Nothing superfluous, everything that matters.",
+      "chapters": [
+        {
+          "title": "The dot",
+          "text": "The little circle floating above the « d » is where it all starts. One more dimension: the one we give to the things we love."
+        },
+        {
+          "title": "The gesture",
+          "text": "Every graphic starts as a drawing: a line, a splash, an overflowing heart. We keep the accident, the hand, the imperfection that makes a piece feel alive."
+        },
+        {
+          "title": "The fabric",
+          "text": "Heavy cottons that last, dense embroidery, inks that age well. We'd rather make one piece you keep for ten years than ten you forget."
+        },
+        {
+          "title": "Short runs",
+          "text": "We produce in drops, in limited quantities. When a piece is gone, it's gone: less dead stock, more pieces that matter."
+        }
+      ]
+    },
+    "nextDrop": {
+      "teaser": "New pieces, same short runs. Subscribers get in first."
+    }
   }
 }

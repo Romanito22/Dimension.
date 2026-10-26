@@ -1,7 +1,7 @@
 // Préférences enregistrées dans le navigateur : favoris, pièces vues récemment, taille conseillée.
 import { atom } from 'nanostores';
 
-function persisted<T>(key: string, fallback: T) {
+export function persisted<T>(key: string, fallback: T) {
   let initial = fallback;
   if (typeof window !== 'undefined') {
     try {

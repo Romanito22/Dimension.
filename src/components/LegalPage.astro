@@ -1,19 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
+import { localeFromPath, translator, type RouteKey } from '../i18n';
 
 interface Props {
   title: string;
   updated: string;
+  route?: RouteKey;
 }
-const { title, updated } = Astro.props;
+const { title, updated, route } = Astro.props;
+const t = translator(localeFromPath(Astro.url.pathname));
 ---
 
-<Base title={title} page="legal">
+<Base title={title} page="legal" route={route}>
   <article class="wrap legal">
     <header class="legal__head">
-      <p class="label accent">Informations légales</p>
+      <p class="label accent">{t('Informations légales', 'Legal information')}</p>
       <h1 class="display h-xl">{title}</h1>
-      <p class="label muted">Mise à jour : {updated}</p>
+      <p class="label muted">{t('Mise à jour : ', 'Last updated: ')}{updated}</p>
     </header>
     <div class="prose legal__body">
       <slot />

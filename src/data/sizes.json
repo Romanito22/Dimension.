@@ -3,27 +3,118 @@
   "tables": {
     "t-shirts": {
       "label": "T-shirts — coupe boxy",
-      "columns": ["Taille", "Largeur poitrine", "Longueur dos", "Longueur manche"],
+      "columns": [
+        "Taille",
+        "Largeur poitrine",
+        "Longueur dos",
+        "Longueur manche"
+      ],
       "rows": [
-        ["XS", 52, 66, 21],
-        ["S", 55, 68, 22],
-        ["M", 58, 70, 23],
-        ["L", 61, 72, 24],
-        ["XL", 64, 74, 25],
-        ["XXL", 67, 76, 26]
-      ]
+        [
+          "XS",
+          52,
+          66,
+          21
+        ],
+        [
+          "S",
+          55,
+          68,
+          22
+        ],
+        [
+          "M",
+          58,
+          70,
+          23
+        ],
+        [
+          "L",
+          61,
+          72,
+          24
+        ],
+        [
+          "XL",
+          64,
+          74,
+          25
+        ],
+        [
+          "XXL",
+          67,
+          76,
+          26
+        ]
+      ],
+      "en": {
+        "label": "T-shirts — boxy fit",
+        "columns": [
+          "Size",
+          "Chest width",
+          "Back length",
+          "Sleeve length"
+        ]
+      }
     },
     "maille": {
       "label": "Maille — coupe ample",
-      "columns": ["Taille", "Largeur poitrine", "Longueur dos", "Longueur manche"],
+      "columns": [
+        "Taille",
+        "Largeur poitrine",
+        "Longueur dos",
+        "Longueur manche"
+      ],
       "rows": [
-        ["XS", 54, 62, 58],
-        ["S", 57, 64, 59],
-        ["M", 60, 66, 60],
-        ["L", 63, 68, 61],
-        ["XL", 66, 70, 62],
-        ["XXL", 69, 72, 63]
-      ]
+        [
+          "XS",
+          54,
+          62,
+          58
+        ],
+        [
+          "S",
+          57,
+          64,
+          59
+        ],
+        [
+          "M",
+          60,
+          66,
+          60
+        ],
+        [
+          "L",
+          63,
+          68,
+          61
+        ],
+        [
+          "XL",
+          66,
+          70,
+          62
+        ],
+        [
+          "XXL",
+          69,
+          72,
+          63
+        ]
+      ],
+      "en": {
+        "label": "Knitwear — relaxed fit",
+        "columns": [
+          "Size",
+          "Chest width",
+          "Back length",
+          "Sleeve length"
+        ]
+      }
     }
+  },
+  "en": {
+    "note": "Garment measured flat, in centimetres. Tolerance ± 1 cm."
   }
 }

@@ -3,6 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { SPECS, encodeKey } from './placeholder';
+import products from '../data/products.json';
+import { localize, type Locale } from '../i18n';
 
 const EXTENSIONS = ['webp', 'jpg', 'jpeg', 'png', 'avif'];
 const PUBLIC = path.resolve(process.cwd(), 'public');
@@ -15,9 +17,40 @@ export interface Media {
   placeholder: boolean;
 }
 
-export function media(key: string, alt?: string): Media {
+const EN_ALT: Record<string, string> = {
+  'hero/desktop': 'Love Over Everything T-shirt lying on gravel in the sun',
+  'hero/mobile': 'Love Over Everything T-shirt lying on gravel',
+  'categories/t-shirts': 'The Drop 01 t-shirts',
+  'categories/maille': 'The Camo knit sweater',
+  'categories/love': 'The Love Over Everything T-shirt',
+  'story/1': 'Close-up of the embroidered monogram',
+  'story/2': 'The Drop 01 pieces laid flat in the sun',
+  'story/3': 'Detail of the jacquard knit',
+  'texture/gravel': 'Gravel in the sun',
+};
+const EN_VIEW = ['front view', 'back view', 'print detail', 'laid flat on gravel'];
+
+/** Texte alternatif anglais d'un visuel (le français vient de la fiche du visuel). */
+function englishAlt(key: string, fallback: string) {
+  if (EN_ALT[key]) return EN_ALT[key];
+  const m = key.match(/^(products|cutout)\/(dim-\d+)-(\w+)$/);
+  if (m) {
+    const p = products.find((x) => x.id.toLowerCase() === m[2]);
+    const name = p ? localize(p, 'en').name : m[2];
+    if (m[1] === 'cutout') return `${name} — ${m[3] === 'back' ? 'back' : 'front'}, cut out`;
+    return `${name} — ${EN_VIEW[Number(m[3]) - 1] ?? 'view'}`;
+  }
+  const look = key.match(/^lookbook\/(\d+)$/);
+  if (look) return `Drop 01 lookbook — image ${look[1]}`;
+  const social = key.match(/^social\/(\d+)$/);
+  if (social) return `@dimensionbrand post ${social[1]}`;
+  return fallback;
+}
+
+export function media(key: string, alt?: string, locale: Locale = 'fr'): Media {
   const spec = SPECS[key];
   if (!spec) throw new Error(`Visuel inconnu : ${key}`);
+  alt ??= locale === 'en' ? englishAlt(key, spec.alt) : undefined;
   for (const ext of EXTENSIONS) {
     const rel = `images/${key}.${ext}`;
     if (fs.existsSync(path.join(PUBLIC, rel))) {

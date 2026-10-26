@@ -1,17 +1,30 @@
 ---
 import Logo from './Logo.astro';
-import brand from '../data/brand.json';
+import { getBrand } from '../lib/shop';
+import { localeFromPath, translator, href, type RouteKey } from '../i18n';
+
+interface Props {
+  route?: RouteKey;
+  slug?: string;
+}
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const brand = getBrand(locale);
+const other = locale === 'fr' ? 'en' : 'fr';
+const { route = 'home', slug = '' } = Astro.props;
+// Lien vers la même page dans l'autre langue (mis à jour à chaque navigation par app.ts)
+const switchHref = href(other, route, slug);
 
 const nav = [
-  { href: '/boutique', label: 'Boutique' },
-  { href: '/lookbook', label: 'Lookbook' },
-  { href: '/la-marque', label: 'La marque' },
+  { href: href(locale, 'shop'), label: t('Boutique', 'Shop') },
+  { href: href(locale, 'lookbook'), label: 'Lookbook' },
+  { href: href(locale, 'brand'), label: t('La marque', 'About') },
 ];
-const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
+const menu = [...nav, { href: href(locale, 'track'), label: t('Suivi de commande', 'Track an order') }, { href: href(locale, 'contact'), label: t('Contact & FAQ', 'Contact & FAQ') }];
 ---
 
 <header class="site-header" data-header transition:persist="site-header">
-  <div class="announce" aria-label="Informations">
+  <div class="announce" aria-label={t('Informations', 'Information')}>
     <div class="announce__track">
       {
         [0, 1].map((n) => (
@@ -30,7 +43,7 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
 
   <div class="bar">
     <div class="wrap bar__inner">
-      <nav class="bar__nav" aria-label="Navigation principale">
+      <nav class="bar__nav" aria-label={t('Navigation principale', 'Main navigation')}>
         <ul role="list">
           {
             nav.map((l) => (
@@ -44,22 +57,23 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
         </ul>
       </nav>
 
-      <a href="/" class="bar__logo" aria-label="dimension. — accueil">
+      <a href={href(locale, 'home')} class="bar__logo" aria-label={t('dimension. — accueil', 'dimension. — home')}>
         <Logo />
       </a>
 
       <div class="bar__actions">
-        <button class="bar__search label" type="button" data-search-open aria-label="Rechercher (touche /)">
+        <a class="bar__lang label" href={switchHref} data-lang-switch data-astro-reload hreflang={other} lang={other} aria-label={t('Read in English', 'Lire en français')}>{other.toUpperCase()}</a>
+        <button class="bar__search label" type="button" data-search-open aria-label={t('Rechercher (touche /)', 'Search (press /)')}>
           <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6.5"></circle><path d="m13.5 13.5 5 5"></path></svg>
-          <span class="bar__search-text">Rechercher</span>
+          <span class="bar__search-text">{t('Rechercher', 'Search')}</span>
           <kbd class="bar__kbd" aria-hidden="true">/</kbd>
         </button>
-        <a class="bar__icon" href="/favoris" data-nav aria-label="Favoris">
+        <a class="bar__icon" href={href(locale, 'wishlist')} data-nav aria-label={t('Favoris', 'Wishlist')}>
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20.5S3 15 3 8.8C3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 6.2-9 11.7-9 11.7z"></path></svg>
           <span class="bar__badge" data-wish-count hidden>0</span>
         </a>
         <button class="bar__cart label" type="button" data-cart-open aria-haspopup="dialog" aria-controls="cart-drawer">
-          <span>Panier</span>
+          <span>{t('Panier', 'Bag')}</span>
           <span class="bar__count" data-cart-count>0</span>
         </button>
         <button
@@ -68,7 +82,9 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
           data-menu-toggle
           aria-expanded="false"
           aria-controls="mobile-menu"
-          aria-label="Ouvrir le menu"
+          aria-label={t('Ouvrir le menu', 'Open menu')}
+          data-label-open={t('Ouvrir le menu', 'Open menu')}
+          data-label-close={t('Fermer le menu', 'Close menu')}
         >
           <span></span><span></span>
         </button>
@@ -77,7 +93,7 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
   </div>
 
   <div class="menu" id="mobile-menu" data-menu hidden>
-    <nav class="wrap menu__inner" aria-label="Menu mobile">
+    <nav class="wrap menu__inner" aria-label={t('Menu mobile', 'Mobile menu')}>
       <ul role="list" class="menu__list">
         {
           menu.map((l, i) => (
@@ -92,6 +108,7 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
       </ul>
       <div class="menu__foot">
         <p class="label muted">{brand.tagline}</p>
+        <a class="label menu__lang" href={switchHref} data-lang-switch data-astro-reload hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Français'} →</a>
         <ul role="list" class="menu__socials">
           {
             brand.socials.map((s) => (
@@ -206,6 +223,24 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
     align-items: center;
     justify-content: end;
     gap: clamp(1rem, 2.4vw, 2.4rem);
+  }
+  .bar__lang {
+    display: inline-grid;
+    place-items: center;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    transition:
+      border-color 0.2s,
+      color 0.2s;
+  }
+  .bar__lang:hover {
+    border-color: currentColor;
+    color: var(--brand);
+  }
+  .menu__lang {
+    color: var(--brand);
   }
   .bar__search {
     display: inline-flex;
@@ -392,7 +427,8 @@ const menu = [...nav, { href: '/contact', label: 'Contact & FAQ' }];
   }
 
   @media (max-width: 860px) {
-    .bar__nav {
+    .bar__nav,
+    .bar__lang {
       display: none;
     }
     .bar__search {

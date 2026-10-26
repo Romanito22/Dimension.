@@ -3,7 +3,7 @@
 import { deliveryWindow } from '../lib/delivery';
 import { $recent, $mySize, pushRecent } from '../lib/saved';
 import { catalog } from '../lib/catalog';
-import { formatPrice } from '../lib/shop';
+import { t, price, lang } from './i18n';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
@@ -31,8 +31,11 @@ export function initProductExtras(signal: AbortSignal) {
   /* Livraison estimée */
   const eta = root.querySelector<HTMLElement>('[data-eta-text]');
   if (eta) {
-    const w = deliveryWindow(3, 5);
-    eta.innerHTML = `${w.cutoff ? 'Commande avant 14 h, ' : 'Commande maintenant, '}reçue entre le <strong>${w.from}</strong> et le <strong>${w.to}</strong>`;
+    const w = deliveryWindow(3, 5, new Date(), lang());
+    eta.innerHTML = t(
+      `${w.cutoff ? 'Commande avant 14 h, ' : 'Commande maintenant, '}reçue entre le <strong>${w.from}</strong> et le <strong>${w.to}</strong>`,
+      `${w.cutoff ? 'Order before 2 pm, ' : 'Order now, '}delivered between <strong>${w.from}</strong> and <strong>${w.to}</strong>`,
+    );
   }
 
   /* Partage */
@@ -47,9 +50,9 @@ export function initProductExtras(signal: AbortSignal) {
           return;
         }
         await navigator.clipboard.writeText(url);
-        if (shareMsg) shareMsg.textContent = 'Lien copié — envoie-le à qui tu veux.';
+        if (shareMsg) shareMsg.textContent = t('Lien copié — envoie-le à qui tu veux.', 'Link copied — send it to anyone.');
       } catch {
-        if (shareMsg) shareMsg.textContent = `Copie ce lien : ${url}`;
+        if (shareMsg) shareMsg.textContent = t(`Copie ce lien : ${url}`, `Copy this link: ${url}`);
       }
       setTimeout(() => shareMsg && (shareMsg.textContent = ''), 4000);
     },
@@ -67,7 +70,7 @@ export function initProductExtras(signal: AbortSignal) {
     recentBox.hidden = false;
     recentBox.querySelector('[data-recent-list]')!.innerHTML = recentItems
       .slice(0, 6)
-      .map((p) => `<a href="${p.url}"><img src="${p.image}" alt="" width="400" height="500" loading="lazy"><span>${esc(p.name)}</span><span class="recent__price">${formatPrice(p.price)}</span></a>`)
+      .map((p) => `<a href="${p.url}"><img src="${p.image}" alt="" width="400" height="500" loading="lazy"><span>${esc(p.name)}</span><span class="recent__price">${price(p.price)}</span></a>`)
       .join('');
   }
   pushRecent(data.id);
@@ -96,7 +99,7 @@ export function initProductExtras(signal: AbortSignal) {
         const w = Number((finder.elements.namedItem('weight') as HTMLInputElement).value);
         const fit = Number((finder.querySelector('input[name="fit"]:checked') as HTMLInputElement)?.value ?? 0);
         if (!(h >= 140 && h <= 215) || !(w >= 35 && w <= 160)) {
-          note.textContent = 'Indique une taille entre 140 et 215 cm et un poids entre 35 et 160 kg.';
+          note.textContent = t('Indique une taille entre 140 et 215 cm et un poids entre 35 et 160 kg.', 'Enter a height between 140 and 215 cm and a weight between 35 and 160 kg.');
           result.hidden = false;
           sizeEl.textContent = '—';
           return;
@@ -106,8 +109,11 @@ export function initProductExtras(signal: AbortSignal) {
         sizeEl.textContent = recommended;
         const available = !root!.querySelector<HTMLInputElement>(`input[name="size"][value="${recommended}"]`)?.disabled;
         note.textContent = available
-          ? 'Basé sur des mesures moyennes et la coupe boxy de nos pièces.'
-          : `Le ${recommended} est épuisé sur cette pièce : active l'alerte de réassort juste sous le bouton d'achat.`;
+          ? t('Basé sur des mesures moyennes et la coupe boxy de nos pièces.', 'Based on average measurements and the boxy cut of our pieces.')
+          : t(
+              `Le ${recommended} est épuisé sur cette pièce : active l'alerte de réassort juste sous le bouton d'achat.`,
+              `${recommended} is sold out on this piece: turn on the restock alert just below the buy button.`,
+            );
         result.hidden = false;
       },
       { signal },
@@ -137,13 +143,13 @@ export function initProductExtras(signal: AbortSignal) {
       const msg = root!.querySelector<HTMLElement>('[data-notify-msg]')!;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
         email.setAttribute('aria-invalid', 'true');
-        msg.textContent = 'Adresse e-mail invalide.';
+        msg.textContent = t('Adresse e-mail invalide.', 'Invalid email address.');
         msg.style.color = 'var(--brand)';
         return;
       }
       const size = (notify.elements.namedItem('size') as HTMLSelectElement).value;
       msg.style.color = '';
-      msg.textContent = `C'est noté : on t'écrit dès que le ${size} revient.`;
+      msg.textContent = t(`C'est noté : on t'écrit dès que le ${size} revient.`, `Got it: we'll email you as soon as ${size} is back.`);
       notify.hidden = true;
     },
     { signal },

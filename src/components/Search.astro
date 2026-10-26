@@ -1,19 +1,22 @@
 ---
 // Recherche instantanée : bouton de l'en-tête, touche « / » ou Ctrl/⌘ + K.
-const chips = ['T-shirt', 'Maille', 'Love', 'Noir', 'Sable', 'Brodé'];
+import { localeFromPath, translator, href } from '../i18n';
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const chips = t(['T-shirt', 'Maille', 'Love', 'Noir', 'Sable', 'Brodé'], ['T-shirt', 'Knit', 'Love', 'Black', 'Sand', 'Embroidered']);
 ---
 
 <div class="search" data-search hidden transition:persist="search">
   <div class="search__backdrop" data-search-close></div>
-  <div class="search__panel" role="dialog" aria-modal="true" aria-label="Rechercher une pièce">
+  <div class="search__panel" role="dialog" aria-modal="true" aria-label={t('Rechercher une pièce', 'Search for a piece')}>
     <div class="search__bar">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6.5"></circle><path d="m13.5 13.5 5 5"></path></svg>
-      <label for="search-input" class="visually-hidden">Rechercher</label>
+      <label for="search-input" class="visually-hidden">{t('Rechercher', 'Search')}</label>
       <input
         id="search-input"
         type="search"
         data-search-input
-        placeholder="Une pièce, une couleur, un print…"
+        placeholder={t('Une pièce, une couleur, un print…', 'A piece, a colour, a print…')}
         autocomplete="off"
         spellcheck="false"
         role="combobox"
@@ -21,22 +24,22 @@ const chips = ['T-shirt', 'Maille', 'Love', 'Noir', 'Sable', 'Brodé'];
         aria-controls="search-results"
         aria-autocomplete="list"
       />
-      <kbd class="search__kbd">Échap</kbd>
-      <button type="button" class="search__close" data-search-close aria-label="Fermer la recherche">×</button>
+      <kbd class="search__kbd">{t('Échap', 'Esc')}</kbd>
+      <button type="button" class="search__close" data-search-close aria-label={t('Fermer la recherche', 'Close search')}>×</button>
     </div>
     <div class="search__body" data-lenis-prevent>
       <div class="search__empty" data-search-empty>
-        <p class="label">Suggestions</p>
+        <p class="label">{t('Suggestions', 'Suggestions')}</p>
         <div class="search__chips">
           {chips.map((c) => <button type="button" class="search__chip" data-search-q={c}>{c}</button>)}
         </div>
         <div data-search-recent></div>
       </div>
       <p class="label search__count" data-search-count hidden></p>
-      <ul id="search-results" class="search__results" role="listbox" data-search-results aria-label="Résultats"></ul>
+      <ul id="search-results" class="search__results" role="listbox" data-search-results aria-label={t('Résultats', 'Results')}></ul>
       <div class="search__none" data-search-none hidden>
-        <p>Rien ne correspond à <strong data-search-term></strong>.</p>
-        <a href="/boutique" class="btn" data-search-close>Voir toute la boutique</a>
+        <p>{t('Rien ne correspond à ', 'Nothing matches ')}<strong data-search-term></strong>.</p>
+        <a href={href(locale, 'shop')} class="btn" data-search-close>{t('Voir toute la boutique', 'See the whole shop')}</a>
       </div>
     </div>
   </div>

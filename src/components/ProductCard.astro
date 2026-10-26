@@ -1,7 +1,10 @@
 ---
 import Img from './Img.astro';
 import { media } from '../lib/media';
-import { formatPrice, imageKeys, availableSizes, totalStock, SIZES, LOW_STOCK, type Product } from '../lib/shop';
+import { formatPrice, imageKeys, availableSizes, totalStock, badgeLabel, SIZES, LOW_STOCK, type Product } from '../lib/shop';
+import { localeFromPath, translator, href } from '../i18n';
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
 
 interface Props {
   product: Product;
@@ -15,10 +18,10 @@ const avail = availableSizes(p);
 const soldOut = avail.length === 0;
 const stock = totalStock(p);
 const orderedSizes = SIZES.map((s) => p.sizes.find((x) => x.size === s)).filter(Boolean) as Product['sizes'];
-const url = `/produit/${p.slug}`;
+const url = href(locale, 'product', p.slug);
 const lowSizes = p.sizes.filter((s) => s.stock > 0 && s.stock <= LOW_STOCK).map((s) => s.size);
 const hot = stock > 0 && stock <= 15;
-const stockLabel = soldOut ? 'Épuisé' : hot ? `Plus que ${stock}` : `${stock} en stock`;
+const stockLabel = soldOut ? t('Épuisé', 'Sold out') : hot ? t(`Plus que ${stock}`, `Only ${stock} left`) : t(`${stock} en stock`, `${stock} in stock`);
 // Données pour l'ajout rapide (lues par scripts/quickadd.ts)
 const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price, color: p.colors[0].name, image: media(k1).src, sizes: p.sizes });
 ---
@@ -44,28 +47,28 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
     {
       (p.badge || soldOut) && (
         <span class:list={['badge card__badge', p.badge === 'Nouveau' && 'badge--accent', p.badge === 'Best-seller' && 'badge--candy']}>
-          {soldOut ? 'Épuisé' : p.badge}
+          {soldOut ? t('Épuisé', 'Sold out') : badgeLabel(p.badge, locale)}
         </span>
       )
     }
-    <button type="button" class="wish-btn card__wish" data-wish={p.id} aria-pressed="false" aria-label="Ajouter aux favoris">
+    <button type="button" class="wish-btn card__wish" data-wish={p.id} aria-pressed="false" aria-label={t('Ajouter aux favoris', 'Add to wishlist')}>
       <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5S3 15 3 8.8C3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 6.2-9 11.7-9 11.7z"></path></svg>
     </button>
     {
       !soldOut && (
-        <button type="button" class="card__plus" data-qa-toggle aria-expanded="false" aria-label={`Ajout rapide : ${p.name}`}>
+        <button type="button" class="card__plus" data-qa-toggle aria-expanded="false" aria-label={t(`Ajout rapide : ${p.name}`, `Quick add: ${p.name}`)}>
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12"></path></svg>
         </button>
         <div class="card__qa">
-          <p class="label card__qa-title">Ajout rapide</p>
-          <div class="card__qa-sizes" role="group" aria-label={`Ajouter ${p.name} au panier`}>
+          <p class="label card__qa-title">{t('Ajout rapide', 'Quick add')}</p>
+          <div class="card__qa-sizes" role="group" aria-label={t(`Ajouter ${p.name} au panier`, `Add ${p.name} to bag`)}>
             {orderedSizes.map((s) => (
               <button
                 type="button"
                 data-qa-size={s.size}
                 disabled={s.stock === 0}
                 class:list={[lowSizes.includes(s.size) && 'is-low']}
-                aria-label={`Ajouter ${p.name}, taille ${s.size}${s.stock === 0 ? ' (épuisé)' : ''}`}
+                aria-label={t(`Ajouter ${p.name}, taille ${s.size}${s.stock === 0 ? ' (épuisé)' : ''}`, `Add ${p.name}, size ${s.size}${s.stock === 0 ? ' (sold out)' : ''}`)}
               >
                 {s.size}
               </button>
@@ -83,7 +86,7 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
         <span class:list={['label card__stock', (hot || soldOut) && 'is-hot']}>{stockLabel}</span>
       </p>
     </div>
-    <p class="card__price">{formatPrice(p.price)}</p>
+    <p class="card__price">{formatPrice(p.price, locale)}</p>
   </a>
 </article>
 

@@ -1,7 +1,7 @@
 // Favoris : cœurs sur les cartes et les fiches, compteur de l'en-tête, page /favoris.
 import { $wishlist, toggleWish } from '../lib/saved';
 import { catalog, stockOf } from '../lib/catalog';
-import { formatPrice } from '../lib/shop';
+import { t, price as formatPrice } from './i18n';
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
@@ -11,8 +11,8 @@ function sync() {
     const on = list.includes(b.dataset.wish!);
     b.setAttribute('aria-pressed', String(on));
     const label = b.querySelector('[data-wish-label]');
-    if (label) label.textContent = on ? 'Dans tes favoris' : 'Ajouter aux favoris';
-    b.setAttribute('aria-label', on ? 'Retirer des favoris' : 'Ajouter aux favoris');
+    if (label) label.textContent = on ? t('Dans tes favoris', 'In your wishlist') : t('Ajouter aux favoris', 'Add to wishlist');
+    b.setAttribute('aria-label', on ? t('Retirer des favoris', 'Remove from wishlist') : t('Ajouter aux favoris', 'Add to wishlist'));
   });
   document.querySelectorAll<HTMLElement>('[data-wish-count]').forEach((el) => {
     el.textContent = String(list.length);
@@ -30,17 +30,17 @@ function renderPage() {
     .filter(Boolean) as ReturnType<typeof catalog>;
   root.querySelector<HTMLElement>('[data-wish-empty]')!.hidden = items.length > 0;
   const n = items.length;
-  root.querySelector<HTMLElement>('[data-wish-total]')!.textContent = `${n} pièce${n > 1 ? 's' : ''} enregistrée${n > 1 ? 's' : ''}`;
+  root.querySelector<HTMLElement>('[data-wish-total]')!.textContent = t(`${n} pièce${n > 1 ? 's' : ''} enregistrée${n > 1 ? 's' : ''}`, `${n} piece${n > 1 ? 's' : ''} saved`);
   root.querySelector<HTMLElement>('[data-wish-grid]')!.innerHTML = items
     .map((p) => {
       const qa = esc(JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price, color: p.color, image: p.image, sizes: p.sizes }));
       const st = stockOf(p);
       return `<article class="wcard" data-qa="${qa}">
         <a href="${p.url}" class="wcard__media"><img src="${p.image}" alt="${esc(p.name)}" width="800" height="1000" loading="lazy"></a>
-        <button type="button" class="wish-btn wcard__wish" data-wish="${p.id}" aria-pressed="true" aria-label="Retirer des favoris">${HEART}</button>
+        <button type="button" class="wish-btn wcard__wish" data-wish="${p.id}" aria-pressed="true" aria-label="${t('Retirer des favoris', 'Remove from wishlist')}">${HEART}</button>
         <div class="wcard__meta"><a href="${p.url}"><strong>${esc(p.name)}</strong></a><span class="wcard__price">${formatPrice(p.price)}</span></div>
-        <p class="label wcard__stock">${st === 0 ? 'Épuisé' : st <= 15 ? `Plus que ${st}` : `${st} en stock`}</p>
-        <div class="wcard__sizes" role="group" aria-label="Ajouter ${esc(p.name)} au panier">
+        <p class="label wcard__stock">${st === 0 ? t('Épuisé', 'Sold out') : st <= 15 ? t(`Plus que ${st}`, `Only ${st} left`) : t(`${st} en stock`, `${st} in stock`)}</p>
+        <div class="wcard__sizes" role="group" aria-label="${t(`Ajouter ${esc(p.name)} au panier`, `Add ${esc(p.name)} to bag`)}">
           ${p.sizes.map((s) => `<button type="button" data-qa-size="${s.size}" ${s.stock === 0 ? 'disabled' : ''}>${s.size}</button>`).join('')}
         </div>
       </article>`;

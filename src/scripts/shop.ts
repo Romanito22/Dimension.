@@ -1,5 +1,7 @@
 // Boutique : filtres (catégorie, taille, couleur, prix), tri et densité,
 // synchronisés avec l'URL — tout côté client, instantané.
+import { t } from './i18n';
+
 interface State {
   cat: string;
   sizes: string[];
@@ -80,10 +82,10 @@ export function initShop(signal: AbortSignal) {
     const out: string[] = [];
     const lbl = (name: string, v: string) =>
       panel.querySelector<HTMLInputElement>(`input[name="${name}"][value="${v}"]`)?.dataset.label ?? v;
-    state.sizes.forEach((s) => out.push(`<button type="button" class="chip" data-chip="size:${s}">Taille ${s} <span aria-hidden="true">×</span></button>`));
+    state.sizes.forEach((s) => out.push(`<button type="button" class="chip" data-chip="size:${s}">${t('Taille', 'Size')} ${s} <span aria-hidden="true">×</span></button>`));
     state.colors.forEach((s) => out.push(`<button type="button" class="chip" data-chip="color:${s}">${lbl('color', s)} <span aria-hidden="true">×</span></button>`));
     if (state.price) out.push(`<button type="button" class="chip" data-chip="price:${state.price}">${lbl('price', state.price)} <span aria-hidden="true">×</span></button>`);
-    if (out.length) out.push(`<button type="button" class="chip chip--reset link" data-reset>Tout effacer</button>`);
+    if (out.length) out.push(`<button type="button" class="chip chip--reset link" data-reset>${t('Tout effacer', 'Clear all')}</button>`);
     chips.innerHTML = out.join('');
     const n = state.sizes.length + state.colors.length + (state.price ? 1 : 0);
     root!.querySelectorAll<HTMLElement>('[data-filter-count]').forEach((el) => (el.textContent = n ? `(${n})` : ''));

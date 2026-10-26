@@ -9,14 +9,38 @@
     "date": "2026-10-20",
     "badge": "Best-seller",
     "art": "love",
-    "colors": [{ "name": "Blanc", "slug": "blanc", "hex": "#F7F7F4" }],
+    "colors": [
+      {
+        "name": "Blanc",
+        "slug": "blanc",
+        "hex": "#F7F7F4"
+      }
+    ],
     "sizes": [
-      { "size": "XS", "stock": 4 },
-      { "size": "S", "stock": 12 },
-      { "size": "M", "stock": 18 },
-      { "size": "L", "stock": 9 },
-      { "size": "XL", "stock": 2 },
-      { "size": "XXL", "stock": 0 }
+      {
+        "size": "XS",
+        "stock": 4
+      },
+      {
+        "size": "S",
+        "stock": 12
+      },
+      {
+        "size": "M",
+        "stock": 18
+      },
+      {
+        "size": "L",
+        "stock": 9
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 0
+      }
     ],
     "description": "La pièce qui a tout lancé. Le monogramme « d » brodé en framboise sur le cœur, et dans le dos, un grand LOVE en forme de cœur, gonflé comme une bulle, avec sa signature : over everything.",
     "details": [
@@ -26,8 +50,40 @@
       "Coupe ample (boxy) — prends ta taille habituelle"
     ],
     "fabric": "100 % coton, jersey épais 240 g/m².",
-    "care": ["Lavage 30 °C à l'envers", "Pas de sèche-linge", "Repassage à l'envers, jamais sur la broderie ni le print"],
-    "fit": "Coupe boxy. Le modèle mesure 1,80 m et porte du M."
+    "care": [
+      "Lavage 30 °C à l'envers",
+      "Pas de sèche-linge",
+      "Repassage à l'envers, jamais sur la broderie ni le print"
+    ],
+    "fit": "Coupe boxy.",
+    "model": {
+      "height": 180,
+      "size": "M"
+    },
+    "en": {
+      "short": "Embroidered monogram, heart printed on the back",
+      "description": "The piece that started it all. The « d » monogram embroidered in raspberry over the heart, and on the back, a big heart-shaped LOVE, puffed up like a bubble, signed: over everything.",
+      "details": [
+        "Embroidered monogram on the front, raspberry & black thread",
+        "Two-tone LOVE print on the back",
+        "Thick ribbed collar, dropped-shoulder seams",
+        "Relaxed (boxy) fit — take your usual size"
+      ],
+      "fabric": "100% cotton, heavyweight 240 g/m² jersey.",
+      "care": [
+        "Wash at 30 °C inside out",
+        "Do not tumble dry",
+        "Iron inside out, never on the embroidery or print"
+      ],
+      "fit": "Boxy fit.",
+      "colors": [
+        {
+          "name": "White",
+          "slug": "blanc",
+          "hex": "#F7F7F4"
+        }
+      ]
+    }
   },
   {
     "id": "DIM-002",
@@ -39,14 +95,38 @@
     "date": "2026-10-24",
     "badge": "Nouveau",
     "art": "crew",
-    "colors": [{ "name": "Sable", "slug": "sable", "hex": "#EFDCC0" }],
+    "colors": [
+      {
+        "name": "Sable",
+        "slug": "sable",
+        "hex": "#EFDCC0"
+      }
+    ],
     "sizes": [
-      { "size": "XS", "stock": 3 },
-      { "size": "S", "stock": 10 },
-      { "size": "M", "stock": 14 },
-      { "size": "L", "stock": 11 },
-      { "size": "XL", "stock": 6 },
-      { "size": "XXL", "stock": 3 }
+      {
+        "size": "XS",
+        "stock": 3
+      },
+      {
+        "size": "S",
+        "stock": 10
+      },
+      {
+        "size": "M",
+        "stock": 14
+      },
+      {
+        "size": "L",
+        "stock": 11
+      },
+      {
+        "size": "XL",
+        "stock": 6
+      },
+      {
+        "size": "XXL",
+        "stock": 3
+      }
     ],
     "description": "Trois silhouettes qui avancent ensemble, un BMX, une veste siglée. Le dos est imprimé façon pochoir, grain de bombe compris. Devant, juste le wordmark DIMENSI*N en gothique liquide.",
     "details": [
@@ -55,8 +135,39 @@
       "Col côtelé, coupe ample épaule tombée"
     ],
     "fabric": "100 % coton, jersey épais 240 g/m², teint sable.",
-    "care": ["Lavage 30 °C à l'envers", "Pas de sèche-linge", "Repassage à l'envers"],
-    "fit": "Coupe boxy. Le modèle mesure 1,80 m et porte du M."
+    "care": [
+      "Lavage 30 °C à l'envers",
+      "Pas de sèche-linge",
+      "Repassage à l'envers"
+    ],
+    "fit": "Coupe boxy.",
+    "model": {
+      "height": 180,
+      "size": "M"
+    },
+    "en": {
+      "short": "Stencilled silhouettes, gothic wordmark",
+      "description": "Three silhouettes moving together, a BMX, a branded jacket. The back is stencil-printed, spray-paint grain included. On the front, just the DIMENSI*N wordmark in liquid gothic.",
+      "details": [
+        "DIMENSI*N wordmark printed over the heart",
+        "Large stencil print on the back, spray effect",
+        "Ribbed collar, relaxed dropped-shoulder fit"
+      ],
+      "fabric": "100% cotton, heavyweight 240 g/m² jersey, sand-dyed.",
+      "care": [
+        "Wash at 30 °C inside out",
+        "Do not tumble dry",
+        "Iron inside out"
+      ],
+      "fit": "Boxy fit.",
+      "colors": [
+        {
+          "name": "Sand",
+          "slug": "sable",
+          "hex": "#EFDCC0"
+        }
+      ]
+    }
   },
   {
     "id": "DIM-003",
@@ -68,14 +179,38 @@
     "date": "2026-10-22",
     "badge": "Nouveau",
     "art": "splash",
-    "colors": [{ "name": "Noir", "slug": "noir", "hex": "#151515" }],
+    "colors": [
+      {
+        "name": "Noir",
+        "slug": "noir",
+        "hex": "#151515"
+      }
+    ],
     "sizes": [
-      { "size": "XS", "stock": 2 },
-      { "size": "S", "stock": 8 },
-      { "size": "M", "stock": 15 },
-      { "size": "L", "stock": 12 },
-      { "size": "XL", "stock": 5 },
-      { "size": "XXL", "stock": 1 }
+      {
+        "size": "XS",
+        "stock": 2
+      },
+      {
+        "size": "S",
+        "stock": 8
+      },
+      {
+        "size": "M",
+        "stock": 15
+      },
+      {
+        "size": "L",
+        "stock": 12
+      },
+      {
+        "size": "XL",
+        "stock": 5
+      },
+      {
+        "size": "XXL",
+        "stock": 1
+      }
     ],
     "description": "Noir profond, encre blanche. Le mot « dimension » coule sur la poitrine dans un lettrage liquide. Au dos, une éclaboussure qui traverse le tissu et un badge ovale, comme un tampon.",
     "details": [
@@ -84,8 +219,39 @@
       "Encre blanche opaque, toucher doux"
     ],
     "fabric": "100 % coton, jersey épais 240 g/m².",
-    "care": ["Lavage 30 °C à l'envers", "Pas de sèche-linge", "Repassage à l'envers"],
-    "fit": "Coupe boxy. Le modèle mesure 1,80 m et porte du M."
+    "care": [
+      "Lavage 30 °C à l'envers",
+      "Pas de sèche-linge",
+      "Repassage à l'envers"
+    ],
+    "fit": "Coupe boxy.",
+    "model": {
+      "height": 180,
+      "size": "M"
+    },
+    "en": {
+      "short": "Liquid wordmark, splash on the back",
+      "description": "Deep black, white ink. The word « dimension » drips across the chest in liquid lettering. On the back, a splash that runs across the fabric and an oval badge, like a stamp.",
+      "details": [
+        "Liquid wordmark printed on the front",
+        "Splash print + oval badge on the back",
+        "Opaque white ink, soft hand feel"
+      ],
+      "fabric": "100% cotton, heavyweight 240 g/m² jersey.",
+      "care": [
+        "Wash at 30 °C inside out",
+        "Do not tumble dry",
+        "Iron inside out"
+      ],
+      "fit": "Boxy fit.",
+      "colors": [
+        {
+          "name": "Black",
+          "slug": "noir",
+          "hex": "#151515"
+        }
+      ]
+    }
   },
   {
     "id": "DIM-004",
@@ -97,14 +263,38 @@
     "date": "2026-10-18",
     "badge": "",
     "art": "doodle",
-    "colors": [{ "name": "Écru", "slug": "ecru", "hex": "#ECE7DF" }],
+    "colors": [
+      {
+        "name": "Écru",
+        "slug": "ecru",
+        "hex": "#ECE7DF"
+      }
+    ],
     "sizes": [
-      { "size": "XS", "stock": 5 },
-      { "size": "S", "stock": 9 },
-      { "size": "M", "stock": 3 },
-      { "size": "L", "stock": 7 },
-      { "size": "XL", "stock": 4 },
-      { "size": "XXL", "stock": 2 }
+      {
+        "size": "XS",
+        "stock": 5
+      },
+      {
+        "size": "S",
+        "stock": 9
+      },
+      {
+        "size": "M",
+        "stock": 3
+      },
+      {
+        "size": "L",
+        "stock": 7
+      },
+      {
+        "size": "XL",
+        "stock": 4
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      }
     ],
     "description": "Un visage, une étoile, quelques traits jetés sans lever le crayon. Le Doodle, c'est le carnet de croquis porté sur la poitrine — signé DIMENSION en petites capitales.",
     "details": [
@@ -113,8 +303,39 @@
       "Dos uni"
     ],
     "fabric": "100 % coton, jersey épais 240 g/m², teint écru.",
-    "care": ["Lavage 30 °C à l'envers", "Pas de sèche-linge", "Repassage à l'envers"],
-    "fit": "Coupe boxy. Le modèle mesure 1,80 m et porte du M."
+    "care": [
+      "Lavage 30 °C à l'envers",
+      "Pas de sèche-linge",
+      "Repassage à l'envers"
+    ],
+    "fit": "Coupe boxy.",
+    "model": {
+      "height": 180,
+      "size": "M"
+    },
+    "en": {
+      "short": "Line drawing, DIMENSION signature",
+      "description": "A face, a star, a few lines drawn without lifting the pen. The Doodle is a sketchbook worn on the chest — signed DIMENSION in small capitals.",
+      "details": [
+        "Line drawing printed on the front, black ink",
+        "DIMENSION signature in spaced capitals",
+        "Plain back"
+      ],
+      "fabric": "100% cotton, heavyweight 240 g/m² jersey, ecru-dyed.",
+      "care": [
+        "Wash at 30 °C inside out",
+        "Do not tumble dry",
+        "Iron inside out"
+      ],
+      "fit": "Boxy fit.",
+      "colors": [
+        {
+          "name": "Ecru",
+          "slug": "ecru",
+          "hex": "#ECE7DF"
+        }
+      ]
+    }
   },
   {
     "id": "DIM-005",
@@ -126,14 +347,38 @@
     "date": "2026-10-25",
     "badge": "Édition limitée",
     "art": "camo",
-    "colors": [{ "name": "Camo gris", "slug": "camo", "hex": "#7E7F82" }],
+    "colors": [
+      {
+        "name": "Camo gris",
+        "slug": "camo",
+        "hex": "#7E7F82"
+      }
+    ],
     "sizes": [
-      { "size": "XS", "stock": 0 },
-      { "size": "S", "stock": 4 },
-      { "size": "M", "stock": 6 },
-      { "size": "L", "stock": 5 },
-      { "size": "XL", "stock": 2 },
-      { "size": "XXL", "stock": 1 }
+      {
+        "size": "XS",
+        "stock": 0
+      },
+      {
+        "size": "S",
+        "stock": 4
+      },
+      {
+        "size": "M",
+        "stock": 6
+      },
+      {
+        "size": "L",
+        "stock": 5
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 1
+      }
     ],
     "description": "Un camouflage dessiné à la main puis tricoté en jacquard : noir, gris et grège qui s'entremêlent comme des coups de pinceau. Le wordmark DIMENSI*N est tricoté en blanc côté cœur.",
     "details": [
@@ -143,7 +388,40 @@
       "Série limitée"
     ],
     "fabric": "Maille jacquard, 70 % coton, 30 % laine.",
-    "care": ["Lavage à la main ou programme laine 30 °C", "Séchage à plat", "Ne pas essorer"],
-    "fit": "Coupe ample, légèrement courte. Le modèle mesure 1,80 m et porte du M."
+    "care": [
+      "Lavage à la main ou programme laine 30 °C",
+      "Séchage à plat",
+      "Ne pas essorer"
+    ],
+    "fit": "Coupe ample, légèrement courte.",
+    "model": {
+      "height": 180,
+      "size": "M"
+    },
+    "en": {
+      "name": "Camo Knit Sweater",
+      "short": "Camouflage jacquard knit, white wordmark",
+      "description": "A hand-drawn camouflage, then knitted in jacquard: black, grey and greige blending like brushstrokes. The DIMENSI*N wordmark is knitted in white over the heart.",
+      "details": [
+        "Heavy jacquard knit, painted camouflage pattern",
+        "DIMENSI*N wordmark knitted on the front",
+        "Black ribbing at the collar, cuffs and hem",
+        "Limited series"
+      ],
+      "fabric": "Jacquard knit, 70% cotton, 30% wool.",
+      "care": [
+        "Hand wash or wool cycle at 30 °C",
+        "Dry flat",
+        "Do not wring"
+      ],
+      "fit": "Relaxed, slightly cropped fit.",
+      "colors": [
+        {
+          "name": "Grey camo",
+          "slug": "camo",
+          "hex": "#7E7F82"
+        }
+      ]
+    }
   }
 ]

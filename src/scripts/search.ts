@@ -1,7 +1,7 @@
 // Recherche instantanée dans le catalogue : insensible aux accents, navigation au clavier.
 import { catalog, norm, stockOf, type CatalogItem } from '../lib/catalog';
 import { $recent } from '../lib/saved';
-import { formatPrice } from '../lib/shop';
+import { t as tr, price as formatPrice } from './i18n';
 import { lockScroll, unlockScroll } from './scroll';
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
@@ -50,7 +50,7 @@ export function initSearch() {
         .map((id) => catalog().find((p) => p.id === id))
         .filter(Boolean) as CatalogItem[];
       recentBox.innerHTML = recent.length
-        ? `<p class="label">Vus récemment</p><ul class="search__recent" role="list">${recent.slice(0, 4).map((p, i) => item(p, '', 100 + i)).join('')}</ul>`
+        ? `<p class="label">${tr('Vus récemment', 'Recently viewed')}</p><ul class="search__recent" role="list">${recent.slice(0, 4).map((p, i) => item(p, '', 100 + i)).join('')}</ul>`
         : '';
       return;
     }
@@ -62,7 +62,7 @@ export function initSearch() {
     empty.hidden = true;
     none.hidden = results.length > 0;
     count.hidden = results.length === 0;
-    count.textContent = `${results.length} résultat${results.length > 1 ? 's' : ''}`;
+    count.textContent = tr(`${results.length} résultat${results.length > 1 ? 's' : ''}`, `${results.length} result${results.length > 1 ? 's' : ''}`);
     root!.querySelector('[data-search-term]')!.textContent = `« ${input.value.trim()} »`;
     list.innerHTML = results.map((p, i) => item(p, q, i)).join('');
   }

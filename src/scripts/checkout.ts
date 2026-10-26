@@ -1,8 +1,9 @@
 // Tunnel de commande en une page : coordonnées → livraison → paiement.
 // Paiement simulé (mode démo) — voir README pour brancher Stripe Checkout.
 import { $cart, $subtotal, clearCart } from '../lib/cart';
-import { formatPrice } from '../lib/shop';
-import brand from '../data/brand.json';
+import { getBrand } from '../lib/shop';
+import { saveOrder } from '../lib/orders';
+import { t as tr, price as formatPrice, lang, link } from './i18n';
 import { renderLines } from './cart-ui';
 import { validateAll, validateField } from './forms';
 import { lenis } from './scroll';
@@ -10,6 +11,7 @@ import { lenis } from './scroll';
 export function initCheckout(signal: AbortSignal) {
   const root = document.querySelector<HTMLElement>('[data-checkout]');
   if (!root) return;
+  const brand = getBrand(lang());
   const form = root.querySelector<HTMLFormElement>('[data-checkout-form]')!;
   const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
   const emptyState = root.querySelector<HTMLElement>('[data-checkout-empty]')!;
@@ -49,7 +51,7 @@ export function initCheckout(signal: AbortSignal) {
     const t = totals();
     const set = (k: string, v: string) => root!.querySelectorAll<HTMLElement>(`[data-total="${k}"]`).forEach((el) => (el.textContent = v));
     set('sub', formatPrice(t.sub));
-    set('ship', t.ship === 0 ? 'Offerte' : formatPrice(t.ship));
+    set('ship', t.ship === 0 ? tr('Offerte', 'Free') : formatPrice(t.ship));
     set('discount', `−${formatPrice(t.discount)}`);
     set('total', formatPrice(t.total));
     root!.querySelectorAll<HTMLElement>('[data-discount-row]').forEach((el) => (el.hidden = t.discount === 0));
@@ -57,7 +59,7 @@ export function initCheckout(signal: AbortSignal) {
     form.querySelectorAll<HTMLElement>('[data-ship-price]').forEach((el) => {
       const m = brand.shipping.methods.find((x) => x.id === el.dataset.shipPrice)!;
       const free = t.sub - t.discount >= brand.shipping.freeThreshold && m.id !== 'express';
-      el.textContent = free ? 'Offerte' : formatPrice(m.price);
+      el.textContent = free ? tr('Offerte', 'Free') : formatPrice(m.price);
     });
   }
 
@@ -114,11 +116,11 @@ export function initCheckout(signal: AbortSignal) {
     if (!code) return;
     if (code === brand.promo.code) {
       discountRate = brand.promo.rate;
-      promoMsg.textContent = `Code ${code} appliqué : −${Math.round(brand.promo.rate * 100)} %.`;
+      promoMsg.textContent = tr(`Code ${code} appliqué : −${Math.round(brand.promo.rate * 100)} %.`, `Code ${code} applied: ${Math.round(brand.promo.rate * 100)}% off.`);
       promoMsg.classList.remove('is-error');
     } else {
       discountRate = 0;
-      promoMsg.textContent = 'Ce code n’est pas valide.';
+      promoMsg.textContent = tr('Ce code n’est pas valide.', 'This code is not valid.');
       promoMsg.classList.add('is-error');
     }
     render();
@@ -179,7 +181,7 @@ export function initCheckout(signal: AbortSignal) {
       }
       const btn = form.querySelector<HTMLButtonElement>('[data-pay]')!;
       btn.disabled = true;
-      btn.querySelector('[data-pay-label]')!.textContent = 'Paiement en cours…';
+      btn.querySelector('[data-pay-label]')!.textContent = tr('Paiement en cours…', 'Processing payment…');
       const t = totals();
       setTimeout(() => {
         const order = `DIM-${Date.now().toString(36).toUpperCase().slice(-6)}`;
@@ -188,6 +190,17 @@ export function initCheckout(signal: AbortSignal) {
         confirm.querySelector('[data-order-email]')!.textContent = email;
         confirm.querySelector('[data-order-total]')!.textContent = formatPrice(t.total);
         confirm.querySelector('[data-order-lines]')!.innerHTML = renderLines($cart.get(), true);
+        // Enregistrée sur l'appareil pour la page de suivi (démo)
+        saveOrder({
+          id: order,
+          email,
+          date: new Date().toISOString(),
+          method: method().id,
+          total: t.total,
+          lines: $cart.get().map((i) => ({ id: i.id, slug: i.slug, name: i.name, size: i.size, color: i.color, qty: i.qty, price: i.price, image: i.image })),
+        });
+        const track = confirm.querySelector<HTMLAnchorElement>('[data-track-link]');
+        if (track) track.href = `${link('track')}?${new URLSearchParams({ commande: order, email })}`;
         layout.hidden = true;
         confirm.hidden = false;
         clearCart();

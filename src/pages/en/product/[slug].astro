@@ -1,0 +1,10 @@
+---
+import Product from '../../../views/Product.astro';
+import { products } from '../../../lib/shop';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { slug: p.slug } }));
+}
+---
+
+<Product slug={Astro.params.slug!} />

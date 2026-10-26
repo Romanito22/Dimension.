@@ -1,6 +1,8 @@
 // Estimation de la date de livraison (jours ouvrés hors jours fériés français,
 // préparation sous 24 h, envoi le jour même avant 14 h).
-const fmt = new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+import { intlLocale, type Locale } from '../i18n';
+
+const fmt = (locale: Locale) => new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'short', day: 'numeric', month: 'short' });
 
 const key = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 
@@ -49,7 +51,7 @@ function holidays(y: number) {
 
 export const isBusinessDay = (d: Date) => d.getDay() !== 0 && d.getDay() !== 6 && !holidays(d.getFullYear()).has(key(d));
 
-function addBusinessDays(from: Date, n: number) {
+export function addBusinessDays(from: Date, n: number) {
   const d = new Date(from);
   let added = 0;
   while (added < n) {
@@ -59,12 +61,12 @@ function addBusinessDays(from: Date, n: number) {
   return d;
 }
 
-export function deliveryWindow(minDays: number, maxDays: number, now = new Date()) {
+export function deliveryWindow(minDays: number, maxDays: number, now = new Date(), locale: Locale = 'fr') {
   const late = now.getHours() >= 14 || !isBusinessDay(now);
   const ship = late ? 1 : 0;
   return {
-    from: fmt.format(addBusinessDays(now, minDays + ship)),
-    to: fmt.format(addBusinessDays(now, maxDays + ship)),
+    from: fmt(locale).format(addBusinessDays(now, minDays + ship)),
+    to: fmt(locale).format(addBusinessDays(now, maxDays + ship)),
     cutoff: !late,
   };
 }

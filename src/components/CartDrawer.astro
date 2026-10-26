@@ -1,13 +1,16 @@
 ---
 import brand from '../data/brand.json';
+import { localeFromPath, translator, href } from '../i18n';
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
 ---
 
 <div class="drawer" id="cart-drawer" data-drawer transition:persist="cart-drawer" aria-hidden="true">
   <div class="drawer__overlay" data-cart-close></div>
   <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1" data-lenis-prevent>
     <header class="drawer__head">
-      <h2 id="cart-title" class="display drawer__title">Panier <sup data-cart-count>0</sup></h2>
-      <button class="icon-btn" type="button" data-cart-close aria-label="Fermer le panier">
+      <h2 id="cart-title" class="display drawer__title">{t('Panier', 'Bag')} <sup data-cart-count>0</sup></h2>
+      <button class="icon-btn" type="button" data-cart-close aria-label={t('Fermer le panier', 'Close bag')}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l12 12M14 2 2 14"></path></svg>
       </button>
     </header>
@@ -19,26 +22,26 @@ import brand from '../data/brand.json';
 
     <div class="drawer__body">
       <div class="drawer__undo" data-undo hidden>
-        <span>Retiré : <strong data-undo-name></strong></span>
-        <button type="button" class="drawer__undo-btn label" data-undo-btn>Annuler</button>
+        <span>{t('Retiré : ', 'Removed: ')}<strong data-undo-name></strong></span>
+        <button type="button" class="drawer__undo-btn label" data-undo-btn>{t('Annuler', 'Undo')}</button>
       </div>
       <div data-cart-lines></div>
       <div class="upsell" data-upsell hidden>
-        <p class="label upsell__title">Complète ton look</p>
+        <p class="label upsell__title">{t('Complète ton look', 'Complete the look')}</p>
         <div class="upsell__list" data-upsell-list></div>
       </div>
     </div>
 
     <footer class="drawer__foot" data-cart-foot>
       <div class="drawer__row">
-        <span class="label">Sous-total</span>
+        <span class="label">{t('Sous-total', 'Subtotal')}</span>
         <strong class="drawer__total" data-cart-subtotal>0 €</strong>
       </div>
-      <p class="drawer__note muted">Taxes incluses. Livraison calculée à l'étape suivante.</p>
-      <a href="/commande" class="btn btn--accent btn--lg btn--block" data-checkout-link>
-        Commander <span class="btn__dot" aria-hidden="true"></span>
+      <p class="drawer__note muted">{t("Taxes incluses. Livraison calculée à l'étape suivante.", 'Taxes included. Delivery calculated at the next step.')}</p>
+      <a href={href(locale, 'checkout')} class="btn btn--accent btn--lg btn--block" data-checkout-link>
+        {t('Commander', 'Checkout')} <span class="btn__dot" aria-hidden="true"></span>
       </a>
-      <button type="button" class="drawer__continue link label" data-cart-close>Continuer mes achats</button>
+      <button type="button" class="drawer__continue link label" data-cart-close>{t('Continuer mes achats', 'Continue shopping')}</button>
     </footer>
   </aside>
 </div>

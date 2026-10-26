@@ -47,7 +47,7 @@ export function initFlip(signal: AbortSignal) {
         if (count) count.textContent = `0${step + 1}`;
       }
       if (side) {
-        const label = rot > 90 ? 'Dos' : 'Devant';
+        const label = (rot > 90 ? side.dataset.back : side.dataset.front) ?? '';
         if (side.textContent !== label) side.textContent = label;
       }
     },

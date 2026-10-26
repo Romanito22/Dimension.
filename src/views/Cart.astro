@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import brand from '../data/brand.json';
+import { formatPrice } from '../lib/shop';
+import { localeFromPath, translator, href } from '../i18n';
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+---
+
+<Base title={t('Panier', 'Bag')} page="cart" noindex route="cart">
+  <div class="wrap cart">
+    <h1 class="display h-xl cart__title">{t('Panier', 'Bag')} <sup data-cart-count>0</sup></h1>
+    <div class="cart__grid">
+      <div>
+        <div class="cart__ship" data-ship>
+          <p data-ship-text></p>
+          <div class="cart__bar"><span data-ship-bar></span></div>
+        </div>
+        <div data-cart-lines></div>
+      </div>
+      <aside class="cart__sum" data-cart-foot>
+        <div class="cart__row"><span class="label">{t('Sous-total', 'Subtotal')}</span><strong data-cart-subtotal>0 €</strong></div>
+        <p class="muted cart__note">{t(`Livraison offerte dès ${formatPrice(brand.shipping.freeThreshold, locale)}. Frais calculés à l'étape suivante.`, `Free delivery from ${formatPrice(brand.shipping.freeThreshold, locale)}. Costs calculated at the next step.`)}</p>
+        <a href={href(locale, 'checkout')} class="btn btn--accent btn--lg btn--block">{t('Commander', 'Checkout')} <span class="btn__dot" aria-hidden="true"></span></a>
+        <a href={href(locale, 'shop')} class="link label cart__back">{t('Continuer mes achats', 'Continue shopping')}</a>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .cart {
+    padding-block: var(--space-md) var(--space-lg);
+  }
+  .cart__title sup {
+    font-size: 0.35em;
+    color: var(--accent);
+    vertical-align: 1.6em;
+  }
+  .cart__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+    align-items: start;
+  }
+  .cart__ship {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+    font-size: var(--fs-sm);
+  }
+  .cart__bar {
+    margin-top: 0.6rem;
+    height: 3px;
+    background: var(--surface);
+  }
+  .cart__bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--accent);
+    transition: width 0.8s var(--ease-out);
+  }
+  .cart__sum {
+    position: sticky;
+    top: calc(var(--header-total) + 1rem);
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border-radius: var(--radius);
+  }
+  .cart__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.15rem;
+  }
+  .cart__note {
+    font-size: var(--fs-xs);
+  }
+  .cart__back {
+    justify-self: center;
+  }
+  @media (max-width: 860px) {
+    .cart__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

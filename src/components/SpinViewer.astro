@@ -27,11 +27,11 @@ const t = translator(localeFromPath(Astro.url.pathname));
       <div class="spin__stage" data-spin-stage data-frames={JSON.stringify(frames)}>
         {
           frames.length ? (
-            <img class="spin__frame" data-spin-frame src={frames[0]} alt={name} draggable="false" />
+            <img class="spin__frame" data-spin-frame src={frames[0]} alt={name} draggable="false" loading="lazy" />
           ) : (
             <div class="spin__card" data-spin-card>
-              <img class="spin__face" src={front.src} alt={front.alt} draggable="false" />
-              <img class="spin__face spin__face--back" src={back.src} alt={back.alt} draggable="false" />
+              <img class="spin__face" src={front.src} srcset={front.srcset} sizes="(max-width: 860px) 80vw, 480px" alt={front.alt} draggable="false" loading="lazy" />
+              <img class="spin__face spin__face--back" src={back.src} srcset={back.srcset} sizes="(max-width: 860px) 80vw, 480px" alt={back.alt} draggable="false" loading="lazy" />
             </div>
           )
         }

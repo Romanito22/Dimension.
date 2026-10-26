@@ -6,7 +6,7 @@ import Newsletter from '../components/Newsletter.astro';
 import TikTok from '../components/TikTok.astro';
 import Perks from '../components/Perks.astro';
 import Sticker from '../components/Sticker.astro';
-import { media } from '../lib/media';
+import { media, mediaAt } from '../lib/media';
 import { getProducts, getBrand, byNewest, formatPrice, imageKeys, categoryLabel, totalStock, stockText, HOT_STOCK } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
 
@@ -37,15 +37,19 @@ const dvData = dvItems.map((p) => ({
   name: p.name,
   price: p.price,
   color: p.colors[0].name,
-  image: media(imageKeys(p)[0]).src,
+  image: media(imageKeys(p)[0]).thumb,
   sizes: p.sizes,
   word: WORDS[p.art] ?? 'DIMENSION',
   short: p.short,
   category: categoryLabel(p.category, locale).replace(/s$/, ''),
-  hero: media(`cutout/${p.id.toLowerCase()}-${HERO_VIEW[p.art] ?? 'front'}`).src,
+  // Textures de la scène WebGL : 1200 px sur grand écran, 800 px sur mobile
+  hero: mediaAt(`cutout/${p.id.toLowerCase()}-${HERO_VIEW[p.art] ?? 'front'}`, 1200),
+  heroSm: mediaAt(`cutout/${p.id.toLowerCase()}-${HERO_VIEW[p.art] ?? 'front'}`, 800),
   url: productUrl(p.slug),
 }));
 const first = dvData[0];
+// Premier visuel de la scène, affiché tout de suite (élément le plus grand à l'écran)
+const firstCut = media(`cutout/${dvItems[0].id.toLowerCase()}-${HERO_VIEW[dvItems[0].art] ?? 'front'}`);
 const firstStock = totalStock(dvItems[0]);
 const dropStock = products.reduce((n, p) => n + totalStock(p), 0);
 const ticker = products.map((p) => {
@@ -70,7 +74,7 @@ const tableItems = dvItems.map((p, i) => ({
   name: p.name,
   price: fmt(p.price),
   url: productUrl(p.slug),
-  img: media(`cutout/${p.id.toLowerCase()}-${TABLE[i % TABLE.length].view}`).src,
+  img: media(`cutout/${p.id.toLowerCase()}-${TABLE[i % TABLE.length].view}`),
 }));
 const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), accent: w.includes('*') }));
 ---
@@ -82,7 +86,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     <h1 id="dv-title" class="visually-hidden">dimension. — {brand.drop.name} : {brand.tagline}</h1>
 
     <div class="dv__word display" aria-hidden="true"><span data-dv-word>{first.word}</span></div>
-    <img class="dv__fallback" data-dv-fallback src={first.hero} alt={`${first.name}`} width="1000" height="1250" fetchpriority="high" />
+    <img class="dv__fallback" data-dv-fallback src={first.heroSm} srcset={firstCut.srcset} sizes="(max-width: 860px) 75vw, 42vw" alt={`${first.name}`} width="1000" height="1250" fetchpriority="high" />
     <canvas class="dv__canvas" data-dv-canvas aria-hidden="true"></canvas>
     <Sticker class="dv__sticker" ring={t(`${brand.drop.name} · en ligne · séries courtes`, `${brand.drop.name} · live now · short runs`)} core={t('En<br>ligne', 'Live<br>now')} size={140} />
 
@@ -248,11 +252,11 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
           <span class="flip__side display" aria-hidden="true"><span data-flip-side data-front={t('Devant', 'Front')} data-back={t('Dos', 'Back')}>{t('Devant', 'Front')}</span></span>
           <div class="flip__card" data-flip-card>
             <div class="flip__face flip__face--front">
-              <img src={teeFront.src} alt={teeFront.alt} width={teeFront.width} height={teeFront.height} loading="lazy" />
+              <img src={teeFront.src} srcset={teeFront.srcset} sizes="(max-width: 860px) 80vw, 40vw" alt={teeFront.alt} width={teeFront.width} height={teeFront.height} loading="lazy" />
               <span class="flip__pin" style="left:50%;top:36%" aria-hidden="true"></span>
             </div>
             <div class="flip__face flip__face--back">
-              <img src={teeBack.src} alt={teeBack.alt} width={teeBack.width} height={teeBack.height} loading="lazy" />
+              <img src={teeBack.src} srcset={teeBack.srcset} sizes="(max-width: 860px) 80vw, 40vw" alt={teeBack.alt} width={teeBack.width} height={teeBack.height} loading="lazy" />
               <span class="flip__pin" style="left:50%;top:46%" aria-hidden="true"></span>
             </div>
           </div>
@@ -263,7 +267,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   </section>
 
   <!-- CATÉGORIES -->
-  <section class="section cats" aria-labelledby="cats-title">
+  <section class="section cats cv" aria-labelledby="cats-title">
     <div class="wrap">
       <div class="section-head">
         <div data-reveal>
@@ -322,7 +326,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       {
         tableItems.map((it, i) => (
           <a class="tb__item" href={it.url} data-drag data-cursor={t('Attraper', 'Grab')} style={`--x:${it.x};--y:${it.y};--r:${it.r}deg;--w:${it.w};--z:${i + 1}`} aria-label={`${it.name}, ${it.price}`}>
-            <img src={it.img} alt="" width="1000" height="1250" loading="lazy" draggable="false" />
+            <img src={it.img.thumb} srcset={it.img.srcset} sizes="(max-width: 860px) 45vw, 24vw" alt="" width="1000" height="1250" loading="lazy" draggable="false" />
             <span class="tb__tag">
               <b>{it.name}</b> {it.price}
             </span>
@@ -333,7 +337,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   </section>
 
   <!-- LOOKBOOK TEASER -->
-  <section class="look" aria-labelledby="look-title">
+  <section class="look cv" aria-labelledby="look-title">
     <a href={href(locale, 'lookbook')} class="look__hero media" data-cursor="Lookbook">
       <div class="look__img" data-parallax="0.12"><Img k="lookbook/1" sizes="100vw" /></div>
       <div class="look__overlay">
@@ -441,19 +445,26 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     gap: 0.6rem;
   }
   .dv__dot {
+    position: relative;
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 0 0 rgb(var(--accent-rgb) / 0.7);
+  }
+  /* Onde du point « en ligne » : transform + opacity seulement (aucun repeint) */
+  .dv__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgb(var(--accent-rgb) / 0.7);
     animation: live 1.6s infinite;
   }
   @keyframes live {
-    70% {
-      box-shadow: 0 0 0 10px rgb(var(--accent-rgb) / 0);
-    }
+    70%,
     100% {
-      box-shadow: 0 0 0 0 rgb(var(--accent-rgb) / 0);
+      transform: scale(3.5);
+      opacity: 0;
     }
   }
   .dv__total {

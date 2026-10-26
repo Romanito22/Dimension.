@@ -27,7 +27,7 @@ const imgs = keys.map((k) => media(k, undefined, locale));
 const others = related(p, products);
 const soldOut = totalStock(p) === 0;
 const sizes = SIZES.map((s) => p.sizes.find((x) => x.size === s)).filter(Boolean) as Product['sizes'];
-const data = { id: p.id, slug: p.slug, name: p.name, price: p.price, image: imgs[0].src, sizes: p.sizes, low: LOW_STOCK };
+const data = { id: p.id, slug: p.slug, name: p.name, price: p.price, image: imgs[0].thumb, sizes: p.sizes, low: LOW_STOCK };
 const outSizes = p.sizes.filter((s) => s.stock === 0).map((s) => s.size);
 
 // Fiche enrichie : vidéo portée, vue 3D / 360°, porté par le modèle, avis
@@ -41,7 +41,7 @@ const galleryCount = keys.length + (video ? 1 : 0);
 const mate = products.find((x) => x.id === p.pair && x.id !== p.id);
 const mateImg = mate ? media(imageKeys(mate)[0], undefined, locale) : null;
 const mateData = mate
-  ? { id: mate.id, slug: mate.slug, name: mate.name, price: mate.price, color: mate.colors[0].name, image: mateImg!.src, sizes: mate.sizes }
+  ? { id: mate.id, slug: mate.slug, name: mate.name, price: mate.price, color: mate.colors[0].name, image: mateImg!.thumb, sizes: mate.sizes }
   : null;
 const modelLine = t(
   `Le modèle mesure ${modelHeight(p.model.height, 'fr')} et porte du ${p.model.size}.`,
@@ -233,7 +233,7 @@ const jsonld = {
               <p class="label">{t('Porte-le avec', 'Wear it with')}</p>
               <div class="pair__row">
                 <a href={href(locale, 'product', mate.slug)} class="pair__img">
-                  <img src={mateImg.src} alt={mateImg.alt} width="160" height="200" loading="lazy" />
+                  <img src={mateImg.thumb} alt={mateImg.alt} width="160" height="200" loading="lazy" />
                 </a>
                 <div class="pair__info">
                   <p class="pair__top">
@@ -343,7 +343,7 @@ const jsonld = {
 
   <!-- Plein écran -->
   <dialog class="lightbox" data-lightbox data-dialog="lightbox" aria-label={t(`Galerie — ${p.name}`, `Gallery — ${p.name}`)}>
-    <img data-lightbox-img src={imgs[0].src} alt={imgs[0].alt} />
+    <img data-lightbox-img src={imgs[0].src} alt={imgs[0].alt} loading="lazy" />
     <button type="button" class="lightbox__close icon-btn" data-close aria-label={t('Fermer', 'Close')}>
       <Icon name="close" size={20} />
     </button>

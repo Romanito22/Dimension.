@@ -11,8 +11,10 @@ interface Props {
   index?: number;
   vt?: boolean;
   sizes?: string;
+  /** Carte visible dès l'arrivée : image chargée tout de suite, en priorité */
+  eager?: boolean;
 }
-const { product: p, index = 0, vt = false, sizes = '(max-width: 700px) 50vw, 25vw' } = Astro.props;
+const { product: p, index = 0, vt = false, sizes = '(max-width: 700px) 50vw, 25vw', eager = false } = Astro.props;
 const [k1, k2] = galleryKeys(p);
 const avail = availableSizes(p);
 const soldOut = avail.length === 0;
@@ -23,7 +25,7 @@ const lowSizes = p.sizes.filter((s) => s.stock > 0 && s.stock <= LOW_STOCK).map(
 const hot = stock > 0 && stock <= HOT_STOCK;
 const stockLabel = stockText(stock, locale);
 // Données pour l'ajout rapide (lues par scripts/quickadd.ts)
-const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price, color: p.colors[0].name, image: media(k1).src, sizes: p.sizes });
+const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price, color: p.colors[0].name, image: media(k1).thumb, sizes: p.sizes });
 ---
 
 <article
@@ -41,7 +43,7 @@ const qa = JSON.stringify({ id: p.id, slug: p.slug, name: p.name, price: p.price
   <div class="card__media media ratio-45" data-tilt>
     <a href={url} class="card__imglink" tabindex="-1" aria-hidden="true">
       <span class="card__glare"></span>
-      <Img k={k1} class="card__img card__img--1" sizes={sizes} vt={vt ? `media-${p.slug}` : undefined} />
+      <Img k={k1} class="card__img card__img--1" sizes={sizes} eager={eager} vt={vt ? `media-${p.slug}` : undefined} />
       <Img k={k2} class="card__img card__img--2" sizes={sizes} />
     </a>
     {

@@ -10,18 +10,22 @@ export const introDone = new Promise<void>((resolve) => {
   const loader = document.querySelector<HTMLElement>('[data-loader]');
   if (!html.classList.contains('is-loading') || !loader) return resolve();
   const counter = loader.querySelector<HTMLElement>('[data-loader-count]');
-  const start = performance.now();
-  const DURATION = 1000;
+  let start = performance.now();
+  const DURATION = 650;
+  // Un clic, un toucher ou une touche : on passe l'intro
+  const skip = () => (start = -Infinity);
+  ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((ev) => window.addEventListener(ev, skip, { once: true, passive: true }));
   const tick = (t: number) => {
     const p = Math.min(1, (t - start) / DURATION);
     const eased = 1 - Math.pow(1 - p, 3);
     if (counter) counter.textContent = String(Math.round(eased * 100)).padStart(3, '0');
     if (p < 1) requestAnimationFrame(tick);
     else {
-      const fonts = document.fonts?.ready ?? Promise.resolve();
+      // On attend les polices, mais jamais plus de 0,7 s
+      const fonts = Promise.race([document.fonts?.ready ?? Promise.resolve(), new Promise((r) => setTimeout(r, 700))]);
       fonts.then(() => {
         loader.classList.add('is-out');
-        setTimeout(resolve, 300);
+        setTimeout(resolve, 250);
         setTimeout(() => {
           html.classList.remove('is-loading');
           try {
@@ -29,7 +33,7 @@ export const introDone = new Promise<void>((resolve) => {
           } catch {
             /* ignore */
           }
-        }, 900);
+        }, 650);
       });
     }
   };
@@ -137,14 +141,14 @@ if (wipe && !reducedMotion) {
       wipe.classList.remove('is-out');
       void wipe.offsetWidth;
       wipe.classList.add('is-in');
-      await Promise.all([load(), new Promise((r) => setTimeout(r, 300))]);
+      await Promise.all([load(), new Promise((r) => setTimeout(r, 200))]);
     };
   });
   document.addEventListener('astro:after-swap', () => {
     if (!covering) return;
     covering = false;
     wipe.classList.replace('is-in', 'is-out');
-    setTimeout(() => wipe.classList.remove('is-out'), 450);
+    setTimeout(() => wipe.classList.remove('is-out'), 280);
   });
 
   // Chargement complet (changement de langue, ou site sans routeur) : le rideau tombe
@@ -170,7 +174,7 @@ if (wipe && !reducedMotion) {
       wipe.classList.remove('is-out');
       void wipe.offsetWidth;
       wipe.classList.add('is-in');
-      setTimeout(() => (location.href = a.href), 300);
+      setTimeout(() => (location.href = a.href), 200);
     },
     true,
   );
@@ -180,7 +184,7 @@ if (wipe && !reducedMotion) {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         wipe.classList.replace('is-in', 'is-out');
-        setTimeout(() => wipe.classList.remove('is-out'), 450);
+        setTimeout(() => wipe.classList.remove('is-out'), 280);
       }),
     );
   }

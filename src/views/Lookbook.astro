@@ -73,7 +73,7 @@ const looks = [
                   name: p.name,
                   price: p.price,
                   color: p.colors[0].name,
-                  image: media(imageKeys(p)[0]).src,
+                  image: media(imageKeys(p)[0]).thumb,
                   url: href(locale, 'product', p.slug),
                   sizes: p.sizes,
                 })),

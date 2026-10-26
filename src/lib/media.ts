@@ -16,7 +16,48 @@ export interface Media {
   width: number;
   height: number;
   placeholder: boolean;
+  /** Versions réduites pour le navigateur (vide pour un visuel provisoire) */
+  srcset?: string;
+  /** Plus petite version : vignettes du panier, de la recherche, des favoris */
+  thumb: string;
 }
+
+/** Largeurs générées au build pour chaque vraie photo (voir src/pages/img/[name].webp.ts). */
+export const WIDTHS = [480, 800, 1200];
+
+/** Dimensions d'une image lues dans son en-tête (WebP, PNG, JPEG), sans dépendance. */
+export function imageSize(file: string): { w: number; h: number } | null {
+  const b = fs.readFileSync(file);
+  if (b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP') {
+    const kind = b.toString('ascii', 12, 16);
+    if (kind === 'VP8X') return { w: 1 + b.readUIntLE(24, 3), h: 1 + b.readUIntLE(27, 3) };
+    if (kind === 'VP8L') {
+      const bits = b.readUInt32LE(21);
+      return { w: 1 + (bits & 0x3fff), h: 1 + ((bits >> 14) & 0x3fff) };
+    }
+    if (kind === 'VP8 ') return { w: b.readUInt16LE(26) & 0x3fff, h: b.readUInt16LE(28) & 0x3fff };
+  }
+  if (b.readUInt32BE(0) === 0x89504e47) return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    let i = 2;
+    while (i < b.length) {
+      const marker = b[i + 1];
+      const len = b.readUInt16BE(i + 2);
+      if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) return { w: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5) };
+      i += 2 + len;
+    }
+  }
+  return null;
+}
+
+const sizes = new Map<string, { w: number; h: number } | null>();
+/** Largeurs réduites disponibles pour un fichier de /public (celles plus petites que l'original). */
+export function variantWidths(rel: string) {
+  if (!sizes.has(rel)) sizes.set(rel, imageSize(path.join(PUBLIC, rel)));
+  const size = sizes.get(rel);
+  return { size, widths: size ? WIDTHS.filter((w) => w < size.w * 0.9) : [] };
+}
+const variantUrl = (key: string, w: number) => `/img/${encodeKey(key)}-w${w}.webp`;
 
 const EN_ALT: Record<string, string> = {
   'hero/desktop': 'Love Over Everything T-shirt, back view, on a raspberry background',
@@ -55,10 +96,23 @@ export function media(key: string, alt?: string, locale: Locale = 'fr'): Media {
   for (const ext of EXTENSIONS) {
     const rel = `images/${key}.${ext}`;
     if (fs.existsSync(path.join(PUBLIC, rel))) {
-      return { src: `/${rel}`, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: false };
+      const { size, widths } = variantWidths(rel);
+      const srcset = size && widths.length ? [...widths.map((w) => `${variantUrl(key, w)} ${w}w`), `/${rel} ${size.w}w`].join(', ') : undefined;
+      const thumb = widths.length ? variantUrl(key, widths[0]) : `/${rel}`;
+      return { src: `/${rel}`, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: false, srcset, thumb };
     }
   }
-  return { src: `/ph/${encodeKey(key)}.webp`, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: true };
+  const src = `/ph/${encodeKey(key)}.webp`;
+  return { src, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: true, thumb: src };
+}
+
+/** Version d'au moins `min` px de large (la plus légère qui suffit), sinon l'original. */
+export function mediaAt(key: string, min: number) {
+  const m = media(key);
+  if (m.placeholder) return m.src;
+  const { widths } = variantWidths(m.src.slice(1));
+  const w = widths.find((x) => x >= min);
+  return w ? variantUrl(key, w) : m.src;
 }
 
 /** Visuels d'une fiche : les vraies photos si la pièce en a, sinon les quatre visuels provisoires. */

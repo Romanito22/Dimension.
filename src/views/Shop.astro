@@ -87,7 +87,7 @@ const prices = [
     <div class="wrap">
       <h2 class="visually-hidden">{t('Les pièces', 'The pieces')}</h2>
       <div class="grid" data-grid data-density="3">
-        {list.map((p, i) => <ProductCard product={p} index={i} vt />)}
+        {list.map((p, i) => <ProductCard product={p} index={i} vt eager={i < 3} sizes="(max-width: 700px) 50vw, 32vw" />)}
       </div>
       <div class="empty-state empty-state--center" data-empty hidden>
         <span class="empty-state__mark" aria-hidden="true"><Icon name="search" size={24} /></span>

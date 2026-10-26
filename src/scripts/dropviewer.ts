@@ -11,6 +11,7 @@ interface DvProduct extends QuickProduct {
   short: string;
   category: string;
   hero: string;
+  heroSm: string;
   url: string;
 }
 
@@ -246,19 +247,13 @@ export function initDropViewer(signal: AbortSignal, introDone: Promise<void>) {
   );
 
   /* ---------- WebGL ---------- */
-  let gl: WebGLRenderingContext | null = null;
-  try {
-    gl = canvas.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false }) as WebGLRenderingContext | null;
-  } catch {
-    gl = null;
-  }
-
   let go = (i: number) => {
     // Repli sans WebGL : fondu simple
     current = (i + items.length) % items.length;
     fallback.style.opacity = '0';
     setTimeout(() => {
-      fallback.src = items[current].hero;
+      fallback.removeAttribute('srcset');
+      fallback.src = items[current].heroSm;
       fallback.style.opacity = '1';
     }, 250);
     renderUI(current);
@@ -270,180 +265,230 @@ export function initDropViewer(signal: AbortSignal, introDone: Promise<void>) {
   });
   renderUI(0, true);
 
-  if (!gl) return;
-
-  let program: WebGLProgram;
-  try {
-    program = gl.createProgram()!;
-    gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERT));
-    gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAG));
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('link');
-  } catch {
-    return;
-  }
-  gl.useProgram(program);
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-  const loc = gl.getAttribLocation(program, 'p');
-  gl.enableVertexAttribArray(loc);
-  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-  const U = (n: string) => gl!.getUniformLocation(program, n);
-  const uA = U('uA'),
-    uB = U('uB'),
-    uP = U('uP'),
-    uT = U('uT'),
-    uVel = U('uVel'),
-    uSpot = U('uSpot'),
-    uMouse = U('uMouse'),
-    uRes = U('uRes'),
-    uRect = U('uRect'),
-    uRot = U('uRot');
-  gl.uniform1i(uA, 0);
-  gl.uniform1i(uB, 1);
-
-  const textures: (WebGLTexture | null)[] = items.map(() => null);
-  const makeTex = (img: HTMLImageElement) => {
-    const t = gl!.createTexture();
-    gl!.bindTexture(gl!.TEXTURE_2D, t);
-    gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_S, gl!.CLAMP_TO_EDGE);
-    gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_T, gl!.CLAMP_TO_EDGE);
-    gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MIN_FILTER, gl!.LINEAR);
-    gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MAG_FILTER, gl!.LINEAR);
-    gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGBA, gl!.RGBA, gl!.UNSIGNED_BYTE, img);
-    return t;
+  // La scène WebGL s'allume au premier geste (souris, toucher, molette, clavier) :
+  // la page s'affiche d'abord avec l'image fixe, sans rien bloquer.
+  const GESTURES = ['pointermove', 'pointerdown', 'touchstart', 'wheel', 'keydown', 'scroll'];
+  const ignite = () => {
+    GESTURES.forEach((ev) => window.removeEventListener(ev, ignite));
+    if (!signal.aborted) startGL();
   };
-  const loading = items.map((p, i) =>
-    loadImage(p.hero)
-      .then((img) => {
-        textures[i] = makeTex(img);
-      })
-      .catch(() => {}),
-  );
+  GESTURES.forEach((ev) => window.addEventListener(ev, ignite, { passive: true, signal }));
 
-  let from = 0;
-  let to = 0;
-  let progress = 1;
-  let transStart = 0;
-  const TRANS = 1300;
-  let mx = 0.5,
-    my = 0.45,
-    tmx = 0.5,
-    tmy = 0.45,
-    vel = 0,
-    spot = 0;
-  const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  let lastMove = 0;
+  function startGL() {
+    let gl: WebGLRenderingContext | null = null;
+    try {
+      gl = canvas.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false }) as WebGLRenderingContext | null;
+    } catch {
+      gl = null;
+    }
+    if (!gl) return;
 
-  root.addEventListener(
-    'pointermove',
-    (e) => {
-      const r = root.getBoundingClientRect();
-      const nx = (e.clientX - r.left) / r.width;
-      const ny = (e.clientY - r.top) / r.height;
-      vel = Math.min(1, vel + Math.hypot(nx - tmx, ny - tmy) * 4);
-      tmx = nx;
-      tmy = ny;
-      lastMove = performance.now();
-    },
-    { passive: true, signal },
-  );
+    let program: WebGLProgram;
+    try {
+      program = gl.createProgram()!;
+      gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERT));
+      gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAG));
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('link');
+    } catch {
+      return;
+    }
+    gl.useProgram(program);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(program, 'p');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = (n: string) => gl!.getUniformLocation(program, n);
+    const uA = U('uA'),
+      uB = U('uB'),
+      uP = U('uP'),
+      uT = U('uT'),
+      uVel = U('uVel'),
+      uSpot = U('uSpot'),
+      uMouse = U('uMouse'),
+      uRes = U('uRes'),
+      uRect = U('uRect'),
+      uRot = U('uRot');
+    gl.uniform1i(uA, 0);
+    gl.uniform1i(uB, 1);
 
-  go = (i: number) => {
-    const next = (i + items.length) % items.length;
-    if (next === current && progress >= 1) return;
-    from = current;
-    to = next;
-    current = next;
-    progress = reducedMotion ? 1 : 0;
-    transStart = performance.now();
-    renderUI(current);
-  };
+    // Économie d'énergie : petits écrans et appareils modestes reçoivent des textures plus légères,
+    // et les plus modestes ne redessinent la scène que lorsqu'elle bouge vraiment.
+    const small = window.matchMedia('(max-width: 860px), (pointer: coarse)').matches;
+    const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+    const lowEnd = (nav.deviceMemory ?? 8) <= 4 || (navigator.hardwareConcurrency ?? 8) <= 4 || !!nav.connection?.saveData;
+    const textures: (WebGLTexture | null)[] = items.map(() => null);
+    const makeTex = (img: HTMLImageElement) => {
+      const t = gl!.createTexture();
+      gl!.bindTexture(gl!.TEXTURE_2D, t);
+      gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_S, gl!.CLAMP_TO_EDGE);
+      gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_T, gl!.CLAMP_TO_EDGE);
+      gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MIN_FILTER, gl!.LINEAR);
+      gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MAG_FILTER, gl!.LINEAR);
+      gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGBA, gl!.RGBA, gl!.UNSIGNED_BYTE, img);
+      return t;
+    };
+    const load = (i: number, src: string) =>
+      loadImage(src)
+        .then((img) => {
+          textures[i] = makeTex(img);
+          wake();
+        })
+        .catch(() => {});
+    // La première pièce réutilise l'image déjà affichée ; les autres attendent la fin du chargement de la page.
+    const firstLoad = load(current, fallback.currentSrc || (small ? items[current].heroSm : items[current].hero));
+    const later = () => items.forEach((p, i) => i !== current && load(i, small ? p.heroSm : p.hero));
+    const idle = (cb: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 2500 }) : setTimeout(cb, 600));
+    if (document.readyState === 'complete') idle(later);
+    else window.addEventListener('load', () => idle(later), { once: true, signal });
 
-  // Résolution plafonnée : la scène reste nette et le GPU garde de la marge pour le scroll.
-  const maxDpr = window.matchMedia('(pointer: coarse)').matches ? 1.25 : 1.5;
-  let dpr = Math.min(maxDpr, window.devicePixelRatio || 1);
-  function resize() {
-    dpr = Math.min(maxDpr, window.devicePixelRatio || 1);
-    const r = canvas.getBoundingClientRect();
-    canvas.width = Math.round(r.width * dpr);
-    canvas.height = Math.round(r.height * dpr);
-    gl!.viewport(0, 0, canvas.width, canvas.height);
-  }
-  window.addEventListener('resize', resize, { signal });
-  resize();
+    let from = current;
+    let to = current;
+    let progress = 1;
+    let transStart = 0;
+    const TRANS = 1300;
+    let mx = 0.5,
+      my = 0.45,
+      tmx = 0.5,
+      tmy = 0.45,
+      vel = 0,
+      spot = 0;
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    let lastMove = 0;
 
-  let visible = true;
-  let raf = 0;
-  // La scène s'arrête dès qu'elle est presque sortie de l'écran : le GPU est libéré pour le scroll.
-  const io = new IntersectionObserver(
-    ([e]) => {
-      visible = e.intersectionRatio > 0.2;
+    root.addEventListener(
+      'pointermove',
+      (e) => {
+        const r = root.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width;
+        const ny = (e.clientY - r.top) / r.height;
+        vel = Math.min(1, vel + Math.hypot(nx - tmx, ny - tmy) * 4);
+        tmx = nx;
+        tmy = ny;
+        lastMove = performance.now();
+        wake();
+      },
+      { passive: true, signal },
+    );
+
+    go = (i: number) => {
+      const next = (i + items.length) % items.length;
+      if (next === current && progress >= 1) return;
+      from = current;
+      to = next;
+      current = next;
+      progress = reducedMotion ? 1 : 0;
+      transStart = performance.now();
+      renderUI(current);
+      wake();
+    };
+
+    // Résolution plafonnée : la scène reste nette et le GPU garde de la marge pour le scroll.
+    const maxDpr = window.matchMedia('(pointer: coarse)').matches ? 1.25 : 1.5;
+    let dpr = Math.min(maxDpr, window.devicePixelRatio || 1);
+    function resize() {
+      dpr = Math.min(maxDpr, window.devicePixelRatio || 1);
+      const r = canvas.getBoundingClientRect();
+      canvas.width = Math.round(r.width * dpr);
+      canvas.height = Math.round(r.height * dpr);
+      gl!.viewport(0, 0, canvas.width, canvas.height);
+    }
+    window.addEventListener(
+      'resize',
+      () => {
+        resize();
+        wake();
+      },
+      { signal },
+    );
+    resize();
+
+    let visible = true;
+    let raf = 0;
+    // La scène s'arrête dès qu'elle est presque sortie de l'écran : le GPU est libéré pour le scroll.
+    const io = new IntersectionObserver(
+      ([e]) => {
+        visible = e.intersectionRatio > 0.2;
+        if (visible && !raf) raf = requestAnimationFrame(frame);
+      },
+      { threshold: [0, 0.2, 0.4] },
+    );
+    io.observe(root);
+
+    // Cadence : pleine pendant une transition ou quand le pointeur bouge, réduite au repos.
+    const IDLE_FPS = small ? 20 : 30;
+    let lastDraw = 0;
+    function wake() {
       if (visible && !raf) raf = requestAnimationFrame(frame);
-    },
-    { threshold: [0, 0.2, 0.4] },
-  );
-  io.observe(root);
-
-  function frame(t: number) {
-    raf = 0;
-    if (!visible) return;
-    const W = canvas.width;
-    const H = canvas.height;
-    if (!fine || t - lastMove > 2500) {
-      // Projecteur en mouvement autonome quand le pointeur est absent
-      tmx = 0.5 + Math.sin(t / 2600) * 0.22;
-      tmy = 0.42 + Math.cos(t / 3100) * 0.14;
     }
-    mx += (tmx - mx) * 0.08;
-    my += (tmy - my) * 0.08;
-    vel *= 0.92;
-    spot += ((root!.classList.contains('is-ready') ? 1 : 0) - spot) * 0.04;
-    if (progress < 1) progress = Math.min(1, (t - transStart) / TRANS);
 
-    // Boîte de la pièce : centrée, légèrement remontée
-    const mobile = W / dpr < 861;
-    const h = Math.min(H * (mobile ? 0.58 : 0.78), W * (mobile ? 1 : 0.56) * 1.25);
-    const w = h * 0.8;
-    const cx = W / 2;
-    const cy = H * (mobile ? 0.4 : 0.5);
-    const rect = [cx - w / 2, H - (cy + h / 2), w, h];
+    function frame(t: number) {
+      raf = 0;
+      if (!visible) return;
+      const active = progress < 1 || (fine && t - lastMove < 2500) || spot < 0.98;
+      if (!active && t - lastDraw < 1000 / IDLE_FPS) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+      lastDraw = t;
+      const W = canvas.width;
+      const H = canvas.height;
+      if (!fine || t - lastMove > 2500) {
+        // Projecteur en mouvement autonome quand le pointeur est absent
+        tmx = 0.5 + Math.sin(t / 2600) * 0.22;
+        tmy = 0.42 + Math.cos(t / 3100) * 0.14;
+      }
+      mx += (tmx - mx) * 0.08;
+      my += (tmy - my) * 0.08;
+      vel *= 0.92;
+      spot += ((root!.classList.contains('is-ready') ? 1 : 0) - spot) * 0.04;
+      if (progress < 1) progress = Math.min(1, (t - transStart) / TRANS);
 
-    gl!.clearColor(0, 0, 0, 0);
-    gl!.clear(gl!.COLOR_BUFFER_BIT);
-    const ta = textures[progress < 1 ? from : to] ?? textures[to];
-    const tb = textures[to] ?? ta;
-    if (ta && tb) {
-      gl!.activeTexture(gl!.TEXTURE0);
-      gl!.bindTexture(gl!.TEXTURE_2D, ta);
-      gl!.activeTexture(gl!.TEXTURE1);
-      gl!.bindTexture(gl!.TEXTURE_2D, tb);
-      const eased = progress < 1 ? progress * progress * (3 - 2 * progress) : 1;
-      gl!.uniform1f(uP, progress < 1 ? eased : 1);
-      gl!.uniform1f(uT, t / 1000);
-      gl!.uniform1f(uVel, vel);
-      gl!.uniform1f(uSpot, spot);
-      gl!.uniform2f(uMouse, mx * W, (1 - my) * H);
-      gl!.uniform2f(uRes, W, H);
-      gl!.uniform4f(uRect, rect[0], rect[1], rect[2], rect[3]);
-      const ra = ROT[(progress < 1 ? from : to) % ROT.length];
-      const rb = ROT[to % ROT.length];
-      gl!.uniform1f(uRot, ((progress < 1 ? ra + (rb - ra) * eased : rb) * Math.PI) / 180);
-      gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
-      if (!root!.classList.contains('has-gl')) root!.classList.add('has-gl');
+      // Boîte de la pièce : centrée, légèrement remontée
+      const mobile = W / dpr < 861;
+      const h = Math.min(H * (mobile ? 0.58 : 0.78), W * (mobile ? 1 : 0.56) * 1.25);
+      const w = h * 0.8;
+      const cx = W / 2;
+      const cy = H * (mobile ? 0.4 : 0.5);
+      const rect = [cx - w / 2, H - (cy + h / 2), w, h];
+
+      gl!.clearColor(0, 0, 0, 0);
+      gl!.clear(gl!.COLOR_BUFFER_BIT);
+      const ta = textures[progress < 1 ? from : to] ?? textures[to];
+      const tb = textures[to] ?? ta;
+      if (ta && tb) {
+        gl!.activeTexture(gl!.TEXTURE0);
+        gl!.bindTexture(gl!.TEXTURE_2D, ta);
+        gl!.activeTexture(gl!.TEXTURE1);
+        gl!.bindTexture(gl!.TEXTURE_2D, tb);
+        const eased = progress < 1 ? progress * progress * (3 - 2 * progress) : 1;
+        gl!.uniform1f(uP, progress < 1 ? eased : 1);
+        gl!.uniform1f(uT, t / 1000);
+        gl!.uniform1f(uVel, vel);
+        gl!.uniform1f(uSpot, spot);
+        gl!.uniform2f(uMouse, mx * W, (1 - my) * H);
+        gl!.uniform2f(uRes, W, H);
+        gl!.uniform4f(uRect, rect[0], rect[1], rect[2], rect[3]);
+        const ra = ROT[(progress < 1 ? from : to) % ROT.length];
+        const rb = ROT[to % ROT.length];
+        gl!.uniform1f(uRot, ((progress < 1 ? ra + (rb - ra) * eased : rb) * Math.PI) / 180);
+        gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
+        if (!root!.classList.contains('has-gl')) root!.classList.add('has-gl');
+      }
+      // Appareil modeste au repos : la scène reste figée jusqu'au prochain mouvement
+      if (lowEnd && !active && ta) return;
+      raf = requestAnimationFrame(frame);
     }
-    raf = requestAnimationFrame(frame);
+    firstLoad.then(wake);
+    wake();
+
+    signal.addEventListener('abort', () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+      textures.forEach((tx) => tx && gl!.deleteTexture(tx));
+      gl!.getExtension('WEBGL_lose_context')?.loseContext();
+    });
   }
-  Promise.all(loading).then(() => {
-    if (!raf) raf = requestAnimationFrame(frame);
-  });
-  raf = requestAnimationFrame(frame);
-
-  signal.addEventListener('abort', () => {
-    io.disconnect();
-    cancelAnimationFrame(raf);
-    textures.forEach((tx) => tx && gl!.deleteTexture(tx));
-    gl!.getExtension('WEBGL_lose_context')?.loseContext();
-  });
 }

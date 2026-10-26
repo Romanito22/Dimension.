@@ -4,24 +4,17 @@ import { lenis, reducedMotion, onScrollFrame, docTop } from './scroll';
 import { initCartUI } from './cart-ui';
 import { initShop } from './shop';
 import { initProduct } from './product';
-import { initCheckout } from './checkout';
 import { initForms } from './forms';
 import { initCarousels } from './carousel';
 import { introDone, splitChars } from './effects';
-import { initFlip, initScrub } from './home';
-import { initDropViewer } from './dropviewer';
 import { initQuickAdd } from './quickadd';
-import { initTable } from './table';
 import { initSearch } from './search';
 import { initWish } from './wish';
 import { initProductExtras } from './product-extras';
 import { initTrack } from './track';
-import { initAccount } from './account';
 import { initResume, initWelcome, initDropReminder } from './personal';
 import { initLook } from './look';
 import { initHelp } from './help';
-import { initProductMedia } from './product-media';
-import { initTikTok } from './tiktok';
 import { initDialogs } from './dialogs';
 import { $mySize } from '../lib/saved';
 import { link, localPath, lang } from './i18n';
@@ -230,24 +223,35 @@ document.addEventListener('astro:page-load', () => {
   markActive();
   splitChars();
   initReveal(signal);
-  initDropViewer(signal, introDone);
-  initScrub(signal);
-  initTable(signal);
-  initFlip(signal);
   initParallax(signal);
   initCarousels(signal);
   initForms(signal);
   initShop(signal);
   initProduct(signal);
   initProductExtras(signal);
-  initProductMedia(signal);
-  initTikTok(signal);
-  initCheckout(signal);
   initTrack(signal);
-  initAccount(signal);
   initResume(signal);
   initLook(signal);
   initDropReminder(signal);
+
+  // Modules propres à une page : téléchargés seulement là où ils servent
+  const when = (selector: string, run: () => Promise<unknown>) => {
+    if (document.querySelector(selector)) run();
+  };
+  const live = () => !signal.aborted;
+  when('[data-dropviewer]', () => import('./dropviewer').then((m) => live() && m.initDropViewer(signal, introDone)));
+  when('[data-scrub], [data-flip]', () =>
+    import('./home').then((m) => {
+      if (!live()) return;
+      m.initScrub(signal);
+      m.initFlip(signal);
+    }),
+  );
+  when('[data-table-stage]', () => import('./table').then((m) => live() && m.initTable(signal)));
+  when('[data-checkout]', () => import('./checkout').then((m) => live() && m.initCheckout(signal)));
+  when('[data-account]', () => import('./account').then((m) => live() && m.initAccount(signal)));
+  when('[data-product]', () => import('./product-media').then((m) => live() && m.initProductMedia(signal)));
+  when('[data-tiktok]', () => import('./tiktok').then((m) => live() && m.initTikTok(signal)));
 
   document.querySelectorAll<HTMLAnchorElement>('[data-to-top]').forEach((a) =>
     a.addEventListener(

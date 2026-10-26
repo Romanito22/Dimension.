@@ -24,6 +24,7 @@ const m = media(k, alt, localeFromPath(Astro.url.pathname));
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : undefined}
       decoding="async"
+      srcset={m.srcset}
       sizes={sizes}
       class={className}
       transition:name={vt}
@@ -37,6 +38,7 @@ const m = media(k, alt, localeFromPath(Astro.url.pathname));
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : undefined}
       decoding="async"
+      srcset={m.srcset}
       sizes={sizes}
       class={className}
     />

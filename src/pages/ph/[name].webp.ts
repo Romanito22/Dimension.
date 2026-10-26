@@ -11,7 +11,7 @@ import { media } from '../../lib/media';
 
 // Largeur de sortie : assez pour un écran Retina sans alourdir la page.
 function targetWidth(key: string, w: number) {
-  if (key === 'texture/gravel') return 1400;
+  if (key === 'texture/gravel') return 1000;
   if (key.startsWith('social/')) return 600;
   return Math.min(1600, Math.round(w * 1.125));
 }
@@ -22,6 +22,7 @@ const VERSION = crypto
   .createHash('sha1')
   .update(fs.readFileSync(path.resolve(process.cwd(), 'src/lib/placeholder.ts')))
   .update(fs.readFileSync(path.resolve(process.cwd(), 'src/data/products.json')))
+  .update(fs.readFileSync(path.resolve(process.cwd(), 'src/pages/ph/[name].webp.ts')))
   .digest('hex')
   .slice(0, 12);
 
@@ -35,7 +36,8 @@ async function render(key: string) {
     .png()
     .toBuffer();
   const encode = (quality: number) => sharp(raster).webp({ quality, alphaQuality: 90, effort: 5 }).toBuffer();
-  let buf = await encode(80);
+  // Texture de fond : grain fin sous un voile sombre, une qualité moyenne suffit
+  let buf = await encode(key === 'texture/gravel' ? 46 : 80);
   // Le grain du gravier se compresse mal : on baisse un peu la qualité, invisible à l'œil.
   if (buf.length > 160_000) buf = await encode(64);
   fs.mkdirSync(CACHE, { recursive: true });

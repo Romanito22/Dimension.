@@ -181,6 +181,24 @@ Pour ajouter une photo : dépose-la dans `originales/`, ajoute une ligne dans `J
 
 ---
 
+## Performance
+
+Mesures Lighthouse (mobile, 4G simulée) avant → après optimisation :
+
+| Page | Performance | Affichage du visuel principal |
+|---|---|---|
+| Accueil | 32 → ~85 | 9,7 s → 2,0 s (mesuré, réseau et processeur bridés) |
+| Boutique | 73 → ~96 | 6,8 s → 1,5 s |
+| Fiche produit | 92 → ~97 | 3,2 s → ~2,3 s |
+
+Ce qui a été fait :
+- **Images responsives** : chaque vraie photo existe en 480, 800 et 1200 px (`src/pages/img/[name].webp.ts`, générées au build depuis `public/images`), avec `srcset` ; les vignettes (panier, recherche, favoris) utilisent la plus petite.
+- **Scène WebGL de l'accueil** : s'allume au premier geste (souris, toucher, scroll, clavier) — l'image fixe s'affiche d'abord ; textures 800 px sur mobile, cadence réduite au repos, figée sur les appareils modestes ou en mode économie de données, arrêt hors écran.
+- **Chargement prioritaire** : visuel de l'accueil et premières cartes de la boutique en `fetchpriority="high"`, polices du premier écran préchargées, CSS intégré à la page (`inlineStylesheets: 'always'`).
+- **JavaScript découpé par page** : scène, table, paiement, espace client, vue 3D et TikTok ne sont téléchargés que sur leurs pages.
+- **Sections lointaines** rendues à l'approche de l'écran (`.cv`, `content-visibility: auto`), animations limitées à `transform` / `opacity`.
+- **Transitions plus vives** : rideau entre les pages ~0,45 s, intro 0,65 s passable d'un clic ou d'un toucher.
+
 ## Brancher les vrais services
 
 Tout fonctionne en local, mais trois éléments sont **simulés** :

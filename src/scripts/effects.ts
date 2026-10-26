@@ -150,24 +150,30 @@ if (wipe && !reducedMotion) {
   // Chargement complet (changement de langue, ou site sans routeur) : le rideau tombe
   // avant de quitter la page, et se relève à l'arrivée (voir le script en tête de Base).
   const routed = !!document.querySelector('meta[name="astro-view-transitions-enabled"]');
-  document.addEventListener('click', (e) => {
-    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
-    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    if (routed && !a.hasAttribute('data-astro-reload')) return;
-    if (a.target || a.hasAttribute('download') || a.origin !== location.origin) return;
-    const url = new URL(a.href);
-    if (url.pathname === location.pathname && url.hash) return;
-    e.preventDefault();
-    try {
-      sessionStorage.setItem('dim-wipe', '1');
-    } catch {
-      /* ignore */
-    }
-    wipe.classList.remove('is-out');
-    void wipe.offsetWidth;
-    wipe.classList.add('is-in');
-    setTimeout(() => (location.href = a.href), 300);
-  });
+  // (phase de capture : on passe avant le routeur, qui sinon recharge la page tout de suite)
+  window.addEventListener(
+    'click',
+    (e) => {
+      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
+      if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (routed && !a.hasAttribute('data-astro-reload')) return;
+      if (a.target || a.hasAttribute('download') || a.origin !== location.origin) return;
+      const url = new URL(a.href);
+      if (url.pathname === location.pathname && url.hash) return;
+      e.preventDefault();
+      e.stopPropagation(); // le routeur ne doit pas recharger la page avant la fin du rideau
+      try {
+        sessionStorage.setItem('dim-wipe', '1');
+      } catch {
+        /* ignore */
+      }
+      wipe.classList.remove('is-out');
+      void wipe.offsetWidth;
+      wipe.classList.add('is-in');
+      setTimeout(() => (location.href = a.href), 300);
+    },
+    true,
+  );
   if (document.documentElement.classList.contains('wipe-cover')) {
     wipe.classList.add('is-in');
     document.documentElement.classList.remove('wipe-cover');

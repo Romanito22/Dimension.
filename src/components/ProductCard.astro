@@ -1,7 +1,7 @@
 ---
 import Img from './Img.astro';
-import { media } from '../lib/media';
-import { formatPrice, imageKeys, availableSizes, totalStock, badgeLabel, stockText, SIZES, LOW_STOCK, HOT_STOCK, type Product } from '../lib/shop';
+import { media, galleryKeys } from '../lib/media';
+import { formatPrice, availableSizes, totalStock, badgeLabel, stockText, SIZES, LOW_STOCK, HOT_STOCK, type Product } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
 const locale = localeFromPath(Astro.url.pathname);
 const t = translator(locale);
@@ -13,7 +13,7 @@ interface Props {
   sizes?: string;
 }
 const { product: p, index = 0, vt = false, sizes = '(max-width: 700px) 50vw, 25vw' } = Astro.props;
-const [k1, k2] = imageKeys(p);
+const [k1, k2] = galleryKeys(p);
 const avail = availableSizes(p);
 const soldOut = avail.length === 0;
 const stock = totalStock(p);

@@ -7,6 +7,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import sharp from 'sharp';
 import { SPECS, placeholderKeys, encodeKey, decodeKey } from '../../lib/placeholder';
+import { media } from '../../lib/media';
 
 // Largeur de sortie : assez pour un écran Retina sans alourdir la page.
 function targetWidth(key: string, w: number) {
@@ -43,7 +44,10 @@ async function render(key: string) {
 }
 
 export function getStaticPaths() {
-  return placeholderKeys().map((key) => ({ params: { name: encodeKey(key) } }));
+  // Seuls les visuels sans vraie photo sont générés
+  return placeholderKeys()
+    .filter((key) => media(key).placeholder)
+    .map((key) => ({ params: { name: encodeKey(key) } }));
 }
 
 export const GET: APIRoute = async ({ params }) => {

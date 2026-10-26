@@ -155,43 +155,27 @@ Le site les utilise automatiquement. Idéalement en SVG, sinon en PNG transparen
 
 ---
 
-## Photos à produire
+## Photos
 
-Le site affiche des **visuels provisoires** qui redessinent chaque pièce. Chaque visuel indique en bas à droite le chemin exact du fichier qui le remplacera. **Dépose une photo au bon chemin (`.jpg`, `.webp` ou `.png`), relance le build : elle remplace automatiquement le placeholder.**
+Le site utilise **tes vraies photos**, détourées : gravier, fond gris, filigrane TikTok, logo d'angle et numéros ont été retirés, il ne reste que le vêtement. Les pièces sont reposées sur les couleurs de la marque (studio clair ou framboise) avec une ombre douce.
 
-> Conseils : JPG qualité 80–85 ou WebP, < 500 Ko par image. Pas de filigrane TikTok sur les photos du site (utilise les originaux).
-
-### Produits — 4 photos par pièce, format 4:5 (1600 × 2000 px)
-
-| Fichier | Contenu | Fond |
+| Étape | Fichier | Rôle |
 |---|---|---|
-| `public/images/products/dim-00X-1.jpg` | **Face**, à plat ou sur cintre, bien centré | gris clair uni (comme tes mockups) |
-| `…-2.jpg` | **Dos** (s'affiche au survol dans la boutique) | gris clair uni |
-| `…-3.jpg` | **Détail** : broderie / print / maille en gros plan | libre |
-| `…-4.jpg` | **Ambiance** : à plat sur le gravier au soleil, ou porté | gravier / extérieur |
+| Originaux | `tools/visuels/originales/` | Les photos telles que reçues (avec filigrane) |
+| 1. Détourage | `tools/visuels/detourer.py` → `tools/visuels/detoures/` | Gomme le filigrane, détoure (modèle BiRefNet via `rembg`), ne garde que le vêtement, redresse la face du Love |
+| 2. Composition | `tools/visuels/composer.py` → `public/images/` | Fiches produit, détourés 4:5, catégories, lookbook, bandeaux, grille sociale |
 
-Soit 5 pièces × 4 = **20 photos** (`dim-001` = Love Over Everything, `dim-002` = Crew, `dim-003` = Splash, `dim-004` = Doodle, `dim-005` = Pull Camo).
+```bash
+python -m venv .venv && .venv/bin/pip install "rembg[cpu]" scipy opencv-python-headless
+.venv/bin/python tools/visuels/detourer.py   # une fois par nouvelle photo
+.venv/bin/python tools/visuels/composer.py   # régénère tous les visuels
+```
 
-**Tes photos actuelles peuvent déjà servir** (version sans filigrane) :
-- T-shirt blanc, monogramme brodé (vue de face en diagonale) → `products/dim-001-1.jpg`
-- T-shirt blanc, dos LOVE à plat → `products/dim-001-2.jpg` **et** `hero/desktop.jpg`
-- Gros plan du monogramme près du col → `products/dim-001-3.jpg` et `story/1.jpg`
-- Dos LOVE en diagonale → `products/dim-001-4.jpg`
-- Mockups Crew, Splash, Doodle, Camo (face/dos séparés) → `dim-002-1/2`, `dim-003-1/2`, `dim-004-1`, `dim-005-1`
+Pour ajouter une photo : dépose-la dans `originales/`, ajoute une ligne dans `JOBS` (`detourer.py`), puis relance les deux scripts. Une image déposée directement dans `public/images/<clé>.webp|jpg|png` est aussi prise telle quelle. Les fiches n'affichent que les vraies photos disponibles (`galleryKeys`) ; un visuel provisoire n'apparaît plus que s'il n'existe aucune photo.
 
-### Pages
-
-| Fichier | Format | Taille | Contenu |
-|---|---|---|---|
-| `cutout/dim-00X-front.png` et `cutout/dim-00X-back.png` | 4:5, **PNG détouré (fond transparent)** | 2000 × 2500 | Chaque pièce à plat, face et dos, sans fond : elles apparaissent sous le projecteur du hero et dans la section « Devant / Dos » (10 fichiers) |
-| `hero/desktop.jpg` | 16:9 | 2560 × 1440 | Image de partage sur les réseaux (Open Graph) |
-| `categories/t-shirts.jpg`, `categories/maille.jpg`, `categories/love.jpg` | 3:4 | 1500 × 2000 | Tuiles catégories de l'accueil |
-| `story/1.jpg`, `story/3.jpg` | 4:5 | 1600 × 2000 | Page « La marque » (détails, atelier, mains) |
-| `story/2.jpg` | 16:9 | 2560 × 1440 | Grand bandeau « La marque » |
-| `lookbook/1.jpg` … `lookbook/9.jpg` | 1, 5, 9 en 16:9 · les autres en 4:5 | 2560 × 1440 / 1600 × 2000 | Lookbook Drop 01 |
-| `social/1.jpg` … `social/6.jpg` | 1:1 | 1080 × 1080 | Grille TikTok / Instagram |
-
-**Total : 20 photos produit + 10 détourés + 21 photos de pages.** Astuce détourage : remove.bg ou Photoshop « Sélectionner le sujet », puis export PNG.
+**Ce qui manque encore** (à shooter pour aller plus loin) :
+- le **dos** du T-shirt Doodle et du Pull Camo (la face sert pour l'instant des deux côtés) ;
+- des **photos portées** (sur modèle) pour chaque pièce, et des gros plans nets en haute définition (les mockups Crew/Splash/Doodle/Camo font ~800 px de large : les gros plans sont un peu doux).
 
 ---
 

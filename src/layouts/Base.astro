@@ -11,8 +11,8 @@ import CartDrawer from '../components/CartDrawer.astro';
 import Search from '../components/Search.astro';
 import TabBar from '../components/TabBar.astro';
 import Help from '../components/Help.astro';
-import { media } from '../lib/media';
-import { getProducts, getBrand, imageKeys, categoryLabel, badgeLabel } from '../lib/shop';
+import { media, galleryKeys } from '../lib/media';
+import { getProducts, getBrand, categoryLabel, badgeLabel } from '../lib/shop';
 import { localeFromPath, translator, href, type RouteKey } from '../i18n';
 import { MONO_VIEWBOX, MONO_BOWL, MONO_STEM, MONO_RING } from '../lib/logo';
 
@@ -36,7 +36,7 @@ const brand = getBrand(locale);
 const {
   title,
   description = brand.description,
-  image = '/ph/hero--desktop.webp',
+  image = media('hero/desktop').src,
   header = 'solid',
   page = 'default',
   jsonld,
@@ -48,7 +48,7 @@ const alternates = route ? { fr: new URL(href('fr', route, slug), Astro.site), e
 
 // Catalogue embarqué pour la recherche, les favoris et les suggestions du panier
 const catalog = getProducts(locale).map((p) => {
-  const [k1, k2] = imageKeys(p);
+  const [k1, k2] = galleryKeys(p);
   return {
     id: p.id,
     slug: p.slug,

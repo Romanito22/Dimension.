@@ -5,6 +5,7 @@ import path from 'node:path';
 import { SPECS, encodeKey } from './placeholder';
 import products from '../data/products.json';
 import { localize, type Locale } from '../i18n';
+import { imageKeys } from './shop';
 
 const EXTENSIONS = ['webp', 'jpg', 'jpeg', 'png', 'avif'];
 const PUBLIC = path.resolve(process.cwd(), 'public');
@@ -18,17 +19,17 @@ export interface Media {
 }
 
 const EN_ALT: Record<string, string> = {
-  'hero/desktop': 'Love Over Everything T-shirt lying on gravel in the sun',
-  'hero/mobile': 'Love Over Everything T-shirt lying on gravel',
+  'hero/desktop': 'Love Over Everything T-shirt, back view, on a raspberry background',
+  'hero/mobile': 'Love Over Everything T-shirt, back view, on a raspberry background',
   'categories/t-shirts': 'The Drop 01 t-shirts',
   'categories/maille': 'The Camo knit sweater',
   'categories/love': 'The Love Over Everything T-shirt',
   'story/1': 'Close-up of the embroidered monogram',
-  'story/2': 'The Drop 01 pieces laid flat in the sun',
+  'story/2': 'The Drop 01 pieces laid flat on a raspberry background',
   'story/3': 'Detail of the jacquard knit',
   'texture/gravel': 'Gravel in the sun',
 };
-const EN_VIEW = ['front view', 'back view', 'print detail', 'laid flat on gravel'];
+const EN_VIEW = ['front view', 'back view', 'print detail', 'laid flat, folded'];
 
 /** Texte alternatif anglais d'un visuel (le français vient de la fiche du visuel). */
 function englishAlt(key: string, fallback: string) {
@@ -58,6 +59,13 @@ export function media(key: string, alt?: string, locale: Locale = 'fr'): Media {
     }
   }
   return { src: `/ph/${encodeKey(key)}.webp`, alt: alt ?? spec.alt, width: spec.w, height: spec.h, placeholder: true };
+}
+
+/** Visuels d'une fiche : les vraies photos si la pièce en a, sinon les quatre visuels provisoires. */
+export function galleryKeys(p: { id: string }) {
+  const keys = imageKeys(p);
+  const real = keys.filter((k) => !media(k).placeholder);
+  return real.length ? real : keys;
 }
 
 export function brandAsset(name: string): string | null {

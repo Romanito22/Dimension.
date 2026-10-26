@@ -319,15 +319,15 @@ products.forEach((p, i) => {
     scene(800, 1000, 'studio', [{ product: p, view: 'back', x: 0.5, y: 0.5, s: 0.86 }], path),
   );
   add(`${k}-3`, 800, 1000, '4:5', '1600 × 2000', `${p.name} — détail du print`, (path) => detail(p, path));
-  add(`${k}-4`, 800, 1000, '4:5', '1600 × 2000', `${p.name} — à plat sur le gravier`, (path) =>
+  add(`${k}-4`, 800, 1000, '4:5', '1600 × 2000', `${p.name} — à plat, plié`, (path) =>
     scene(800, 1000, 'gravel', [{ product: p, view: hasBack(p) ? 'back' : 'front', x: 0.5, y: 0.5, s: 0.9, r: -12 + i * 5 }], path, 3 + i),
   );
 });
 
-add('hero/desktop', 1600, 900, '16:9', '2560 × 1440', 'T-shirt Love Over Everything posé sur le gravier en plein soleil', (path) =>
+add('hero/desktop', 1600, 900, '16:9', '2560 × 1440', 'T-shirt Love Over Everything, vu de dos, sur fond framboise', (path) =>
   scene(1600, 900, 'gravel', [{ product: P(0), view: 'back', x: 0.68, y: 0.52, s: 0.98, r: -9 }], path, 5),
 );
-add('hero/mobile', 800, 1000, '4:5', '1350 × 1688', 'T-shirt Love Over Everything posé sur le gravier', (path) =>
+add('hero/mobile', 800, 1000, '4:5', '1350 × 1688', 'T-shirt Love Over Everything, vu de dos, sur fond framboise', (path) =>
   scene(800, 1000, 'gravel', [{ product: P(0), view: 'back', x: 0.56, y: 0.34, s: 0.62, r: -9 }], path, 5),
 );
 add('categories/t-shirts', 900, 1200, '3:4', '1500 × 2000', 'Les t-shirts du Drop 01', (path) =>
@@ -347,7 +347,7 @@ add('story/1', 800, 1000, '4:5', '1600 × 2000', 'Le monogramme brodé en gros p
     `<g transform="translate(400 470) scale(4.4) translate(-52 -52)">${monogramSvg(FRAMBOISE, FRAMBOISE, 'stroke="#1a1a1a" stroke-width="2.6" paint-order="stroke"')}</g>` +
     label(800, 1000, 'cotton', path)),
 );
-add('story/2', 1600, 900, '16:9', '2560 × 1440', 'Les pièces du Drop 01 à plat au soleil', (path) =>
+add('story/2', 1600, 900, '16:9', '2560 × 1440', 'Les pièces du Drop 01 à plat sur fond framboise', (path) =>
   scene(1600, 900, 'gravel', [
     { product: P(3), view: 'front', x: 0.24, y: 0.5, s: 0.82, r: -14 },
     { product: P(0), view: 'back', x: 0.52, y: 0.48, s: 0.82, r: 6 },

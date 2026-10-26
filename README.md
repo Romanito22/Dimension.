@@ -43,7 +43,46 @@ Node.js ≥ 22.12 requis. Pour mettre en ligne : importer le dépôt sur **Verce
 | **Alerte de réassort** | « Préviens-moi » sur les tailles épuisées (envoi simulé, à relier à l'outil d'e-mailing). |
 | **Livraison estimée** | Dates calculées en jours ouvrés (envoi le jour même avant 14 h). |
 | **Panier** | Suggestions « Complète ton look », barre de livraison offerte, « Annuler » après un retrait. |
-| **Fiche produit** | Pièces vues récemment, bouton Partager (partage natif ou copie du lien). |
+| **Fiche produit** | Pièces vues récemment, bouton Partager, **vue 3D** (rotation au doigt), **vidéo portée**, **mesures du modèle**, **avis clients**. |
+| **Suivi de commande** | Page `/suivi` (`/en/track`) : numéro + e-mail → frise des étapes (confirmée, préparée, expédiée, en livraison, livrée). Lien direct depuis la confirmation. |
+| **Vidéos TikTok** | Sur l'accueil, cartes verticales qui ouvrent le lecteur TikTok au clic (rien n'est chargé chez TikTok avant). |
+| **Version anglaise** | Tout le site existe en anglais sous `/en/` (bouton FR/EN dans l'en-tête, le menu et le pied de page). |
+
+## Version anglaise
+
+- Les adresses françaises ne changent pas ; l'anglais est servi sous `/en/` : `/en/shop`, `/en/product/<slug>`, `/en/about`, `/en/track`… (table dans `src/i18n/index.ts`).
+- Les textes des pages sont écrits côte à côte : `t('Boutique', 'Shop')`. Pour corriger une traduction, cherche le texte français dans `src/views/` ou `src/components/` et modifie la deuxième valeur.
+- Les données ont un bloc `"en"` : produits (`products.json`), marque (`brand.json`), FAQ (`faq.json`), guide des tailles (`sizes.json`). Un champ absent du bloc `"en"` reprend le français.
+- Les pages elles-mêmes sont dans `src/views/` ; `src/pages/` ne contient que les adresses (français et `en/`).
+
+## Fiche produit : vidéo, 360°, modèle, avis
+
+| Quoi | Comment |
+|---|---|
+| **Vidéo portée** | Dépose `public/videos/dim-001.mp4` (id du produit en minuscules, MP4 H.264, ~6–10 s, format 4:5, sans son, < 4 Mo). Elle apparaît dans la galerie, en lecture automatique et muette. |
+| **Vue 360°** | Dépose une série de photos `public/images/spin/dim-001/01.webp`, `02.webp`… (24 à 36 photos tournant autour de la pièce, fond uni, même cadrage). Sans ces photos, le bouton « Vue 3D » fait tourner le devant et le dos détourés. |
+| **Porté par** | Champ `model` de chaque produit dans `products.json` : `{ "height": 180, "size": "M" }` — **à remplacer par les vraies mesures du modèle du shooting**. |
+| **Avis clients** | `src/data/reviews.json` est **vide** : la section affiche « Pas encore d'avis » et un formulaire (envoi simulé, à relier à Judge.me, Trustpilot ou Google). N'y mets que de **vrais avis** : `{ "product": "DIM-001", "author": "Léa", "rating": 5, "title": "…", "text": "…", "size": "M", "fit": 0, "date": "2026-11-02", "verified": true }` (`fit` : −1 taille petit, 0 taille bien, 1 taille grand). La note moyenne s'affiche alors près du prix et dans les données Google. |
+
+## Vidéos TikTok
+
+Colle les liens de tes vidéos dans `src/data/tiktok.json` :
+
+```json
+{
+  "videos": [
+    { "url": "https://www.tiktok.com/@dimensionbrand/video/7412345678901234567", "caption": "Le LOVE au soleil" }
+  ]
+}
+```
+
+- La miniature est récupérée automatiquement chez TikTok au moment du build. Pour choisir la tienne, dépose `public/images/tiktok/<numéro de la vidéo>.jpg` (format 9:16).
+- Tant que la liste est vide, l'accueil affiche une grille de visuels qui renvoie vers ton profil.
+- Le lecteur TikTok ne se charge qu'au clic sur une vidéo (meilleur pour la vitesse et le RGPD).
+
+## Suivi de commande
+
+En mode démo, la commande est enregistrée dans le navigateur au moment de la confirmation, et les étapes sont **estimées** à partir de la date et du mode de livraison (jours ouvrés, jours fériés exclus). Une fois le paiement branché, relie la page au transporteur (Colissimo, Chronopost, Mondial Relay ou Boxtal) pour afficher les vrais passages du colis : tout est dans `src/scripts/track.ts`.
 
 ## Modifier le contenu
 
@@ -54,7 +93,9 @@ Node.js ≥ 22.12 requis. Pour mettre en ligne : importer le dépôt sur **Verce
 | FAQ | `src/data/faq.json` |
 | Guide des tailles | `src/data/sizes.json` |
 | Couleurs, typos, espacements | `src/styles/tokens.css` |
-| Mentions légales / CGV (passages surlignés à compléter) | `src/pages/mentions-legales.astro`, `src/pages/cgv.astro` |
+| Mentions légales / CGV (passages surlignés à compléter, FR + EN) | `src/views/Legal.astro`, `src/views/Terms.astro` |
+| Vidéos TikTok | `src/data/tiktok.json` |
+| Avis clients (vrais avis uniquement) | `src/data/reviews.json` |
 
 **Ajouter un produit** : copier un bloc dans `products.json`, changer `id` (ex. `DIM-006`), `slug` (l'URL), etc. Le champ `art` choisit le visuel provisoire (`love`, `crew`, `splash`, `doodle`, `camo`) : il disparaît dès que tu déposes les photos.
 
@@ -129,6 +170,8 @@ Tout fonctionne en local, mais trois éléments sont **simulés** :
 1. **Paiement** (`src/scripts/checkout.ts`) : le tunnel est complet (validation, livraison, code promo, confirmation) mais aucun paiement n'est débité. Pour encaisser : [Stripe Checkout](https://stripe.com/docs/payments/checkout) via une fonction serverless (Vercel/Netlify), ou [Shopify Buy Button / Storefront API](https://shopify.dev/docs/storefronts/headless) si tu préfères gérer stocks et commandes dans Shopify.
 2. **Newsletter** (`src/scripts/forms.ts`) : à relier à Brevo, Klaviyo ou Mailchimp (formulaire d'inscription ou API).
 3. **Formulaire de contact** : à relier à Formspree, Basin ou une fonction serverless.
+4. **Avis clients** : formulaire à relier à Judge.me, Trustpilot ou Google Avis clients.
+5. **Suivi de commande** : à relier au transporteur (voir plus haut).
 
 ---
 
@@ -136,12 +179,14 @@ Tout fonctionne en local, mais trois éléments sont **simulés** :
 
 ```
 src/
-  data/         brand.json, products.json, faq.json, sizes.json
+  data/         brand.json, products.json, faq.json, sizes.json, reviews.json, tiktok.json
+  i18n/         langues et adresses des pages (FR à la racine, EN sous /en/)
+  views/        contenu des pages, partagé entre français et anglais
   styles/       tokens.css (variables), global.css, cart.css
   layouts/      Base.astro (head, SEO, header, footer, panier, curseur)
   components/   Header, Footer, CartDrawer, ProductCard, Img, Logo, Newsletter, SizeTable, LegalPage
-  pages/        index, boutique, produit/[slug], panier, commande, la-marque, lookbook, contact, cgv, mentions-legales, 404
-                ph/[name].svg.ts → génère les visuels provisoires
+  pages/        adresses françaises (index, boutique, produit/[slug], suivi…) et anglaises (en/…)
+                ph/[name].webp.ts → génère les visuels provisoires (WebP)
   scripts/      app.ts (cycle de vie), cart-ui, shop (filtres), product, checkout, carousel, forms, scroll
   lib/          shop.ts, cart.ts, media.ts (photo réelle ou placeholder), placeholder.ts, logo.ts
 public/

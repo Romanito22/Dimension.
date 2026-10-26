@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import Img from '../components/Img.astro';
 import Newsletter from '../components/Newsletter.astro';
+import TikTok from '../components/TikTok.astro';
 import { media } from '../lib/media';
 import { getProducts, getBrand, byNewest, formatPrice, imageKeys, categoryLabel, totalStock } from '../lib/shop';
 import { localeFromPath, translator, href } from '../i18n';
@@ -22,8 +23,6 @@ const latest = byNewest(products);
 const signature = products.find((p) => p.art === 'love')!;
 const tshirtCount = products.filter((p) => p.category === 't-shirts').length;
 const knitCount = products.filter((p) => p.category === 'maille').length;
-const socialHandle = brand.handle;
-const tiktok = brand.socials.find((s) => s.name === 'TikTok')!.url;
 const sigUrl = productUrl(signature.slug);
 
 // Scène du hero : la pièce signature d'abord, puis les nouveautés
@@ -333,32 +332,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     </a>
   </section>
 
-  <!-- SOCIAL -->
-  <section class="section social" aria-labelledby="social-title">
-    <div class="wrap">
-      <div class="section-head social__head">
-        <div data-reveal>
-          <span class="label accent">On se retrouve là-bas</span>
-          <h2 id="social-title" class="display h-xl" data-chars>{socialHandle}</h2>
-        </div>
-        <a href={tiktok} target="_blank" rel="noopener" class="btn btn--ghost" data-reveal>Suivre sur TikTok</a>
-      </div>
-      <ul class="social__grid" role="list">
-        {
-          [1, 2, 3, 4, 5, 6].map((n) => (
-            <li data-reveal style={`--i:${n - 1}`}>
-              <a href={tiktok} target="_blank" rel="noopener" class="social__item media ratio-11" aria-label={`Publication ${n} sur TikTok`}>
-                <Img k={`social/${n}`} sizes="(max-width: 700px) 33vw, 16vw" />
-                <span class="social__hover" aria-hidden="true">
-                  <svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor"><path d="M16 0c.4 3 2.3 5 5.6 5.3v3.9c-2 .1-3.8-.5-5.6-1.6V16c0 9.6-10.5 10.2-13.5 4.7C.3 17 1.6 10.8 8.6 10.6v4.1c-.6.1-1.1.2-1.6.4-1.4.5-2.2 1.4-2 3 .4 3 6.1 4 5.6-2V0z"></path></svg>
-                </span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
+  <!-- RÉSEAUX : vidéos TikTok -->
+  <TikTok />
 
   <Newsletter />
 </Base>
@@ -1392,40 +1367,4 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     margin-bottom: 1rem;
   }
 
-  /* SOCIAL */
-  .social__head {
-    flex-wrap: wrap;
-  }
-  .social__head h2 {
-    font-size: clamp(1.5rem, 7.4vw, 4.25rem);
-    overflow-wrap: anywhere;
-  }
-  .social__grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: clamp(8px, 1vw, 16px);
-  }
-  .social__item {
-    display: block;
-    border-radius: var(--radius);
-  }
-  .social__hover {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background: rgb(var(--accent-rgb) / 0.8);
-    color: var(--on-accent);
-    opacity: 0;
-    transition: opacity 0.35s;
-  }
-  .social__item:hover .social__hover,
-  .social__item:focus-visible .social__hover {
-    opacity: 1;
-  }
-  @media (max-width: 860px) {
-    .social__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
 </style>

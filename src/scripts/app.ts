@@ -15,6 +15,9 @@ import { initTable } from './table';
 import { initSearch } from './search';
 import { initWish } from './wish';
 import { initProductExtras } from './product-extras';
+import { initTrack } from './track';
+import { initProductMedia } from './product-media';
+import { initTikTok } from './tiktok';
 import { link, localPath, lang } from './i18n';
 import { href, type RouteKey } from '../i18n';
 
@@ -220,7 +223,10 @@ document.addEventListener('astro:page-load', () => {
   initShop(signal);
   initProduct(signal);
   initProductExtras(signal);
+  initProductMedia(signal);
+  initTikTok(signal);
   initCheckout(signal);
+  initTrack(signal);
 
   document.querySelectorAll<HTMLAnchorElement>('[data-to-top]').forEach((a) =>
     a.addEventListener(

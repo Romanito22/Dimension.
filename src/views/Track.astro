@@ -1,0 +1,342 @@
+---
+import Base from '../layouts/Base.astro';
+import { getBrand } from '../lib/shop';
+import { localeFromPath, translator, href } from '../i18n';
+
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const brand = getBrand(locale);
+// Libellés des modes de livraison, lus par le script de suivi
+const methods = Object.fromEntries(brand.shipping.methods.map((m) => [m.id, m.label]));
+---
+
+<Base
+  title={t('Suivi de commande', 'Order tracking')}
+  description={t('Suis ta commande dimension. étape par étape.', 'Follow your dimension. order step by step.')}
+  page="track"
+  route="track"
+  noindex
+>
+  <section class="wrap trk" data-track>
+    <script type="application/json" data-track-methods set:html={JSON.stringify(methods)} />
+    <header class="trk__head">
+      <p class="label accent">{t('Suivi de commande', 'Order tracking')}</p>
+      <h1 class="display h-2xl patch" data-chars>{t('Où est mon colis ?', "Where's my parcel?")}</h1>
+      <p class="lede muted">
+        {t(
+          'Entre le numéro reçu à la confirmation (DIM-XXXXXX) et ton e-mail : on te montre où en est ta commande.',
+          'Enter the number you got at confirmation (DIM-XXXXXX) and your email: we show you where your order is.',
+        )}
+      </p>
+    </header>
+
+    <div class="trk__grid">
+      <div class="trk__side">
+        <form class="trk__form" data-track-form novalidate>
+          <div class="field">
+            <label for="t-order" class="label">{t('N° de commande', 'Order number')}</label>
+            <input
+              class="input trk__order"
+              id="t-order"
+              name="order"
+              placeholder="DIM-XXXXXX"
+              autocomplete="off"
+              autocapitalize="characters"
+              spellcheck="false"
+              required
+              data-pattern="^DIM-[A-Za-z0-9]{4,10}$"
+              data-message={t('Format attendu : DIM- suivi de 6 caractères.', 'Expected format: DIM- followed by 6 characters.')}
+            />
+            <p class="field-error"></p>
+          </div>
+          <div class="field">
+            <label for="t-email" class="label">{t('E-mail de la commande', 'Order email')}</label>
+            <input class="input" id="t-email" name="email" type="email" autocomplete="email" required />
+            <p class="field-error"></p>
+          </div>
+          <button class="btn btn--accent btn--lg btn--block" type="submit">{t('Suivre ma commande', 'Track my order')} <span class="btn__dot" aria-hidden="true"></span></button>
+        </form>
+
+        <div class="trk__mine" data-track-mine hidden>
+          <p class="label">{t('Tes commandes sur cet appareil', 'Your orders on this device')}</p>
+          <ul role="list" data-track-mine-list></ul>
+        </div>
+      </div>
+
+      <div class="trk__out" aria-live="polite">
+        <div class="trk__idle" data-track-idle>
+          <span class="trk__ring" aria-hidden="true"></span>
+          <p class="display h-lg">{t('Prépare-toi,', 'Get ready,')}<br />{t('ça arrive.', "it's coming.")}</p>
+          <p class="muted">{t('Le suivi apparaît ici dès que tu as entré ta commande.', 'Tracking shows up here once you enter your order.')}</p>
+        </div>
+
+        <div class="trk__none" data-track-none hidden>
+          <p class="display h-lg">{t('Commande introuvable', 'Order not found')}</p>
+          <p class="muted">
+            {t(
+              "On ne trouve pas cette commande sur cet appareil. Vérifie le numéro et l'e-mail utilisés lors de la commande — ou écris-nous, on regarde pour toi.",
+              "We can't find this order on this device. Check the number and email used when ordering — or write to us and we'll look it up.",
+            )}
+          </p>
+          <a href={href(locale, 'contact')} class="btn">{t('Nous écrire', 'Contact us')}</a>
+        </div>
+
+        <article class="trk__card" data-track-result hidden tabindex="-1">
+          <header class="trk__card-head">
+            <div>
+              <p class="label accent" data-track-status></p>
+              <h2 class="display trk__id" data-track-id></h2>
+            </div>
+            <dl class="trk__meta">
+              <div><dt class="label">{t('Passée le', 'Placed on')}</dt><dd data-track-date></dd></div>
+              <div><dt class="label">{t('Livraison', 'Delivery')}</dt><dd data-track-method></dd></div>
+              <div><dt class="label">Total</dt><dd data-track-total></dd></div>
+            </dl>
+          </header>
+          <div class="trk__bar" aria-hidden="true"><span data-track-bar></span></div>
+          <ol class="trk__steps" role="list" data-track-steps></ol>
+          <div class="trk__lines" data-track-lines></div>
+          <p class="trk__note muted">
+            {t(
+              'Démo : les étapes sont estimées à partir de la date de commande et du mode de livraison. Une fois la boutique reliée au transporteur, ce suivi affichera les vrais passages du colis.',
+              "Demo: steps are estimated from the order date and delivery method. Once the shop is connected to the carrier, this page will show the parcel's real scans.",
+            )}
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .trk {
+    padding-block: var(--space-lg);
+  }
+  .trk__head {
+    display: grid;
+    gap: 1rem;
+    max-width: 60ch;
+    margin-bottom: var(--space-md);
+  }
+  .trk__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+    gap: var(--space-md);
+    align-items: start;
+  }
+  .trk__side {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .trk__form {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 2.4vw, 2rem);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 6px 6px 0 var(--brand);
+  }
+  .trk__order {
+    font-family: var(--f-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .trk__mine {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .trk__mine ul {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .trk__mine :global(button) {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 12px;
+    text-align: left;
+    font-size: var(--fs-sm);
+    transition:
+      border-color 0.2s,
+      background 0.2s;
+  }
+  .trk__mine :global(button:hover),
+  .trk__mine :global(button[aria-current='true']) {
+    border-style: solid;
+    border-color: var(--ink);
+    background: #fff;
+  }
+  .trk__mine :global(b) {
+    font-family: var(--f-mono);
+  }
+  .trk__idle,
+  .trk__none {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    padding: clamp(1.5rem, 3vw, 3rem);
+    border: 2px dashed var(--line-strong);
+    border-radius: 16px;
+  }
+  .trk__ring {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid var(--brand);
+    animation: trk-pulse 2s var(--ease-out) infinite;
+  }
+  @keyframes trk-pulse {
+    50% {
+      transform: scale(1.12);
+    }
+  }
+  .trk__card {
+    display: grid;
+    gap: 1.5rem;
+    padding: clamp(1.25rem, 2.6vw, 2.5rem);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 8px 8px 0 var(--ink);
+    animation: trk-in 0.5s var(--ease-out);
+  }
+  @keyframes trk-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  .trk__card:focus {
+    outline: none;
+  }
+  .trk__card-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+  .trk__id {
+    font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+    margin-top: 0.4rem;
+  }
+  .trk__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.75rem;
+  }
+  .trk__meta dt {
+    color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+  .trk__meta dd {
+    font-weight: 600;
+  }
+  .trk__bar {
+    height: 10px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--cotton);
+  }
+  .trk__bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: repeating-linear-gradient(-45deg, var(--brand) 0 8px, #d63a6f 8px 16px);
+    transition: width 1.2s var(--ease-out);
+  }
+  .trk__steps {
+    display: grid;
+    gap: 0;
+  }
+  .trk__steps :global(li) {
+    position: relative;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+  }
+  .trk__steps :global(li:not(:last-child))::before {
+    content: '';
+    position: absolute;
+    left: 17px;
+    top: 36px;
+    bottom: 0;
+    border-left: 2px dashed var(--line-strong);
+  }
+  .trk__steps :global(li.is-done:not(:last-child))::before {
+    border-left: 2px solid var(--ink);
+  }
+  .trk__steps :global(.trk__dot) {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 2px solid var(--line-strong);
+    background: var(--cotton);
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .trk__steps :global(li.is-done .trk__dot) {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--cotton);
+  }
+  .trk__steps :global(li.is-current .trk__dot) {
+    border-color: var(--ink);
+    background: var(--brand);
+    color: #fff;
+    box-shadow: 0 0 0 5px var(--accent-soft);
+  }
+  .trk__steps :global(strong) {
+    display: block;
+    padding-top: 0.45rem;
+  }
+  .trk__steps :global(li:not(.is-done):not(.is-current) strong) {
+    color: var(--muted);
+  }
+  .trk__steps :global(.trk__when) {
+    font-size: var(--fs-sm);
+    color: var(--fg-2);
+  }
+  .trk__steps :global(.trk__desc) {
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .trk__lines {
+    display: grid;
+    gap: 0.6rem;
+    padding-top: 1.25rem;
+    border-top: 2px dashed var(--line-strong);
+  }
+  .trk__lines :global(.trk__line) {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    font-size: var(--fs-sm);
+  }
+  .trk__lines :global(img) {
+    width: 48px;
+    height: 60px;
+    object-fit: cover;
+    border: 1.5px solid var(--ink);
+    border-radius: 8px;
+    background: var(--media);
+  }
+  .trk__note {
+    font-size: var(--fs-xs);
+  }
+  @media (max-width: 860px) {
+    .trk__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

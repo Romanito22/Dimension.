@@ -119,12 +119,26 @@ const countries = t(
                     <span class="ship__text">
                       <strong>{m.label}</strong>
                       <span class="muted">{m.delay}</span>
+                      <span class="ship__eta" data-ship-eta={m.id}></span>
                     </span>
                     <span class="ship__price" data-ship-price={m.id}>{formatPrice(m.price, locale)}</span>
                   </label>
                 ))
               }
             </fieldset>
+            <div class="gift">
+              <label class="check">
+                <input type="checkbox" name="gift" data-gift-toggle />
+                <span>
+                  <strong>{t("C'est un cadeau", "It's a gift")}</strong>
+                  {t(' — aucun prix dans le colis, et un petit mot de ta part si tu veux.', " — no prices in the parcel, and a short note from you if you like.")}
+                </span>
+              </label>
+              <div class="field gift__msg" data-gift-msg hidden>
+                <label for="gift-message" class="label">{t('Ton petit mot', 'Your note')} <span class="muted">{t('(200 caractères max.)', '(200 characters max.)')}</span></label>
+                <textarea class="textarea" id="gift-message" name="giftMessage" maxlength="200" rows="3"></textarea>
+              </div>
+            </div>
             <button type="button" class="btn btn--lg" data-step-next>{t('Continuer vers le paiement', 'Continue to payment')}</button>
           </div>
         </section>
@@ -195,6 +209,7 @@ const countries = t(
       <p class="lede">
         {t('Ta commande de ', 'Your order of ')}<strong data-order-total></strong>{t(' est confirmée. Un e-mail récapitulatif part vers ', ' is confirmed. A summary email is on its way to ')}<strong data-order-email></strong>{t('. On prépare ton colis avec amour — over everything.', '. We\'re packing your parcel with love — over everything.')}
       </p>
+      <p class="confirm__eta" data-order-eta></p>
       <div class="confirm__lines" data-order-lines></div>
       <div class="confirm__ctas">
         <a href={href(locale, 'track')} class="btn btn--accent" data-track-link>{t('Suivre ma commande', 'Track my order')} <span class="btn__dot" aria-hidden="true"></span></a>
@@ -311,6 +326,25 @@ const countries = t(
   }
   .row--3 {
     grid-template-columns: 1fr 1.4fr 1.4fr;
+  }
+  .ship__eta {
+    display: block;
+    font-size: var(--fs-xs);
+    color: var(--brand);
+    font-weight: 600;
+  }
+  .gift {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    padding: 1rem;
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 14px;
+  }
+  .gift:has(input:checked) {
+    border-style: solid;
+    border-color: var(--brand);
+    background: var(--accent-soft);
   }
   .check {
     display: flex;
@@ -474,6 +508,17 @@ const countries = t(
   }
   .confirm .lede {
     max-width: 48ch;
+  }
+  .confirm__eta {
+    padding: 0.6rem 1rem;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--cotton);
+    box-shadow: 3px 3px 0 var(--brand);
+    font-size: var(--fs-sm);
+  }
+  .confirm__eta:empty {
+    display: none;
   }
   .confirm__lines {
     width: min(460px, 100%);

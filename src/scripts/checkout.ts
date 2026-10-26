@@ -3,6 +3,7 @@
 import { $cart, $subtotal, clearCart } from '../lib/cart';
 import { getBrand, shippingFor } from '../lib/shop';
 import { saveOrder } from '../lib/orders';
+import { deliveryWindow, SHIP_DAYS } from '../lib/delivery';
 import { t as tr, price as formatPrice, lang, link } from './i18n';
 import { renderLines } from './cart-ui';
 import { validateAll, validateField } from './forms';
@@ -32,6 +33,11 @@ export function initCheckout(signal: AbortSignal) {
     return brand.shipping.methods.find((m) => m.id === id)!;
   }
 
+  function etaText(min: number, max: number) {
+    const w = deliveryWindow(min, max, new Date(), lang());
+    return min === max ? tr(`Reçue le ${w.from}`, `Delivered ${w.from}`) : tr(`Reçue entre le ${w.from} et le ${w.to}`, `Delivered between ${w.from} and ${w.to}`);
+  }
+
   function totals() {
     const sub = $subtotal.get();
     const discount = Math.round(sub * discountRate * 100) / 100;
@@ -53,6 +59,11 @@ export function initCheckout(signal: AbortSignal) {
     set('discount', `−${formatPrice(t.discount)}`);
     set('total', formatPrice(t.total));
     root!.querySelectorAll<HTMLElement>('[data-discount-row]').forEach((el) => (el.hidden = t.discount === 0));
+    // Date de livraison estimée sous chaque mode
+    form.querySelectorAll<HTMLElement>('[data-ship-eta]').forEach((el) => {
+      const [min, max] = SHIP_DAYS[el.dataset.shipEta!] ?? SHIP_DAYS.relay;
+      el.textContent = etaText(min, max);
+    });
     // Met à jour les prix affichés des modes de livraison
     form.querySelectorAll<HTMLElement>('[data-ship-price]').forEach((el) => {
       const cost = shippingFor(t.sub - t.discount, el.dataset.shipPrice);
@@ -86,7 +97,10 @@ export function initCheckout(signal: AbortSignal) {
     if (!out) return;
     const v = (n: string) => (form.elements.namedItem(n) as HTMLInputElement | null)?.value.trim() ?? '';
     if (i === 0) out.textContent = `${v('firstname')} ${v('lastname')} · ${v('email')}`;
-    if (i === 1) out.textContent = `${v('address')}, ${v('zip')} ${v('city')} · ${method().label}`;
+    if (i === 1) {
+      const gift = (form.elements.namedItem('gift') as HTMLInputElement).checked;
+      out.textContent = `${v('address')}, ${v('zip')} ${v('city')} · ${method().label}${gift ? tr(' · Cadeau', ' · Gift') : ''}`;
+    }
   }
 
   root.addEventListener(
@@ -122,6 +136,17 @@ export function initCheckout(signal: AbortSignal) {
     }
     render();
   }
+  // Option cadeau : le champ du petit mot n'apparaît que si on coche
+  form.querySelector<HTMLInputElement>('[data-gift-toggle]')?.addEventListener(
+    'change',
+    (e) => {
+      const box = form.querySelector<HTMLElement>('[data-gift-msg]')!;
+      box.hidden = !(e.target as HTMLInputElement).checked;
+      if (!box.hidden) box.querySelector('textarea')?.focus();
+    },
+    { signal },
+  );
+
   promoInput.addEventListener(
     'keydown',
     (e) => {
@@ -194,8 +219,13 @@ export function initCheckout(signal: AbortSignal) {
           date: new Date().toISOString(),
           method: method().id,
           total: t.total,
+          gift: (form.elements.namedItem('gift') as HTMLInputElement).checked
+            ? { message: (form.elements.namedItem('giftMessage') as HTMLTextAreaElement).value.trim() }
+            : undefined,
           lines: $cart.get().map((i) => ({ id: i.id, slug: i.slug, name: i.name, size: i.size, color: i.color, qty: i.qty, price: i.price, image: i.image })),
         });
+        const [min, max] = SHIP_DAYS[method().id] ?? SHIP_DAYS.relay;
+        confirm.querySelector('[data-order-eta]')!.textContent = etaText(min, max);
         const track = confirm.querySelector<HTMLAnchorElement>('[data-track-link]');
         if (track) track.href = `${link('track')}?${new URLSearchParams({ commande: order, email })}`;
         layout.hidden = true;

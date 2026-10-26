@@ -1,7 +1,8 @@
 // Fiche produit : livraison estimée, partage, pièces vues récemment,
 // assistant de taille et alerte de réassort.
 import { deliveryWindow } from '../lib/delivery';
-import { $recent, $mySize, pushRecent } from '../lib/saved';
+import { $recent, $mySize, $alerts, pushRecent } from '../lib/saved';
+import { addItem } from '../lib/cart';
 import { catalog } from '../lib/catalog';
 import { t, price, lang } from './i18n';
 import { esc } from './html';
@@ -136,6 +137,49 @@ export function initProductExtras(signal: AbortSignal) {
     );
   }
 
+  /* Porte-le avec : choisir la taille de la pièce assortie et ajouter les deux */
+  const pair = root.querySelector<HTMLElement>('[data-pair]');
+  if (pair) {
+    const mate = JSON.parse(pair.dataset.pairJson!) as { id: string; slug: string; name: string; price: number; color: string; image: string; sizes: { size: string; stock: number }[] };
+    const msg = pair.querySelector<HTMLElement>('[data-pair-msg]')!;
+    let mateSize = '';
+    const pick = (size: string) => {
+      mateSize = size;
+      pair.querySelectorAll<HTMLButtonElement>('[data-pair-size]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.pairSize === size)));
+    };
+    // Taille mémorisée pré-choisie si elle est disponible
+    const mine = $mySize.get();
+    if (mine && mate.sizes.some((s) => s.size === mine && s.stock > 0)) pick(mine);
+    pair.addEventListener(
+      'click',
+      (e) => {
+        const t2 = e.target as HTMLElement;
+        const b = t2.closest<HTMLButtonElement>('[data-pair-size]');
+        if (b) {
+          pick(b.dataset.pairSize!);
+          msg.textContent = '';
+          return;
+        }
+        if (!t2.closest('[data-pair-add]')) return;
+        const mainSize = root!.querySelector<HTMLInputElement>('input[name="size"]:checked')?.value;
+        if (!mainSize) {
+          msg.textContent = t(`Choisis d'abord ta taille pour ${data.name}.`, `First pick your size for ${data.name}.`);
+          root!.querySelector<HTMLElement>('[data-add-main]')?.click(); // affiche l'aide sur les tailles
+          return;
+        }
+        if (!mateSize) {
+          msg.textContent = t(`Choisis ta taille pour ${mate.name}.`, `Pick your size for ${mate.name}.`);
+          return;
+        }
+        const s = mate.sizes.find((x) => x.size === mateSize)!;
+        addItem({ id: mate.id, slug: mate.slug, name: mate.name, price: mate.price, color: mate.color, size: mateSize, max: s.stock, image: new URL(mate.image, location.href).href });
+        root!.querySelector<HTMLElement>('[data-add-main]')?.click(); // ajoute la pièce principale et ouvre le panier
+        msg.textContent = '';
+      },
+      { signal },
+    );
+  }
+
   /* Alerte de réassort (simulée : à relier à l'outil d'e-mailing) */
   const notify = root.querySelector<HTMLFormElement>('[data-notify-form]');
   notify?.addEventListener(
@@ -151,6 +195,7 @@ export function initProductExtras(signal: AbortSignal) {
         return;
       }
       const size = (notify.elements.namedItem('size') as HTMLSelectElement).value;
+      $alerts.set([{ id: data.id, size, date: new Date().toISOString() }, ...$alerts.get().filter((a) => !(a.id === data.id && a.size === size))]);
       msg.style.color = '';
       msg.textContent = t(`C'est noté : on t'écrit dès que le ${size} revient.`, `Got it: we'll email you as soon as ${size} is back.`);
       notify.hidden = true;

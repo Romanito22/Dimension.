@@ -16,9 +16,14 @@ import { initSearch } from './search';
 import { initWish } from './wish';
 import { initProductExtras } from './product-extras';
 import { initTrack } from './track';
+import { initAccount } from './account';
+import { initResume, initWelcome, initDropReminder } from './personal';
+import { initLook } from './look';
+import { initHelp } from './help';
 import { initProductMedia } from './product-media';
 import { initTikTok } from './tiktok';
 import { initDialogs } from './dialogs';
+import { $mySize } from '../lib/saved';
 import { link, localPath, lang } from './i18n';
 import { href, type RouteKey } from '../i18n';
 
@@ -179,7 +184,8 @@ function markActive() {
   document.querySelectorAll<HTMLElement>('[data-tab]').forEach((a) => {
     const key = a.dataset.tab as RouteKey;
     const target = href(lang(), key).replace(/\/$/, '') || '/';
-    const on = path === target || (key === 'shop' && isProduct);
+    const isMine = /^\/(en\/)?(favoris|wishlist|compte|account|suivi|track)$/.test(path);
+    const on = path === target || (key === 'shop' && isProduct) || (key === 'account' && isMine);
     if (on) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
@@ -193,9 +199,21 @@ document.addEventListener('keydown', (e) => {
   document.documentElement.classList.toggle('show-grid');
 });
 
+/* ---------- Taille mémorisée : mise en évidence partout (voir global.css) ---------- */
+const applyMySize = () => {
+  const v = $mySize.get();
+  if (v) document.documentElement.dataset.mysize = v;
+  else delete document.documentElement.dataset.mysize;
+};
+$mySize.subscribe(applyMySize);
+// le routeur remplace les attributs de <html> à chaque page
+document.addEventListener('astro:after-swap', applyMySize);
+
 /* ---------- Cycle de vie des pages ---------- */
 initCartUI();
 initDialogs();
+initHelp();
+initWelcome();
 initQuickAdd();
 initSearch();
 initWish();
@@ -226,6 +244,10 @@ document.addEventListener('astro:page-load', () => {
   initTikTok(signal);
   initCheckout(signal);
   initTrack(signal);
+  initAccount(signal);
+  initResume(signal);
+  initLook(signal);
+  initDropReminder(signal);
 
   document.querySelectorAll<HTMLAnchorElement>('[data-to-top]').forEach((a) =>
     a.addEventListener(

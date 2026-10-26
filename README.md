@@ -48,6 +48,21 @@ Node.js ≥ 22.12 requis. Pour mettre en ligne : importer le dépôt sur **Verce
 | **Vidéos TikTok** | Sur l'accueil, cartes verticales qui ouvrent le lecteur TikTok au clic (rien n'est chargé chez TikTok avant). |
 | **Version anglaise** | Tout le site existe en anglais sous `/en/` (bouton FR/EN dans l'en-tête, le menu et le pied de page). |
 
+## Expérience client
+
+| | |
+|---|---|
+| **Mon espace** | Page `/compte` (`/en/account`, onglet « Moi » sur mobile) : taille mémorisée + mini-calcul de taille, commandes, favoris, pièces vues, alertes de réassort, e-mail retenu, bouton « tout effacer ». Tout reste dans le navigateur. |
+| **Centre d'aide** | Fenêtre ouverte depuis le pied de page, le menu, la fiche produit, le suivi et l'espace client : rappel de la dernière commande, raccourcis (suivi, retour, taille, livraison), FAQ cherchable (sans accents), contacts (formulaire, e-mail, DM TikTok/Instagram). |
+| **Retour ou échange en libre-service** | Sur la page de suivi : choix des pièces, échange de taille (les plus proches d'abord) ou remboursement, raison, puis récapitulatif et prochaines étapes. Annulable. Délai : fin de livraison estimée + `returnsDays`. |
+| **Acheter le look** | Sur le lookbook, chaque look ouvre une fenêtre avec ses pièces, taille préremplie si elle est mémorisée, possibilité d'en écarter une, tout ajouter en un geste. |
+| **Porté avec** | Sur la fiche produit, la pièce associée (`pair` dans `products.json`) ajoutable dans la taille choisie. |
+| **Mettre de côté** | Dans le panier, une pièce part dans les favoris (avec « Annuler »). |
+| **Emballage cadeau** | Case « C'est un cadeau » au paiement + petit mot (200 caractères), rappelé sur la confirmation. |
+| **Bienvenue** | Carte discrète après quelques secondes à la première visite, avec le code `BIENVENUE10` copiable. Ne s'affiche ni au panier ni au paiement, une seule fois. |
+| **Rappel du drop** | Bouton « Ajouter à mon agenda » (fichier `.ics`) à côté du compte à rebours. |
+| **Reprendre où j'en étais** | Sur l'accueil, retour rapide vers le panier en cours et les dernières pièces vues. |
+
 ## Identité visuelle
 
 - **Titres en relief** : classe `patch` (lettres framboise cernées d'encre, épaisseur « extrudée »). Ajoute `patch` à n'importe quel titre.
@@ -98,6 +113,8 @@ Colle les liens de tes vidéos dans `src/data/tiktok.json` :
 ## Suivi de commande
 
 En mode démo, la commande est enregistrée dans le navigateur au moment de la confirmation, et les étapes sont **estimées** à partir de la date et du mode de livraison (jours ouvrés, jours fériés exclus). Une fois le paiement branché, relie la page au transporteur (Colissimo, Chronopost, Mondial Relay ou Boxtal) pour afficher les vrais passages du colis : tout est dans `src/scripts/track.ts`.
+
+Les demandes de retour/échange (`src/scripts/returns.ts`) sont enregistrées avec la commande (champ `return`). Pour la vraie boutique, envoie-les à ton outil de retours (Boxtal, Sendcloud, Shopify Returns…) qui génère l'étiquette.
 
 ## Modifier le contenu
 

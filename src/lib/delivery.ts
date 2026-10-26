@@ -61,6 +61,9 @@ export function addBusinessDays(from: Date, n: number) {
   return d;
 }
 
+/** Jours ouvrés entre l'expédition et la livraison, par mode (min, max). */
+export const SHIP_DAYS: Record<string, [number, number]> = { relay: [3, 5], home: [2, 3], express: [1, 1] };
+
 export function deliveryWindow(minDays: number, maxDays: number, now = new Date(), locale: Locale = 'fr') {
   const late = now.getHours() >= 14 || !isBusinessDay(now);
   const ship = late ? 1 : 0;

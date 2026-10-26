@@ -1,15 +1,15 @@
 // Suivi de commande (démo) : retrouve une commande passée sur cet appareil et
 // estime ses étapes à partir de la date et du mode de livraison.
 import { $orders, findOrder, type Order } from '../lib/orders';
-import { addBusinessDays, isBusinessDay } from '../lib/delivery';
+import { addBusinessDays, isBusinessDay, SHIP_DAYS } from '../lib/delivery';
 import { catalog } from '../lib/catalog';
 import { validateAll } from './forms';
 import { t, price, lang } from './i18n';
 import { intlLocale } from '../i18n';
 import { esc } from './html';
+import { initReturns } from './returns';
+import brand from '../data/brand.json';
 
-// Jours ouvrés entre l'expédition et la livraison, par mode (min, max)
-const DAYS: Record<string, [number, number]> = { relay: [3, 5], home: [2, 3], express: [1, 1] };
 
 const at = (d: Date, h: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), h);
 
@@ -18,7 +18,7 @@ export function timeline(order: Order, now = new Date()) {
   const placed = new Date(order.date);
   const sameDay = placed.getHours() < 14 && isBusinessDay(placed);
   const ship = at(sameDay ? placed : addBusinessDays(placed, 1), 17);
-  const [min, max] = DAYS[order.method] ?? DAYS.relay;
+  const [min, max] = SHIP_DAYS[order.method] ?? SHIP_DAYS.relay;
   const out = at(addBusinessDays(ship, Math.max(1, min) - (min > 1 ? 1 : 0)), 8);
   const from = at(addBusinessDays(ship, min), 12);
   const to = at(addBusinessDays(ship, max), 19);
@@ -42,6 +42,12 @@ const LABELS = {
   delivered: () => [t('Livrée', 'Delivered'), t('Bonne première sortie.', 'Enjoy the first wear.')],
 } as const;
 
+/** Où en est une commande, en quelques mots (« Expédiée », « Livrée »…). */
+export function orderStatus(order: Order) {
+  const tl = timeline(order);
+  return tl.done ? t('Livrée', 'Delivered') : LABELS[tl.steps[tl.current].key as keyof typeof LABELS]()[0];
+}
+
 export function initTrack(signal: AbortSignal) {
   const root = document.querySelector<HTMLElement>('[data-track]');
   if (!root) return;
@@ -54,6 +60,9 @@ export function initTrack(signal: AbortSignal) {
   const fmtTime = new Intl.DateTimeFormat(intlLocale(lang()), { hour: '2-digit', minute: '2-digit' });
   const $ = <T extends HTMLElement>(s: string) => card.querySelector<T>(s)!;
   const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+  const renderReturn = initReturns(card.querySelector<HTMLElement>('[data-return]')!, signal);
+  // Arrivée depuis « Retour ou échange » : le formulaire s'ouvre directement
+  const wantReturn = new URLSearchParams(location.search).has('retour');
 
   function show(order: Order | null, focus = true) {
     idle.hidden = true;
@@ -93,7 +102,10 @@ export function initTrack(signal: AbortSignal) {
         return `<div class="trk__line"><img src="${esc(p?.image ?? l.image)}" alt="" width="48" height="60" loading="lazy"><span><a class="link" href="${esc(p?.url ?? '#')}">${esc(p?.name ?? l.name)}</a><br><span class="muted">${esc(p?.color ?? l.color)} · ${t('Taille', 'Size')} ${esc(l.size)} · ×${l.qty}</span></span><span>${price(l.price * l.qty)}</span></div>`;
       })
       .join('');
-    if (focus) card.focus({ preventScroll: false });
+    // Retours ouverts jusqu'à N jours après la fin de la fenêtre de livraison estimée
+    const deadline = new Date((tl.steps[4].until ?? tl.steps[4].date).getTime() + brand.shipping.returnsDays * 864e5);
+    renderReturn(order, deadline, wantReturn);
+    if (focus && !wantReturn) card.focus({ preventScroll: false });
   }
 
   function lookup(focus = true) {
@@ -112,6 +124,8 @@ export function initTrack(signal: AbortSignal) {
     },
     { signal },
   );
+
+  card.addEventListener('return:change', () => show(findOrder(field('order').value, field('email').value), false), { signal });
 
   /* Commandes enregistrées sur cet appareil : un clic pour les suivre */
   const mine = root.querySelector<HTMLElement>('[data-track-mine]')!;

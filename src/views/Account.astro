@@ -1,0 +1,271 @@
+---
+// « Mon espace » : tout ce que le site retient pour la personne, sur son appareil,
+// sans compte ni mot de passe (taille, e-mail, commandes, favoris, alertes).
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { localeFromPath, translator, href } from '../i18n';
+
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+---
+
+<Base title={t('Mon espace', 'My space')} page="account" route="account" noindex>
+  <section class="wrap acct" data-account>
+    <header class="acct__head">
+      <p class="label accent">{t('Sans compte, sans mot de passe', 'No account, no password')}</p>
+      <h1 class="display h-2xl patch" data-chars>{t('Mon espace', 'My space')}</h1>
+      <p class="lede muted">
+        {t(
+          'Tout ce que dimension. retient pour toi, gardé uniquement sur cet appareil. Tu peux tout modifier ou tout effacer.',
+          'Everything dimension. remembers for you, kept only on this device. You can edit or erase it all.',
+        )}
+      </p>
+    </header>
+
+    <div class="acct__grid">
+      <!-- Taille -->
+      <article class="acard acard--size">
+        <header class="acard__head"><Icon name="person" /><h2 class="label">{t('Ma taille', 'My size')}</h2></header>
+        <p class="acard__big display" data-acct-size>—</p>
+        <form class="mini-finder" data-acct-finder novalidate>
+          <div class="mini-finder__row">
+            <label class="field"><span class="label">{t('Taille (cm)', 'Height (cm)')}</span><input class="input" name="height" type="number" inputmode="numeric" min="140" max="215" placeholder="178" /></label>
+            <label class="field"><span class="label">{t('Poids (kg)', 'Weight (kg)')}</span><input class="input" name="weight" type="number" inputmode="numeric" min="35" max="160" placeholder="72" /></label>
+          </div>
+          <div class="mini-finder__fit" role="radiogroup" aria-label={t('Coupe', 'Fit')}>
+            <label><input type="radio" name="fit" value="-1" /> {t('Près du corps', 'Close')}</label>
+            <label><input type="radio" name="fit" value="0" checked /> Boxy</label>
+            <label><input type="radio" name="fit" value="1" /> Oversize</label>
+          </div>
+          <button class="btn" type="submit">{t('Calculer ma taille', 'Get my size')}</button>
+          <p class="acard__note muted" data-acct-size-note></p>
+        </form>
+      </article>
+
+      <!-- Commandes -->
+      <article class="acard acard--orders">
+        <header class="acard__head"><Icon name="truck" /><h2 class="label">{t('Mes commandes', 'My orders')}</h2></header>
+        <ul class="acard__list" role="list" data-acct-orders></ul>
+        <p class="acard__empty muted" data-acct-orders-empty>{t('Aucune commande passée sur cet appareil.', 'No orders placed on this device.')}</p>
+        <a class="link link--under label" href={href(locale, 'track')}>{t('Suivre une autre commande →', 'Track another order →')}</a>
+      </article>
+
+      <!-- Favoris -->
+      <article class="acard">
+        <header class="acard__head"><Icon name="heart" /><h2 class="label">{t('Mes favoris', 'My wishlist')} <span data-acct-wish-count></span></h2></header>
+        <div class="acard__thumbs" data-acct-wish></div>
+        <p class="acard__empty muted" data-acct-wish-empty>{t("Touche le cœur d'une pièce pour la garder ici.", 'Tap the heart on a piece to keep it here.')}</p>
+        <a class="link link--under label" href={href(locale, 'wishlist')}>{t('Voir mes favoris →', 'See my wishlist →')}</a>
+      </article>
+
+      <!-- Vus récemment -->
+      <article class="acard">
+        <header class="acard__head"><Icon name="rotate" /><h2 class="label">{t('Vus récemment', 'Recently viewed')}</h2></header>
+        <div class="acard__thumbs" data-acct-recent></div>
+        <p class="acard__empty muted" data-acct-recent-empty>{t('Les pièces que tu regardes apparaîtront ici.', 'Pieces you look at will show up here.')}</p>
+      </article>
+
+      <!-- Alertes -->
+      <article class="acard">
+        <header class="acard__head"><Icon name="needle" /><h2 class="label">{t('Mes alertes de réassort', 'My restock alerts')}</h2></header>
+        <ul class="acard__list" role="list" data-acct-alerts></ul>
+        <p class="acard__empty muted" data-acct-alerts-empty>{t('Aucune alerte. Sur une taille épuisée, touche « Préviens-moi ».', 'No alerts. On a sold-out size, tap “Notify me”.')}</p>
+      </article>
+
+      <!-- E-mail + données -->
+      <article class="acard">
+        <header class="acard__head"><Icon name="lock" /><h2 class="label">{t('Mon e-mail', 'My email')}</h2></header>
+        <form class="acard__email" data-acct-email novalidate>
+          <label class="visually-hidden" for="acct-email">{t('E-mail', 'Email')}</label>
+          <input class="input" id="acct-email" type="email" autocomplete="email" placeholder={t('ton@email.com', 'you@email.com')} />
+          <button class="btn btn--ghost" type="submit">{t('Enregistrer', 'Save')}</button>
+        </form>
+        <p class="acard__note muted">{t('Pré-rempli dans tous les formulaires du site (newsletter, commande, avis, suivi).', 'Pre-filled in every form on the site (newsletter, checkout, reviews, tracking).')}</p>
+        <p class="acard__msg" data-acct-email-msg role="status" aria-live="polite"></p>
+        <div class="acard__actions">
+          <button type="button" class="link link--under label" data-open="help">{t('Besoin d’aide ?', 'Need help?')}</button>
+          <button type="button" class="link link--under label acard__danger" data-acct-forget>{t('Effacer mes données de cet appareil', 'Erase my data from this device')}</button>
+        </div>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .acct {
+    padding-block: var(--space-lg);
+  }
+  .acct__head {
+    display: grid;
+    gap: 1rem;
+    max-width: 62ch;
+    margin-bottom: var(--space-md);
+  }
+  .acct__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 24px);
+    align-items: start;
+  }
+  .acard {
+    display: grid;
+    gap: 0.9rem;
+    padding: clamp(1.1rem, 2vw, 1.6rem);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .acard--size {
+    background: var(--brand);
+    color: #fff;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .acard--size .muted {
+    color: rgb(255 255 255 / 0.85);
+  }
+  .acard__head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px dashed var(--line-strong);
+  }
+  .acard--size .acard__head {
+    border-color: rgb(255 255 255 / 0.5);
+  }
+  .acard__head :global(.icon) {
+    color: var(--brand);
+  }
+  .acard--size .acard__head :global(.icon) {
+    color: #fff;
+  }
+  .acard__big {
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1;
+    -webkit-text-stroke: 0.04em var(--ink);
+    paint-order: stroke fill;
+    text-shadow: 0.06em 0.06em 0 var(--ink);
+  }
+  .mini-finder {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .mini-finder__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+  .mini-finder .field {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .mini-finder .label {
+    color: inherit;
+  }
+  .mini-finder .input {
+    background: #fff;
+  }
+  .mini-finder__fit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: var(--fs-sm);
+  }
+  .mini-finder__fit input {
+    accent-color: var(--ink);
+  }
+  .acard--size .btn {
+    --btn-bg: var(--cotton);
+    --btn-fg: var(--ink);
+  }
+  .acard__list {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .acard__list :global(li) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 10px;
+    font-size: var(--fs-sm);
+  }
+  .acard__list :global(.acard__id) {
+    font-family: var(--f-mono);
+    font-weight: 700;
+  }
+  .acard__list :global(.acard__state) {
+    display: block;
+    color: var(--brand);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+  }
+  .acard__list :global(button) {
+    color: var(--muted);
+    font-size: 1.2rem;
+  }
+  .acard__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .acard__thumbs :global(a) {
+    display: block;
+    aspect-ratio: 4 / 5;
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--media);
+  }
+  .acard__thumbs :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .acard__thumbs:empty,
+  .acard__list:empty {
+    display: none;
+  }
+  .acard__empty[hidden] {
+    display: none;
+  }
+  .acard__email {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+  }
+  .acard__note {
+    font-size: var(--fs-xs);
+  }
+  .acard__msg {
+    font-size: var(--fs-sm);
+    color: var(--ok);
+  }
+  .acard__msg:empty {
+    display: none;
+  }
+  .acard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 2px dashed var(--line-strong);
+  }
+  .acard__danger {
+    color: var(--brand);
+  }
+  @media (max-width: 1100px) {
+    .acct__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 700px) {
+    .acct__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

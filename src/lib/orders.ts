@@ -19,6 +19,9 @@ export interface Order {
   method: string;
   total: number;
   lines: OrderLine[];
+  gift?: { message: string };
+  /** Demande de retour ou d'échange faite depuis la page de suivi */
+  return?: { id: string; date: string; items: { key: string; action: string }[]; reason: string };
 }
 
 export const $orders = persisted<Order[]>('dimension-orders-v1', []);

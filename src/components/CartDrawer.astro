@@ -22,7 +22,7 @@ const t = translator(locale);
 
     <div class="drawer__body">
       <div class="drawer__undo" data-undo hidden>
-        <span>{t('Retiré : ', 'Removed: ')}<strong data-undo-name></strong></span>
+        <span><span data-undo-label>{t('Retiré : ', 'Removed: ')}</span><strong data-undo-name></strong></span>
         <button type="button" class="drawer__undo-btn label" data-undo-btn>{t('Annuler', 'Undo')}</button>
       </div>
       <div data-cart-lines></div>

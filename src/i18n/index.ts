@@ -15,6 +15,7 @@ export const ROUTES = {
   brand: { fr: '/la-marque', en: '/en/about' },
   contact: { fr: '/contact', en: '/en/contact' },
   track: { fr: '/suivi', en: '/en/track' },
+  account: { fr: '/compte', en: '/en/account' },
   terms: { fr: '/cgv', en: '/en/terms' },
   legal: { fr: '/mentions-legales', en: '/en/legal' },
 } as const;

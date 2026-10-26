@@ -19,9 +19,9 @@ const t = translator(locale);
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg>
     <span>{t('Chercher', 'Search')}</span>
   </button>
-  <a href={href(locale, 'wishlist')} class="tabbar__item" data-tab="wishlist">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5S3 15 3 8.8C3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 6.2-9 11.7-9 11.7z"></path></svg>
-    <span>{t('Favoris', 'Wishlist')}</span>
+  <a href={href(locale, 'account')} class="tabbar__item" data-tab="account">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c.8-4.2 4-6.5 8-6.5s7.2 2.3 8 6.5"></path></svg>
+    <span>{t('Moi', 'Me')}</span>
     <b class="tabbar__badge" data-wish-count hidden>0</b>
   </a>
   <button type="button" class="tabbar__item" data-cart-open aria-haspopup="dialog" aria-controls="cart-drawer">

@@ -24,9 +24,11 @@ const cols = [
   {
     title: t('Aide', 'Help'),
     links: [
+      { open: 'help', label: t('Centre d’aide', 'Help centre') },
       { href: h('contact', '#faq'), label: 'FAQ' },
       { href: h('contact', '#guide-des-tailles'), label: t('Guide des tailles', 'Size guide') },
       { href: h('track'), label: t('Suivi de commande', 'Track an order') },
+      { href: h('account'), label: t('Mon espace', 'My space') },
       { href: h('contact'), label: t('Nous écrire', 'Contact us') },
     ],
   },
@@ -57,9 +59,15 @@ const cols = [
               <ul role="list">
                 {c.links.map((l) => (
                   <li>
-                    <a class="link" href={l.href}>
-                      {l.label}
-                    </a>
+                    {'open' in l ? (
+                      <button type="button" class="link" data-open={l.open}>
+                        {l.label}
+                      </button>
+                    ) : (
+                      <a class="link" href={l.href}>
+                        {l.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

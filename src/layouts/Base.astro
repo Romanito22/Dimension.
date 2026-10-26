@@ -10,6 +10,7 @@ import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/CartDrawer.astro';
 import Search from '../components/Search.astro';
 import TabBar from '../components/TabBar.astro';
+import Help from '../components/Help.astro';
 import { media } from '../lib/media';
 import { getProducts, getBrand, imageKeys, categoryLabel, badgeLabel } from '../lib/shop';
 import { localeFromPath, translator, href, type RouteKey } from '../i18n';
@@ -152,6 +153,7 @@ const orgLd = {
     <Footer />
     <CartDrawer />
     <Search />
+    <Help />
     <TabBar />
     <script type="application/json" id="catalog" set:html={JSON.stringify(catalog)} />
     <div class="toast" data-toast role="status" aria-live="polite" transition:persist="toast">
@@ -167,6 +169,13 @@ const orgLd = {
       </div>
       <button type="button" class="toast__x" data-toast-close aria-label={t('Fermer la notification', 'Close notification')}>×</button>
     </div>
+    <aside class="welcome" data-welcome hidden aria-label={t('Bienvenue', 'Welcome')} transition:persist="welcome">
+      <button type="button" class="welcome__x" data-welcome-close aria-label={t('Fermer', 'Close')}>×</button>
+      <p class="welcome__kicker label">{t('Première visite ?', 'First time here?')}</p>
+      <p class="welcome__title display">{t(`−${Math.round(brand.promo.rate * 100)} %`, `${Math.round(brand.promo.rate * 100)}% off`)}</p>
+      <p class="welcome__text">{t('sur ta première commande, avec le code', 'your first order, with the code')}</p>
+      <button type="button" class="welcome__code" data-welcome-copy={brand.promo.code}>{brand.promo.code}</button>
+    </aside>
     <div class="wipe" data-wipe aria-hidden="true" transition:persist="wipe">
       <svg class="wipe__mono" viewBox={MONO_VIEWBOX}>
         <path d={MONO_BOWL} fill-rule="evenodd" fill="#fff" stroke="#111" stroke-width="1.4"></path>
@@ -370,6 +379,62 @@ const orgLd = {
     }
     .toast.is-visible {
       transform: none;
+    }
+  }
+  /* Bienvenue (première visite) */
+  .welcome {
+    position: fixed;
+    left: var(--gutter);
+    bottom: 1.25rem;
+    z-index: 84;
+    display: grid;
+    gap: 0.3rem;
+    width: min(270px, calc(100% - 2rem));
+    padding: 1.1rem 1.2rem 1.2rem;
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    background: var(--brand);
+    color: #fff;
+    box-shadow: 6px 6px 0 var(--ink);
+    rotate: -2deg;
+    transform: translateY(140%);
+    transition: transform 0.6s var(--ease-out);
+  }
+  .welcome.is-visible {
+    transform: none;
+  }
+  .welcome__x {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.6rem;
+    font-size: 1.3rem;
+    color: #fff;
+  }
+  .welcome__title {
+    font-size: 2.6rem;
+    line-height: 1;
+    -webkit-text-stroke: 0.04em var(--ink);
+    paint-order: stroke fill;
+    text-shadow: 0.06em 0.06em 0 var(--ink);
+  }
+  .welcome__text {
+    font-size: var(--fs-sm);
+  }
+  .welcome__code {
+    justify-self: start;
+    margin-top: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 2px dashed var(--ink);
+    border-radius: 10px;
+    background: var(--cotton);
+    color: var(--ink);
+    font-family: var(--f-mono);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  @media (max-width: 860px) {
+    .welcome {
+      bottom: calc(var(--tabbar-h, 0px) + 26px + env(safe-area-inset-bottom));
     }
   }
   .toast img {

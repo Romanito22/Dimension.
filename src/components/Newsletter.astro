@@ -18,6 +18,16 @@ const next = brand.nextDrop;
         <div><span class="display patch" data-cd="m">00</span><span class="label">min</span></div>
         <div><span class="display patch" data-cd="s">00</span><span class="label">sec</span></div>
       </div>
+      <button
+        type="button"
+        class="btn btn--light nl__ics"
+        data-ics
+        data-ics-date={next.date}
+        data-ics-title={t(`dimension. — ${next.name}`, `dimension. — ${next.name}`)}
+        data-ics-text={t('Le drop ouvre. Les séries sont courtes.', 'The drop opens. Short runs.')}
+      >
+        {t('Ajouter à mon agenda', 'Add to my calendar')}
+      </button>
     </div>
     <form class="nl__form" data-newsletter novalidate>
       <p class="lede">
@@ -73,6 +83,10 @@ const next = brand.nextDrop;
   }
   .nl__title {
     font-size: clamp(2.1rem, 5vw, 5.6rem);
+  }
+  .nl__ics {
+    justify-self: start;
+    margin-top: 1.25rem;
   }
   .nl__count {
     display: grid;

@@ -4,6 +4,7 @@ import { t, price as formatPrice, link } from './i18n';
 import { openDialog } from './dialogs';
 import { catalog } from '../lib/catalog';
 import { addItem } from '../lib/cart';
+import { $wishlist, toggleWish } from '../lib/saved';
 import { esc } from './html';
 
 
@@ -42,7 +43,10 @@ export function renderLines(items: CartItem[], compact = false) {
             <output aria-live="polite">${i.qty}</output>
             <button type="button" data-qty="${esc(i.key)}" data-delta="1" aria-label="${t('Ajouter un', 'Add one')}" ${i.qty >= i.max ? 'disabled' : ''}>+</button>
           </div>
-          <button type="button" class="label line__remove" data-remove="${esc(i.key)}">${t('Retirer', 'Remove')}</button>
+          <span class="line__acts">
+            <button type="button" class="label line__remove" data-save-later="${esc(i.key)}">${t('Mettre de côté', 'Save for later')}</button>
+            <button type="button" class="label line__remove" data-remove="${esc(i.key)}">${t('Retirer', 'Remove')}</button>
+          </span>
         </div>`
         }
       </div>
@@ -83,11 +87,14 @@ function renderUpsell(items: CartItem[]) {
 }
 
 let lastRemoved: CartItem | null = null;
+let lastSaved = false;
 let undoTimer = 0;
-function showUndo(item: CartItem) {
+function showUndo(item: CartItem, saved = false) {
   lastRemoved = item;
+  lastSaved = saved;
   const bar = document.querySelector<HTMLElement>('[data-undo]');
   if (!bar) return;
+  bar.querySelector('[data-undo-label]')!.textContent = saved ? t('Mis de côté dans tes favoris : ', 'Saved to your wishlist: ') : t('Retiré : ', 'Removed: ');
   bar.querySelector('[data-undo-name]')!.textContent = `${display(item).name} (${item.size})`;
   bar.hidden = false;
   clearTimeout(undoTimer);
@@ -175,6 +182,16 @@ export function initCartUI() {
       }
       return;
     }
+    // Mettre de côté : la pièce part dans les favoris, le panier s'allège
+    const later = t.closest<HTMLElement>('[data-save-later]');
+    if (later) {
+      const item = $cart.get().find((i) => i.key === later.dataset.saveLater);
+      if (!item) return;
+      if (!$wishlist.get().includes(item.id)) toggleWish(item.id);
+      showUndo(item, true);
+      removeItem(item.key);
+      return;
+    }
     const r = t.closest<HTMLElement>('[data-remove]');
     if (r) {
       const item = $cart.get().find((i) => i.key === r.dataset.remove);
@@ -185,6 +202,7 @@ export function initCartUI() {
     if (t.closest('[data-undo-btn]') && lastRemoved) {
       const { key: _k, qty, ...rest } = lastRemoved;
       addItem(rest, qty);
+      if (lastSaved && $wishlist.get().includes(rest.id)) toggleWish(rest.id);
       lastRemoved = null;
       document.querySelector<HTMLElement>('[data-undo]')!.hidden = true;
     }

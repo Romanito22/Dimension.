@@ -1,0 +1,218 @@
+---
+// Centre d'aide : une fenêtre ouverte de partout ([data-open="help"]).
+// Raccourcis, FAQ cherchable et moyens de contact, sans quitter la page.
+import Icon from './Icon.astro';
+import rawFaq from '../data/faq.json';
+import { getBrand } from '../lib/shop';
+import { localeFromPath, translator, href, localize } from '../i18n';
+
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const brand = getBrand(locale);
+const groups = rawFaq.groups.map((g) => ({ ...localize(g, locale), items: g.items.map((i) => localize(i, locale)) }));
+const tiles = [
+  { icon: 'truck', label: t('Où est ma commande ?', 'Where is my order?'), href: href(locale, 'track') },
+  { icon: 'returns', label: t('Retour ou échange', 'Return or exchange'), href: `${href(locale, 'track')}?retour=1` },
+  { icon: 'needle', label: t('Trouver ma taille', 'Find my size'), href: href(locale, 'contact', '#guide-des-tailles') },
+  { icon: 'search', label: t('Livraison & délais', 'Delivery & timing'), q: t('livraison', 'delivery') },
+] as const;
+---
+
+<dialog class="sheet help" data-dialog="help" aria-labelledby="help-title" transition:persist="help">
+  <div class="sheet__panel" data-lenis-prevent>
+    <header class="sheet__head">
+      <h2 id="help-title" class="display sheet__title">{t('On t’aide', 'How can we help?')}</h2>
+      <button class="icon-btn" type="button" data-close aria-label={t('Fermer l’aide', 'Close help')}>
+        <Icon name="close" size={18} />
+      </button>
+    </header>
+
+    <div class="help__order" data-help-order hidden></div>
+
+    <div class="help__tiles">
+      {
+        tiles.map((tile) =>
+          'href' in tile ? (
+            <a class="help__tile" href={tile.href}>
+              <Icon name={tile.icon} size={20} />
+              <span>{tile.label}</span>
+            </a>
+          ) : (
+            <button type="button" class="help__tile" data-help-q={tile.q}>
+              <Icon name={tile.icon} size={20} />
+              <span>{tile.label}</span>
+            </button>
+          ),
+        )
+      }
+    </div>
+
+    <div class="help__search">
+      <label for="help-q" class="label">{t('Pose ta question', 'Ask your question')}</label>
+      <input id="help-q" class="input" type="search" data-help-input placeholder={t('ex. : échange, broderie, express…', 'e.g. exchange, embroidery, express…')} autocomplete="off" />
+    </div>
+
+    <div class="help__faq" data-help-faq>
+      {
+        groups.map((g) => (
+          <div class="help__group" data-help-group>
+            <p class="label help__gtitle">{g.title}</p>
+            {g.items.map((i) => (
+              <details class="help__item" data-help-item>
+                <summary>{i.q}</summary>
+                <p>{i.a}</p>
+              </details>
+            ))}
+          </div>
+        ))
+      }
+      <p class="help__none muted" data-help-none hidden>{t('Rien trouvé pour cette question — écris-nous, on répond vite.', 'Nothing found for that — write to us, we reply fast.')}</p>
+    </div>
+
+    <div class="help__contact">
+      <p class="label">{t('Une vraie personne au bout', 'A real person on the other end')}</p>
+      <p class="muted">{t('Réponse sous 24 h ouvrées.', 'Reply within 24 working hours.')}</p>
+      <div class="help__channels">
+        <a class="btn btn--accent" href={href(locale, 'contact')}>{t('Nous écrire', 'Contact us')} <span class="btn__dot" aria-hidden="true"></span></a>
+        <a class="btn btn--ghost" href={`mailto:${brand.email}`}>{brand.email}</a>
+        {
+          brand.socials.map((s) => (
+            <a class="btn btn--ghost" href={s.url} target="_blank" rel="noopener">
+              {t(`DM ${s.name}`, `DM on ${s.name}`)}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style is:global>
+  dialog.help {
+    width: min(520px, 100%);
+  }
+  .help .sheet__panel {
+    display: grid;
+    align-content: start;
+    gap: 1.5rem;
+  }
+  .help .sheet__head {
+    margin-bottom: 0;
+  }
+  .help__order {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem 1.1rem;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--cotton);
+    box-shadow: 4px 4px 0 var(--brand);
+  }
+  .help__order[hidden] {
+    display: none;
+  }
+  .help__order-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: var(--fs-sm);
+  }
+  .help__order-top b {
+    font-family: var(--f-mono);
+  }
+  .help__order-acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+  }
+  .help__tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+  .help__tile {
+    display: grid;
+    gap: 0.6rem;
+    justify-items: start;
+    padding: 1rem;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    text-align: left;
+    transition:
+      transform 0.2s var(--ease-out),
+      box-shadow 0.2s var(--ease-out);
+  }
+  .help__tile .icon {
+    color: var(--brand);
+  }
+  .help__tile:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .help__search {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .help__faq {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .help__group {
+    display: grid;
+  }
+  .help__gtitle {
+    margin-bottom: 0.4rem;
+    color: var(--muted);
+  }
+  .help__item {
+    border-bottom: 1.5px solid var(--line-strong);
+  }
+  .help__item summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+  .help__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .help__item summary::after {
+    content: '+';
+    font-family: var(--f-mono);
+    transition: transform 0.25s var(--ease-out);
+  }
+  .help__item[open] summary::after {
+    transform: rotate(45deg);
+  }
+  .help__item p {
+    padding-bottom: 1rem;
+    color: var(--fg-2);
+    font-size: var(--fs-sm);
+  }
+  .help__item mark {
+    background: var(--accent-soft);
+    color: inherit;
+  }
+  .help__contact {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed var(--line-strong);
+  }
+  .help__channels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .help__channels .btn {
+    flex: 1 1 auto;
+  }
+</style>

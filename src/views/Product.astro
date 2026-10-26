@@ -37,6 +37,12 @@ const front = media(`cutout/${p.id.toLowerCase()}-front`, undefined, locale);
 const back = media(`cutout/${p.id.toLowerCase()}-back`, undefined, locale);
 const reviews = productReviews(p.id);
 const galleryCount = keys.length + (video ? 1 : 0);
+// « Porte-le avec » : la pièce conseillée avec celle-ci
+const mate = products.find((x) => x.id === p.pair && x.id !== p.id);
+const mateImg = mate ? media(imageKeys(mate)[0], undefined, locale) : null;
+const mateData = mate
+  ? { id: mate.id, slug: mate.slug, name: mate.name, price: mate.price, color: mate.colors[0].name, image: mateImg!.src, sizes: mate.sizes }
+  : null;
 const modelLine = t(
   `Le modèle mesure ${modelHeight(p.model.height, 'fr')} et porte du ${p.model.size}.`,
   `The model is ${modelHeight(p.model.height, 'en')} and wears a ${p.model.size}.`,
@@ -221,12 +227,43 @@ const jsonld = {
           )
         }
 
+        {
+          mate && mateImg && (
+            <div class="pair" data-pair data-pair-json={JSON.stringify(mateData)}>
+              <p class="label">{t('Porte-le avec', 'Wear it with')}</p>
+              <div class="pair__row">
+                <a href={href(locale, 'product', mate.slug)} class="pair__img">
+                  <img src={mateImg.src} alt={mateImg.alt} width="160" height="200" loading="lazy" />
+                </a>
+                <div class="pair__info">
+                  <p class="pair__top">
+                    <a href={href(locale, 'product', mate.slug)} class="link">{mate.name}</a>
+                    <span>{fmt(mate.price)}</span>
+                  </p>
+                  <div class="pair__sizes" role="radiogroup" aria-label={t(`Taille pour ${mate.name}`, `Size for ${mate.name}`)}>
+                    {SIZES.map((z) => mate.sizes.find((s) => s.size === z)!).map((s) => (
+                      <button type="button" role="radio" aria-checked="false" data-pair-size={s.size} data-qa-size={s.size} disabled={s.stock === 0}>
+                        {s.size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn--block pair__add" data-pair-add disabled={soldOut}>
+                {t('Ajouter les deux', 'Add both')} · {fmt(p.price + mate.price)}
+              </button>
+              <p class="pair__msg" data-pair-msg role="status" aria-live="polite" />
+            </div>
+          )
+        }
+
         <div class="shipcard">
           <p class="eta" data-eta>
             <Icon name="truck" size={18} />
             <span data-eta-text>{t('Livraison en 3 à 5 jours ouvrés', 'Delivery in 3 to 5 working days')}</span>
           </p>
           <Perks variant="compact" only={['ship', 'returns', 'pay']} />
+          <button type="button" class="shipcard__help link link--under label" data-open="help" data-help-topic={t('taille', 'size')}>{t('Une question sur cette pièce ?', 'A question about this piece?')}</button>
         </div>
 
         <div class="acc">
@@ -639,6 +676,9 @@ const jsonld = {
     border: 2px solid var(--ink);
     border-radius: 14px;
     background: var(--surface);
+  }
+  .shipcard__help {
+    justify-self: start;
   }
   .eta {
     display: flex;
@@ -1117,5 +1157,68 @@ const jsonld = {
       bottom: 46px;
       left: 12px;
     }
+  }
+  /* Porte-le avec */
+  .pair {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 5px 5px 0 var(--brand);
+  }
+  .pair__row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 0.9rem;
+    align-items: center;
+  }
+  .pair__img img {
+    width: 72px;
+    height: 90px;
+    object-fit: cover;
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    background: var(--media);
+  }
+  .pair__info {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .pair__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  .pair__sizes {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .pair__sizes button {
+    height: 34px;
+    border: 1.5px solid var(--ink);
+    border-radius: 8px;
+    font-family: var(--f-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+  .pair__sizes button[aria-checked='true'] {
+    background: var(--ink);
+    color: var(--cotton);
+  }
+  .pair__sizes button:disabled {
+    opacity: 0.3;
+    text-decoration: line-through;
+  }
+  .pair__msg {
+    font-size: var(--fs-sm);
+    color: var(--brand);
+  }
+  .pair__msg:empty {
+    display: none;
   }
 </style>

@@ -37,6 +37,21 @@ export const $recent = persisted<string[]>('dimension-recent-v1', []);
 export const $mySize = persisted<string>('dimension-size-v1', '');
 /** E-mail saisi une fois (newsletter, commande, alerte, avis, suivi) : pré-rempli partout ensuite. */
 export const $email = persisted<string>('dimension-email-v1', '');
+/** Alertes de réassort demandées (pièce + taille), affichées dans « Mon espace ». */
+export const $alerts = persisted<{ id: string; size: string; date: string }[]>('dimension-alerts-v1', []);
+/** Message de bienvenue déjà vu ou fermé */
+export const $welcomed = persisted<boolean>('dimension-welcome-v1', false);
+
+/** Efface tout ce que le site a gardé sur cet appareil (panier compris). */
+export function forgetEverything() {
+  try {
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith('dimension-'))
+      .forEach((k) => localStorage.removeItem(k));
+  } catch {
+    /* ignore */
+  }
+}
 
 export function toggleWish(id: string) {
   const list = $wishlist.get();

@@ -80,7 +80,10 @@ const methods = Object.fromEntries(brand.shipping.methods.map((m) => [m.id, m.la
               "We can't find this order on this device. Check the number and email used when ordering — or write to us and we'll look it up.",
             )}
           </p>
-          <a href={href(locale, 'contact')} class="btn">{t('Nous écrire', 'Contact us')}</a>
+          <span class="trk__none-acts">
+            <a href={href(locale, 'contact')} class="btn">{t('Nous écrire', 'Contact us')}</a>
+            <button type="button" class="btn btn--ghost" data-open="help">{t('Centre d’aide', 'Help centre')}</button>
+          </span>
         </div>
 
         <article class="trk__card" data-track-result hidden tabindex="-1">
@@ -98,6 +101,7 @@ const methods = Object.fromEntries(brand.shipping.methods.map((m) => [m.id, m.la
           <div class="trk__bar" aria-hidden="true"><span data-track-bar></span></div>
           <ol class="trk__steps" role="list" data-track-steps></ol>
           <div class="trk__lines" data-track-lines></div>
+          <div class="ret" data-return hidden></div>
           <p class="trk__note muted">
             {t(
               'Démo : les étapes sont estimées à partir de la date de commande et du mode de livraison. Une fois la boutique reliée au transporteur, ce suivi affichera les vrais passages du colis.',
@@ -322,6 +326,137 @@ const methods = Object.fromEntries(brand.shipping.methods.map((m) => [m.id, m.la
   }
   .trk__note {
     font-size: var(--fs-xs);
+  }
+  .trk__none-acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  /* Retour / échange */
+  .ret {
+    scroll-margin-top: calc(var(--header-total) + 1rem);
+  }
+  .ret :global(.ret__box) {
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--cotton);
+  }
+  .ret :global(.ret__box summary) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--fs-sm);
+  }
+  .ret :global(.ret__box summary::-webkit-details-marker) {
+    display: none;
+  }
+  .ret :global(.ret__box summary::after) {
+    content: '+';
+    font-family: var(--f-mono);
+    font-weight: 700;
+    transition: transform 0.25s var(--ease-out);
+  }
+  .ret :global(.ret__box[open] summary::after) {
+    transform: rotate(45deg);
+  }
+  .ret :global(.ret__form) {
+    display: grid;
+    gap: 1rem;
+    padding: 0 1.1rem 1.1rem;
+  }
+  .ret :global(fieldset) {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .ret :global(.ret__lines) {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .ret :global(.ret__line) {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 12px;
+    background: #fff;
+  }
+  .ret :global(.ret__line:has(input:checked)) {
+    border-color: var(--ink);
+    box-shadow: 3px 3px 0 var(--brand);
+  }
+  .ret :global(.ret__pick) {
+    display: grid;
+    grid-template-columns: auto 40px 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: var(--fs-sm);
+    cursor: pointer;
+  }
+  .ret :global(.ret__pick input) {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--brand);
+  }
+  .ret :global(img) {
+    width: 40px;
+    height: 50px;
+    object-fit: cover;
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    background: var(--media);
+  }
+  .ret :global(.ret__reason) {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .ret :global(.ret__err) {
+    color: var(--accent);
+    font-size: var(--fs-sm);
+  }
+  .ret :global(.ret__err:empty) {
+    display: none;
+  }
+  .ret :global(.ret__note) {
+    font-size: var(--fs-xs);
+  }
+  .ret :global(.ret__done) {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.1rem;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--cotton);
+    box-shadow: 4px 4px 0 var(--brand);
+    justify-items: start;
+  }
+  .ret :global(.ret__id b) {
+    font-family: var(--f-mono);
+  }
+  .ret :global(.ret__sum) {
+    display: grid;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .ret :global(.ret__sum li) {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: var(--fs-sm);
+  }
+  .ret :global(.ret__next) {
+    display: grid;
+    gap: 0.4rem;
+    padding-left: 1.2rem;
+    font-size: var(--fs-sm);
+    list-style: decimal;
   }
   @media (max-width: 860px) {
     .trk__grid {

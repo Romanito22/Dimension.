@@ -930,3 +930,26 @@ html.wipe-cover .wipe {
 .theme-dark .patch .accent {
   color: var(--cotton);
 }
+
+/* ---------- Ta taille (mémorisée) mise en évidence sur tous les sélecteurs ---------- */
+html[data-mysize="XS"] [data-qa-size="XS"]:not(:disabled),
+html[data-mysize="XS"] [data-dv-size="XS"]:not(:disabled),
+html[data-mysize="XS"] .size:has(input[value="XS"]:not(:disabled)),
+html[data-mysize="S"] [data-qa-size="S"]:not(:disabled),
+html[data-mysize="S"] [data-dv-size="S"]:not(:disabled),
+html[data-mysize="S"] .size:has(input[value="S"]:not(:disabled)),
+html[data-mysize="M"] [data-qa-size="M"]:not(:disabled),
+html[data-mysize="M"] [data-dv-size="M"]:not(:disabled),
+html[data-mysize="M"] .size:has(input[value="M"]:not(:disabled)),
+html[data-mysize="L"] [data-qa-size="L"]:not(:disabled),
+html[data-mysize="L"] [data-dv-size="L"]:not(:disabled),
+html[data-mysize="L"] .size:has(input[value="L"]:not(:disabled)),
+html[data-mysize="XL"] [data-qa-size="XL"]:not(:disabled),
+html[data-mysize="XL"] [data-dv-size="XL"]:not(:disabled),
+html[data-mysize="XL"] .size:has(input[value="XL"]:not(:disabled)),
+html[data-mysize="XXL"] [data-qa-size="XXL"]:not(:disabled),
+html[data-mysize="XXL"] [data-dv-size="XXL"]:not(:disabled),
+html[data-mysize="XXL"] .size:has(input[value="XXL"]:not(:disabled)) {
+  outline: 2px solid var(--brand);
+  outline-offset: -5px;
+}

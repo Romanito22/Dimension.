@@ -41,6 +41,10 @@
   justify-content: space-between;
   align-items: center;
 }
+.line__acts {
+  display: inline-flex;
+  gap: 1rem;
+}
 .line__remove {
   color: var(--muted);
   padding: 0.4rem 0;

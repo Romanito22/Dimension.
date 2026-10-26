@@ -165,6 +165,25 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     </div>
   </div>
 
+  <!-- POUR TOI : visiteurs qui reviennent (rempli par scripts/personal.ts) -->
+  <section class="wrap resume" data-resume hidden aria-labelledby="resume-title">
+    <div class="resume__head">
+      <div>
+        <span class="label accent">{t('Content de te revoir', 'Good to see you again')}</span>
+        <h2 id="resume-title" class="display h-xl patch">{t('Reprends où tu en étais', 'Pick up where you left off')}</h2>
+      </div>
+      <a href={href(locale, 'account')} class="link link--under label">{t('Mon espace →', 'My space →')}</a>
+    </div>
+    <div class="resume__body">
+      <div class="resume__cart" data-resume-cart hidden>
+        <p class="display resume__cart-title">{t('Ton panier t’attend', 'Your bag is waiting')}</p>
+        <p class="muted" data-resume-cart-text></p>
+        <button type="button" class="btn btn--accent" data-cart-open>{t('Voir mon panier', 'View my bag')} <span class="btn__dot" aria-hidden="true"></span></button>
+      </div>
+      <div class="resume__list" data-resume-list></div>
+    </div>
+  </section>
+
   <!-- NOUVEAUTÉS : grille claire (glissable au doigt sur mobile) -->
   <section id="drop" class="section drop" aria-labelledby="drop-title">
     <div class="wrap section-head drop__head">
@@ -990,6 +1009,86 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
       transform: scale(2.6);
       opacity: 0;
     }
+  }
+
+  /* ================= POUR TOI ================= */
+  .resume {
+    padding-top: var(--space-lg);
+  }
+  .resume__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+    margin-bottom: var(--space-sm);
+  }
+  .resume__head .label {
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .resume__body {
+    display: flex;
+    gap: clamp(10px, 1.4vw, 20px);
+    overflow-x: auto;
+    padding: 4px 4px 12px;
+    scrollbar-width: none;
+  }
+  .resume__body::-webkit-scrollbar {
+    display: none;
+  }
+  .resume__cart {
+    flex: none;
+    width: clamp(220px, 22vw, 300px);
+    display: grid;
+    align-content: space-between;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    background: var(--brand);
+    color: #fff;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .resume__cart .muted {
+    color: rgb(255 255 255 / 0.85);
+  }
+  .resume__cart-title {
+    font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+  }
+  .resume__cart .btn {
+    --btn-bg: var(--cotton);
+    --btn-fg: var(--ink);
+  }
+  .resume__list {
+    display: flex;
+    gap: clamp(10px, 1.4vw, 20px);
+  }
+  .resume__list :global(a) {
+    flex: none;
+    width: clamp(140px, 13vw, 190px);
+    display: grid;
+    gap: 0.4rem;
+    font-size: var(--fs-sm);
+  }
+  .resume__list :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--media);
+    transition:
+      translate 0.25s var(--ease-out),
+      box-shadow 0.25s var(--ease-out);
+  }
+  .resume__list :global(a:hover img) {
+    translate: -3px -3px;
+    box-shadow: 6px 6px 0 var(--brand);
+  }
+  .resume__list :global(.resume__price) {
+    font-family: var(--f-display);
+    font-weight: 700;
   }
 
   /* ================= NOUVEAUTÉS ================= */

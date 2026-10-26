@@ -1,6 +1,7 @@
 // Boutique : filtres (catégorie, taille, couleur, prix), tri et densité,
 // synchronisés avec l'URL — tout côté client, instantané.
 import { t } from './i18n';
+import { $mySize } from '../lib/saved';
 
 interface State {
   cat: string;
@@ -37,7 +38,16 @@ export function initShop(signal: AbortSignal) {
     sort: params.get('tri') ?? 'nouveautes',
   };
 
+  // Pastille « Ma taille » : filtre en un geste sur la taille mémorisée
+  const mine = $mySize.get();
+  const minePill = root.querySelector<HTMLButtonElement>('[data-mysize-pill]');
+  if (minePill && mine) {
+    minePill.hidden = false;
+    minePill.querySelector('[data-mysize-pill-value]')!.textContent = mine;
+  }
+
   function syncInputs() {
+    minePill?.setAttribute('aria-pressed', String(!!mine && state.sizes.length === 1 && state.sizes[0] === mine));
     root!.querySelectorAll<HTMLButtonElement>('[data-cat]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === state.cat)));
     panel.querySelectorAll<HTMLInputElement>('input[name="size"]').forEach((i) => (i.checked = state.sizes.includes(i.value)));
     panel.querySelectorAll<HTMLInputElement>('input[name="color"]').forEach((i) => (i.checked = state.colors.includes(i.value)));
@@ -113,6 +123,13 @@ export function initShop(signal: AbortSignal) {
     'click',
     (e) => {
       const t = e.target as HTMLElement;
+      if (t.closest('[data-mysize-pill]') && mine) {
+        const on = state.sizes.length === 1 && state.sizes[0] === mine;
+        state.sizes = on ? [] : [mine];
+        syncInputs();
+        apply();
+        return;
+      }
       const cat = t.closest<HTMLButtonElement>('[data-cat]');
       if (cat) {
         state.cat = cat.dataset.cat!;

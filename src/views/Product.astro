@@ -1057,6 +1057,11 @@ const jsonld = {
       transform 0.2s var(--ease-out),
       box-shadow 0.2s var(--ease-out);
   }
+  .gallery__spin::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
   .gallery__spin:hover {
     transform: translate(-2px, -2px);
     box-shadow: 5px 5px 0 var(--brand);

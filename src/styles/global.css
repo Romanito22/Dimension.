@@ -339,6 +339,12 @@ body {
     color 0.25s,
     translate 0.5s var(--ease-out);
 }
+/* Zone de survol élargie : le bouton se soulève sans « fuir » le pointeur (pas de tremblement au bord) */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
 .btn::after {
   content: '';
   position: absolute;

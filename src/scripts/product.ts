@@ -3,6 +3,7 @@
 import { addItem, openDrawer } from '../lib/cart';
 import { openDialog } from './dialogs';
 import { t } from './i18n';
+import { hearts } from './hearts';
 
 interface ProductData {
   id: string;
@@ -86,6 +87,7 @@ export function initProduct(signal: AbortSignal) {
           image: new URL(data.image, location.href).href,
         });
         btn.classList.add('is-added');
+        hearts(btn);
         btn.querySelector('[data-add-label]')!.textContent = t('Ajouté ✓', 'Added ✓');
         setTimeout(() => {
           btn.classList.remove('is-added');

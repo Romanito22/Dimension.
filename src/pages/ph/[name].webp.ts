@@ -11,7 +11,6 @@ import { media } from '../../lib/media';
 
 // Largeur de sortie : assez pour un écran Retina sans alourdir la page.
 function targetWidth(key: string, w: number) {
-  if (key === 'texture/gravel') return 1000;
   if (key.startsWith('social/')) return 600;
   return Math.min(1600, Math.round(w * 1.125));
 }
@@ -36,8 +35,7 @@ async function render(key: string) {
     .png()
     .toBuffer();
   const encode = (quality: number) => sharp(raster).webp({ quality, alphaQuality: 90, effort: 5 }).toBuffer();
-  // Texture de fond : grain fin sous un voile sombre, une qualité moyenne suffit
-  let buf = await encode(key === 'texture/gravel' ? 46 : 80);
+  let buf = await encode(80);
   // Le grain du gravier se compresse mal : on baisse un peu la qualité, invisible à l'œil.
   if (buf.length > 160_000) buf = await encode(64);
   fs.mkdirSync(CACHE, { recursive: true });
@@ -49,6 +47,8 @@ export function getStaticPaths() {
   // Seuls les visuels sans vraie photo sont générés
   return placeholderKeys()
     .filter((key) => media(key).placeholder)
+    // Pièce qui a déjà de vraies photos : sa galerie n'affiche qu'elles, inutile de dessiner le reste
+    .filter((key) => !/^products\/dim-\d+-\d$/.test(key) || media(key.replace(/-\d$/, '-1')).placeholder)
     .map((key) => ({ params: { name: encodeKey(key) } }));
 }
 

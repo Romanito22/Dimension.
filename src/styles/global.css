@@ -959,3 +959,27 @@ html[data-mysize="XXL"] .size:has(input[value="XXL"]:not(:disabled)) {
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
 }
+
+/* ---------- Grain : texture de papier très légère sur les grands aplats ---------- */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Cœurs de l'ajout au panier (scripts/hearts.ts) */
+.heart-fx {
+  position: fixed;
+  z-index: 600;
+  pointer-events: none;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.15);
+}

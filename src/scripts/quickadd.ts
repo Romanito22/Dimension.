@@ -3,6 +3,7 @@
 import { addItem } from '../lib/cart';
 import { price as formatPrice } from './i18n';
 import { reducedMotion } from './scroll';
+import { hearts } from './hearts';
 
 export interface QuickProduct {
   id: string;
@@ -59,6 +60,7 @@ export function quickAdd(p: QuickProduct, size: string, from: HTMLElement) {
   from.classList.remove('is-added');
   void from.offsetWidth;
   from.classList.add('is-added');
+  hearts(from, 6);
   flyToCart(from);
   setTimeout(() => toast(p, size), reducedMotion ? 0 : 600);
 }

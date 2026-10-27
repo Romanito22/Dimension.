@@ -19,7 +19,6 @@ const fmt = (n: number) => formatPrice(n, locale);
 const productUrl = (slug: string) => href(locale, 'product', slug);
 
 const ogImage = media('hero/desktop');
-const gravel = media('texture/gravel');
 const teeBack = media('cutout/dim-001-back', undefined, locale);
 const teeFront = media('cutout/dim-001-front', undefined, locale);
 const latest = byNewest(products);
@@ -82,7 +81,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
 
 <Base header="overlay" page="home" image={ogImage.src} route="home">
   <!-- HERO : la scène du drop -->
-  <section class="dv theme-dark" data-dropviewer aria-labelledby="dv-title" style={`--gravel-img:url(${gravel.src})`}>
+  <section class="dv theme-dark grain" data-dropviewer aria-labelledby="dv-title">
     <script type="application/json" data-dv-json set:html={JSON.stringify(dvData)} />
     <h1 id="dv-title" class="visually-hidden">dimension. — {brand.drop.name} : {brand.tagline}</h1>
 
@@ -234,6 +233,17 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     <div class="wrap drop__facts"><Perks variant="cards" /></div>
   </section>
 
+  <!-- QUIZ : quelle pièce es-tu ? -->
+  <section class="wrap qz" aria-labelledby="qz-title">
+    <div class="qz__card theme-brand">
+      <div>
+        <p class="label">{t('4 questions · 20 secondes', '4 questions · 20 seconds')}</p>
+        <h2 id="qz-title" class="display qz__title patch">{t('Quelle pièce dimension. es-tu ?', 'Which dimension. piece are you?')}</h2>
+      </div>
+      <button type="button" class="btn btn--light btn--lg" data-open="quiz">{t('Faire le quiz', 'Take the quiz')} <span class="btn__dot" aria-hidden="true"></span></button>
+    </div>
+  </section>
+
   <!-- PIÈCE SIGNATURE : devant / dos au scroll -->
   <section class="flip theme-dark" data-flip aria-labelledby="flip-title">
     <div class="flip__sticky">
@@ -318,17 +328,6 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     </div>
   </section>
 
-  <!-- QUIZ : quelle pièce es-tu ? -->
-  <section class="wrap qz" aria-labelledby="qz-title">
-    <div class="qz__card theme-brand">
-      <div>
-        <p class="label">{t('4 questions · 20 secondes', '4 questions · 20 seconds')}</p>
-        <h2 id="qz-title" class="display qz__title patch">{t('Quelle pièce dimension. es-tu ?', 'Which dimension. piece are you?')}</h2>
-      </div>
-      <button type="button" class="btn btn--light btn--lg" data-open="quiz">{t('Faire le quiz', 'Take the quiz')} <span class="btn__dot" aria-hidden="true"></span></button>
-    </div>
-  </section>
-
   <!-- MANIFESTE : s'allume mot par mot -->
   <section class="mf theme-brand" data-scrub aria-label={t('Manifeste', 'Manifesto')}>
     <div class="mf__sticky">
@@ -342,7 +341,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   </section>
 
   <!-- TABLE DE TRAVAIL : les pièces à plat, déplaçables -->
-  <section class="tb theme-dark" data-table aria-labelledby="tb-title" style={`--gravel-img:url(${gravel.src})`}>
+  <section class="tb theme-brand grain" data-table aria-labelledby="tb-title">
     <div class="wrap tb__head">
       <div>
         <span class="label accent">{t('Touche à tout', 'Hands on')}</span>
@@ -394,7 +393,11 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     min-height: 680px;
     overflow: hidden;
     isolation: isolate;
-    background: var(--gravel) var(--gravel-img) center / cover;
+    /* Studio sombre : un halo framboise derrière la pièce, comme une lumière de scène */
+    background:
+      radial-gradient(ellipse 48% 52% at 50% 46%, rgb(194 18 79 / 0.42), transparent 70%),
+      radial-gradient(ellipse 90% 70% at 50% 110%, rgb(194 18 79 / 0.25), transparent 70%),
+      #120c0f;
   }
   .dv::before {
     content: '';
@@ -402,9 +405,9 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     inset: 0;
     z-index: 0;
     background:
-      radial-gradient(ellipse 55% 60% at 50% 48%, transparent 30%, rgb(10 8 6 / 0.55) 100%),
-      linear-gradient(0deg, rgb(10 8 6 / 0.75) 0%, transparent 38%),
-      linear-gradient(180deg, rgb(10 8 6 / 0.55) 0%, transparent 25%);
+      radial-gradient(ellipse 60% 62% at 50% 48%, transparent 35%, rgb(8 5 6 / 0.6) 100%),
+      linear-gradient(0deg, rgb(8 5 6 / 0.8) 0%, transparent 36%),
+      linear-gradient(180deg, rgb(8 5 6 / 0.5) 0%, transparent 22%);
   }
   .dv__word {
     position: absolute;
@@ -906,7 +909,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   .tb {
     position: relative;
     padding-top: var(--space-lg);
-    background: var(--gravel) var(--gravel-img) center / cover;
+    /* La table : une nappe framboise, éclairée par le haut */
+    background: radial-gradient(ellipse 80% 70% at 50% 30%, #d62a67, var(--brand) 60%, #a50d42);
     overflow: hidden;
   }
   .tb::before {
@@ -914,8 +918,8 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(180deg, rgb(10 8 6 / 0.75) 0%, transparent 30%),
-      linear-gradient(120deg, rgb(255 236 200 / 0.12), transparent 50%);
+      linear-gradient(180deg, rgb(60 4 24 / 0.35) 0%, transparent 30%),
+      linear-gradient(120deg, rgb(255 255 255 / 0.1), transparent 50%);
     pointer-events: none;
   }
   .tb__head {
@@ -1010,7 +1014,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   /* ================= MANIFESTE ================= */
   .mf {
     --mp: 0;
-    height: 190vh;
+    height: 150vh;
     position: relative;
   }
   .mf__sticky {
@@ -1028,20 +1032,16 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
     font-size: clamp(1.5rem, 3.5vw, 4.2rem);
     line-height: 1.04;
   }
+  /* Les mots passent de l'encre au blanc en s'allumant : lisibles dans les deux états */
   .mf__w {
-    opacity: 0.1;
-    transition:
-      opacity 0.35s,
-      color 0.35s;
+    color: rgb(17 17 17 / 0.92);
+    transition: color 0.35s;
   }
   .mf__w:global(.is-lit) {
-    opacity: 1;
+    color: #fff;
   }
   .mf__w.is-accent:global(.is-lit) {
-    color: var(--ink);
-  }
-  .mf__w {
-    opacity: 0.22;
+    color: #ffd3e2;
   }
   @keyframes ping {
     to {
@@ -1289,7 +1289,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   .flip {
     --fp: 0;
     position: relative;
-    height: 230vh;
+    height: 180vh;
     background: var(--bg);
   }
   /* Halo framboise : seule son opacité varie (composée par le GPU, sans repeindre). */
@@ -1467,7 +1467,7 @@ const mfWords = manifesto.split(' ').map((w) => ({ text: w.replaceAll('*', ''), 
   }
   @media (max-width: 860px) {
     .flip {
-      height: 220vh;
+      height: 170vh;
     }
     .flip__grid {
       grid-template-columns: 1fr;

@@ -502,9 +502,10 @@ const jsonld = {
   .shipcard__help {
     position: relative;
   }
-  .info__guide::after,
-  .fit__cta::after,
-  .shipcard__help::after {
+  /* ::before : ::after porte déjà le soulignement des liens */
+  .info__guide::before,
+  .fit__cta::before,
+  .shipcard__help::before {
     content: '';
     position: absolute;
     inset: -15px -8px;

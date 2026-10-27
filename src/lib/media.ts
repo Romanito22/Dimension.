@@ -68,7 +68,6 @@ const EN_ALT: Record<string, string> = {
   'story/1': 'Close-up of the embroidered monogram',
   'story/2': 'The Drop 01 pieces laid flat on a raspberry background',
   'story/3': 'Detail of the jacquard knit',
-  'texture/gravel': 'Gravel in the sun',
 };
 const EN_VIEW = ['front view', 'back view', 'print detail', 'embroidery close-up'];
 
